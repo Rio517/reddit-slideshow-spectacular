@@ -172,8 +172,12 @@
     "description": "Settings-panel checkbox: pan and zoom large images."
   },
   "settingsAlwaysShowMeta": {
-    "message": "Mostra sempre contatore, titolo e saltati",
+    "message": "Mostra sempre il titolo e la didascalia",
     "description": "Settings-panel checkbox: always show count, title and skips."
+  },
+  "settingsAlwaysShowCount": {
+    "message": "Mostra sempre il contatore e i saltati",
+    "description": "Settings-panel checkbox: always show the position counter and skipped count."
   },
   "settingsFullPreferences": {
     "message": "Preferenze complete ↗",
@@ -509,12 +513,20 @@
     "description": "Options hint under the hide-duplicate-media checkbox."
   },
   "optAlwaysShowMeta": {
-    "message": "Mostra sempre contatore, titolo e saltati",
+    "message": "Mostra sempre il titolo e la didascalia",
     "description": "Options checkbox: always show count, title and skips."
   },
   "optAlwaysShowMetaHint": {
-    "message": "Tienili visibili anche quando i controlli si nascondono automaticamente, così un salto nel contatore dovuto a un elemento saltato rimane spiegato.",
+    "message": "Mantieni visibili il titolo e la didascalia del post anche quando i controlli si nascondono.",
     "description": "Options hint under the always-show-meta checkbox."
+  },
+  "optAlwaysShowCount": {
+    "message": "Mostra sempre il contatore e i saltati",
+    "description": "Options page label: always show the position counter and skipped count."
+  },
+  "optAlwaysShowCountHint": {
+    "message": "Mantieni visibili il contatore di posizione e il badge dei saltati anche quando i controlli si nascondono, così un salto nel conteggio resta spiegato.",
+    "description": "Options page hint for the always-show-count checkbox."
   },
   "optContentDedup": {
     "message": "Salta anche le immagini ricaricate",

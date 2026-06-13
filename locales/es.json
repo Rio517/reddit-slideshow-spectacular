@@ -172,8 +172,12 @@
     "description": "Settings-panel checkbox: pan and zoom large images."
   },
   "settingsAlwaysShowMeta": {
-    "message": "Mostrar siempre contador, título y omisiones",
+    "message": "Mostrar siempre el título y la firma",
     "description": "Settings-panel checkbox: always show count, title and skips."
+  },
+  "settingsAlwaysShowCount": {
+    "message": "Mostrar siempre el contador y los omitidos",
+    "description": "Settings-panel checkbox: always show the position counter and skipped count."
   },
   "settingsFullPreferences": {
     "message": "Preferencias completas ↗",
@@ -509,12 +513,20 @@
     "description": "Options hint under the hide-duplicate-media checkbox."
   },
   "optAlwaysShowMeta": {
-    "message": "Mostrar siempre contador, título y omisiones",
+    "message": "Mostrar siempre el título y la firma",
     "description": "Options checkbox: always show count, title and skips."
   },
   "optAlwaysShowMetaHint": {
-    "message": "Mantenlos visibles aunque los controles se oculten automáticamente, para que un hueco en el contador por un elemento omitido quede explicado.",
+    "message": "Mantén visibles el título y la firma de la publicación aunque los controles se oculten.",
     "description": "Options hint under the always-show-meta checkbox."
+  },
+  "optAlwaysShowCount": {
+    "message": "Mostrar siempre el contador y los omitidos",
+    "description": "Options page label: always show the position counter and skipped count."
+  },
+  "optAlwaysShowCountHint": {
+    "message": "Mantén visibles el contador de posición y el indicador de omitidos aunque los controles se oculten, para que un salto en el conteo siga explicado.",
+    "description": "Options page hint for the always-show-count checkbox."
   },
   "optContentDedup": {
     "message": "También omitir imágenes subidas de nuevo",

@@ -172,8 +172,12 @@
     "description": "Settings-panel checkbox: pan and zoom large images."
   },
   "settingsAlwaysShowMeta": {
-    "message": "Anzahl, Titel & Übersprungene immer anzeigen",
+    "message": "Titel und Infozeile immer anzeigen",
     "description": "Settings-panel checkbox: always show count, title and skips."
+  },
+  "settingsAlwaysShowCount": {
+    "message": "Zähler und Übersprungene immer anzeigen",
+    "description": "Settings-panel checkbox: always show the position counter and skipped count."
   },
   "settingsFullPreferences": {
     "message": "Alle Einstellungen ↗",
@@ -509,12 +513,20 @@
     "description": "Options hint under the hide-duplicate-media checkbox."
   },
   "optAlwaysShowMeta": {
-    "message": "Anzahl, Titel & Übersprungene immer anzeigen",
+    "message": "Titel und Infozeile immer anzeigen",
     "description": "Options checkbox: always show count, title and skips."
   },
   "optAlwaysShowMetaHint": {
-    "message": "Immer sichtbar halten, auch wenn die Steuerelemente automatisch ausgeblendet werden – so bleibt eine Lücke in der Zählung durch übersprungene Elemente erklärt.",
+    "message": "Titel und Infozeile des Beitrags sichtbar halten, auch wenn die Steuerung ausgeblendet wird.",
     "description": "Options hint under the always-show-meta checkbox."
+  },
+  "optAlwaysShowCount": {
+    "message": "Zähler und Übersprungene immer anzeigen",
+    "description": "Options page label: always show the position counter and skipped count."
+  },
+  "optAlwaysShowCountHint": {
+    "message": "Positionszähler und Übersprungen-Abzeichen sichtbar halten, auch wenn die Steuerung ausgeblendet wird, damit eine Lücke in der Zählung erklärt bleibt.",
+    "description": "Options page hint for the always-show-count checkbox."
   },
   "optContentDedup": {
     "message": "Erneut hochgeladene Bilder ebenfalls überspringen",

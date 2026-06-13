@@ -172,8 +172,12 @@
     "description": "Settings-panel checkbox: pan and zoom large images."
   },
   "settingsAlwaysShowMeta": {
-    "message": "Always show count, title & skips",
+    "message": "Always show the title & byline",
     "description": "Settings-panel checkbox: always show count, title and skips."
+  },
+  "settingsAlwaysShowCount": {
+    "message": "Always show the count & skips",
+    "description": "Settings-panel checkbox: always show the position counter and skipped count."
   },
   "settingsFullPreferences": {
     "message": "Full preferences ↗",
@@ -509,12 +513,20 @@
     "description": "Options hint under the hide-duplicate-media checkbox."
   },
   "optAlwaysShowMeta": {
-    "message": "Always show count, title & skips",
+    "message": "Always show the title & byline",
     "description": "Options checkbox: always show count, title and skips."
   },
   "optAlwaysShowMetaHint": {
-    "message": "Keep them visible even when the controls auto-hide, so a gap in the count from a skipped item stays explained.",
+    "message": "Keep the post's title and byline visible even when the controls auto-hide.",
     "description": "Options hint under the always-show-meta checkbox."
+  },
+  "optAlwaysShowCount": {
+    "message": "Always show the count & skips",
+    "description": "Options page label: always show the position counter and skipped count."
+  },
+  "optAlwaysShowCountHint": {
+    "message": "Keep the position counter and skipped-count badge visible even when the controls auto-hide, so a gap in the count from a skipped item stays explained.",
+    "description": "Options page hint for the always-show-count checkbox."
   },
   "optContentDedup": {
     "message": "Also skip re-uploaded images",

@@ -172,8 +172,12 @@
     "description": "Settings-panel checkbox: pan and zoom large images."
   },
   "settingsAlwaysShowMeta": {
-    "message": "إظهار العدد والعنوان والتخطّيات دائمًا",
+    "message": "إظهار العنوان وسطر المعلومات دائمًا",
     "description": "Settings-panel checkbox: always show count, title and skips."
+  },
+  "settingsAlwaysShowCount": {
+    "message": "إظهار العدّاد والعناصر المتخطّاة دائمًا",
+    "description": "Settings-panel checkbox: always show the position counter and skipped count."
   },
   "settingsFullPreferences": {
     "message": "التفضيلات الكاملة ↗",
@@ -509,12 +513,20 @@
     "description": "Options hint under the hide-duplicate-media checkbox."
   },
   "optAlwaysShowMeta": {
-    "message": "إظهار العدد والعنوان والتخطّيات دائمًا",
+    "message": "إظهار العنوان وسطر المعلومات دائمًا",
     "description": "Options checkbox: always show count, title and skips."
   },
   "optAlwaysShowMetaHint": {
-    "message": "أبقِها ظاهرة حتى عند إخفاء عناصر التحكّم تلقائيًا، حتى يبقى أيّ فراغ في العدد ناتج عن عنصر مُتخطًّى مُفسَّرًا.",
+    "message": "أبقِ عنوان المنشور وسطر معلوماته ظاهرين حتى عند إخفاء عناصر التحكم.",
     "description": "Options hint under the always-show-meta checkbox."
+  },
+  "optAlwaysShowCount": {
+    "message": "إظهار العدّاد والعناصر المتخطّاة دائمًا",
+    "description": "Options page label: always show the position counter and skipped count."
+  },
+  "optAlwaysShowCountHint": {
+    "message": "أبقِ عدّاد الموضع وشارة العناصر المتخطّاة ظاهرين حتى عند إخفاء عناصر التحكم، كي يظل أي فرق في العدّ مفهومًا.",
+    "description": "Options page hint for the always-show-count checkbox."
   },
   "optContentDedup": {
     "message": "تخطّي الصور المُعاد رفعها أيضًا",

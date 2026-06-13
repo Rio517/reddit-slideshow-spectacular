@@ -172,8 +172,12 @@
     "description": "Settings-panel checkbox: pan and zoom large images."
   },
   "settingsAlwaysShowMeta": {
-    "message": "Toujours afficher le compteur, le titre et les ignorés",
+    "message": "Toujours afficher le titre et la signature",
     "description": "Settings-panel checkbox: always show count, title and skips."
+  },
+  "settingsAlwaysShowCount": {
+    "message": "Toujours afficher le compteur et les ignorés",
+    "description": "Settings-panel checkbox: always show the position counter and skipped count."
   },
   "settingsFullPreferences": {
     "message": "Toutes les préférences ↗",
@@ -509,12 +513,20 @@
     "description": "Options hint under the hide-duplicate-media checkbox."
   },
   "optAlwaysShowMeta": {
-    "message": "Toujours afficher le compteur, le titre et les ignorés",
+    "message": "Toujours afficher le titre et la signature",
     "description": "Options checkbox: always show count, title and skips."
   },
   "optAlwaysShowMetaHint": {
-    "message": "Les garde visibles même quand les contrôles se masquent automatiquement, afin d'expliquer un saut dans le compteur dû à un élément ignoré.",
+    "message": "Gardez le titre et la signature de la publication visibles même lorsque les contrôles se masquent.",
     "description": "Options hint under the always-show-meta checkbox."
+  },
+  "optAlwaysShowCount": {
+    "message": "Toujours afficher le compteur et les ignorés",
+    "description": "Options page label: always show the position counter and skipped count."
+  },
+  "optAlwaysShowCountHint": {
+    "message": "Gardez le compteur de position et le badge d'ignorés visibles même lorsque les contrôles se masquent, pour qu'un écart dans le décompte reste expliqué.",
+    "description": "Options page hint for the always-show-count checkbox."
   },
   "optContentDedup": {
     "message": "Ignorer aussi les images re-téléversées",
