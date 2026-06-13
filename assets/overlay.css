@@ -428,11 +428,11 @@ iframe.reddit-slideshow-media {
     ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
   font-size: 12px;
   letter-spacing: 0.14em;
-  color: var(--rs-accent);
+  color: var(--rs-muted);
   padding: 4px 9px;
-  border: 1px solid rgba(255, 122, 24, 0.35);
+  border: 1px solid transparent;
   border-radius: 6px;
-  background: rgba(0, 0, 0, 0.35);
+  background: transparent;
   font-variant-numeric: tabular-nums;
 }
 
@@ -587,11 +587,14 @@ iframe.reddit-slideshow-media {
   transform: translateY(-50%) translateX(calc(12px * var(--rs-dir)));
 }
 
-/* "Always show count, title & skips": the bottom meta bar and the top-left
-   cluster (counter + skipped badge) survive the idle fade. They stay
-   non-interactive while idle (the cursor is hidden); a mousemove wakes them. */
-#reddit-slideshow-root.rs-pin-meta.rs-idle .rs-meta,
-#reddit-slideshow-root.rs-pin-meta.rs-idle .rs-topleft {
+/* "Always show count": the top-left cluster (counter + skipped badge) survives
+   the idle fade. "Always show meta": the bottom title/byline bar does. Each is
+   driven by its own setting; both stay non-interactive while idle (cursor is
+   hidden) - a mousemove wakes them. */
+#reddit-slideshow-root.rs-pin-count.rs-idle .rs-topleft {
+  opacity: 1;
+}
+#reddit-slideshow-root.rs-pin-meta.rs-idle .rs-meta {
   opacity: 1;
 }
 
@@ -980,6 +983,34 @@ iframe.reddit-slideshow-media {
   }
 }
 
+/* Small corner spinner shown only while the chrome is idle-hidden and the next
+   media is loading - the title-row spinner is faded then, so this is the only
+   loading feedback. Stays hidden when the meta is pinned (its title spinner is
+   still visible) or when the chrome is awake. */
+.rs-loaddot {
+  position: absolute;
+  inset-inline-end: 24px;
+  bottom: 34px;
+  z-index: 8;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.rs-loaddot span {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  border-top-color: var(--rs-accent);
+  animation: rs-spin 0.8s linear infinite;
+}
+
+#reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-loaddot--on {
+  opacity: 1;
+}
+
 /* Vote feedback toast (the up/down keys); a brief top-center flash. */
 .rs-vote-flash {
   position: absolute;
@@ -1066,13 +1097,16 @@ iframe.reddit-slideshow-media {
     ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
   font-size: 11px;
   letter-spacing: 0.12em;
-  color: var(--rs-danger);
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 107, 107, 0.4);
+  color: var(--rs-muted);
+  background: transparent;
+  border: 1px solid transparent;
   border-radius: 6px;
   padding: 4px 9px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .rs-skipped[hidden] {
@@ -1080,6 +1114,8 @@ iframe.reddit-slideshow-media {
 }
 
 .rs-skipped:hover {
+  color: var(--rs-danger);
+  border-color: rgba(255, 107, 107, 0.4);
   background: rgba(255, 107, 107, 0.18);
 }
 
@@ -1376,8 +1412,9 @@ iframe.reddit-slideshow-media {
 }
 
 .rs-meta__counter:hover {
-  background: rgba(255, 122, 24, 0.16);
   color: #ffcf9e;
+  border-color: rgba(255, 122, 24, 0.35);
+  background: rgba(255, 122, 24, 0.16);
 }
 
 /* A quick scale + accent flash so a manual Next/Prev always registers, even
