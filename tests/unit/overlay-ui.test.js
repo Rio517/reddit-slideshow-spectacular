@@ -1014,16 +1014,47 @@ describe("createOverlay", () => {
     expect(overlay.root.querySelector(".rs-logo")).toBeNull();
   });
 
-  it("pins the meta with rs-pin-meta only when alwaysShowMeta is set", () => {
+  it("pins counts and meta independently via rs-pin-count / rs-pin-meta", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.setSettings(
-      /** @type {any} */ ({ ...PANEL_SETTINGS, alwaysShowMeta: true }),
+      /** @type {any} */ ({
+        ...PANEL_SETTINGS,
+        alwaysShowCount: true,
+        alwaysShowMeta: false,
+      }),
     );
-    expect(overlay.root.classList.contains("rs-pin-meta")).toBe(true);
-    overlay.setSettings(
-      /** @type {any} */ ({ ...PANEL_SETTINGS, alwaysShowMeta: false }),
-    );
+    expect(overlay.root.classList.contains("rs-pin-count")).toBe(true);
     expect(overlay.root.classList.contains("rs-pin-meta")).toBe(false);
+    overlay.setSettings(
+      /** @type {any} */ ({
+        ...PANEL_SETTINGS,
+        alwaysShowCount: false,
+        alwaysShowMeta: true,
+      }),
+    );
+    expect(overlay.root.classList.contains("rs-pin-count")).toBe(false);
+    expect(overlay.root.classList.contains("rs-pin-meta")).toBe(true);
+  });
+
+  it("marks the corner load spinner active while a slide is loading", () => {
+    const overlay = createOverlay(noopHandlers());
+    const dot = /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-loaddot")
+    );
+    expect(dot).not.toBeNull();
+    expect(dot.classList.contains("rs-loaddot--on")).toBe(false);
+    // Rendering a slide arms the loading spinner (media never "loads" in the
+    // DOM-less test, so it stays on).
+    overlay.renderCurrent(imageSlide(), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    expect(dot.classList.contains("rs-loaddot--on")).toBe(true);
+    overlay.hide();
+    expect(dot.classList.contains("rs-loaddot--on")).toBe(false);
   });
 
   it("stops and detaches the current video on hide so audio can't keep playing", async () => {
