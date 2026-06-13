@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { createVoter } from "../../lib/reddit-vote.js";
+import { createRedditWriter } from "../../lib/reddit-write.js";
 
 /** @param {any} body @param {{ status?: number }} [opts] */
 function jsonResponse(body, { status = 200 } = {}) {
   return { ok: status >= 200 && status < 300, status, json: async () => body };
 }
 
-describe("createVoter", () => {
+describe("createRedditWriter", () => {
   it("fetches the modhash once and posts id/dir/uh, caching the token", async () => {
     /** @type {Array<{ url: string, opts: any }>} */
     const calls = [];
@@ -18,7 +18,9 @@ describe("createVoter", () => {
           : jsonResponse({});
       },
     );
-    const { vote } = createVoter({ fetchImpl: /** @type {any} */ (fetchImpl) });
+    const { vote } = createRedditWriter({
+      fetchImpl: /** @type {any} */ (fetchImpl),
+    });
 
     expect(await vote("t3_abc", 1)).toBe(true);
     await vote("t3_def", -1);
@@ -44,7 +46,9 @@ describe("createVoter", () => {
         ? jsonResponse({}, { status: 403 })
         : jsonResponse({});
     });
-    const { vote } = createVoter({ fetchImpl: /** @type {any} */ (fetchImpl) });
+    const { vote } = createRedditWriter({
+      fetchImpl: /** @type {any} */ (fetchImpl),
+    });
     expect(await vote("t3_abc", 0)).toBe(true);
     expect(voteCalls).toBe(2);
   });
@@ -53,7 +57,9 @@ describe("createVoter", () => {
     const fetchImpl = vi.fn(async () =>
       jsonResponse({ data: { modhash: "" } }),
     );
-    const { vote } = createVoter({ fetchImpl: /** @type {any} */ (fetchImpl) });
+    const { vote } = createRedditWriter({
+      fetchImpl: /** @type {any} */ (fetchImpl),
+    });
     await expect(vote("t3_abc", 1)).rejects.toThrow();
   });
 
@@ -63,7 +69,9 @@ describe("createVoter", () => {
         ? jsonResponse({ data: { modhash: "MH" } })
         : jsonResponse({}, { status: 500 }),
     );
-    const { vote } = createVoter({ fetchImpl: /** @type {any} */ (fetchImpl) });
+    const { vote } = createRedditWriter({
+      fetchImpl: /** @type {any} */ (fetchImpl),
+    });
     await expect(vote("t3_abc", 1)).rejects.toThrow();
   });
 
@@ -78,7 +86,7 @@ describe("createVoter", () => {
           : jsonResponse({});
       },
     );
-    const { blockUser } = createVoter({
+    const { blockUser } = createRedditWriter({
       fetchImpl: /** @type {any} */ (fetchImpl),
     });
     expect(await blockUser("spez")).toBe(true);
@@ -101,10 +109,10 @@ describe("createVoter", () => {
           : jsonResponse({});
       },
     );
-    const { friendUser } = createVoter({
+    const { friendUser } = createRedditWriter({
       fetchImpl: /** @type {any} */ (fetchImpl),
     });
-    expect(await friendUser("spez", "old")).toBe(true);
+    expect(await friendUser("spez")).toBe(true);
     const req = calls.find((c) => c.url.includes("/api/friend"));
     const params = new URLSearchParams(req?.opts?.body);
     expect(params.get("type")).toBe("friend");
@@ -122,7 +130,7 @@ describe("createVoter", () => {
         ? jsonResponse({}, { status: 403 })
         : jsonResponse({});
     });
-    const { blockUser } = createVoter({
+    const { blockUser } = createRedditWriter({
       fetchImpl: /** @type {any} */ (fetchImpl),
     });
     expect(await blockUser("spez")).toBe(true);

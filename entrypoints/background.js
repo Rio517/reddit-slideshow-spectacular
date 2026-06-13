@@ -16,7 +16,7 @@ import {
   MAX_MANIFEST_BYTES,
 } from "@/lib/proxy-fetch.js";
 import { audioUrlFromDash } from "@/lib/reddit-audio.js";
-import { createVoter } from "@/lib/reddit-vote.js";
+import { createRedditWriter } from "@/lib/reddit-write.js";
 import { createImageHasher } from "@/lib/image-hash.js";
 import { createLogger } from "@/lib/log.js";
 
@@ -30,8 +30,9 @@ export default defineBackground(() => {
   const redgifs = createRedgifsResolver();
   const streamable = createStreamableResolver();
   const imgur = createImgurAlbumResolver();
-  // Post voting through the logged-in session (caches the modhash).
-  const voter = createVoter();
+  // Account writes (vote / block / friend) through the logged-in session,
+  // sharing one cached modhash.
+  const writer = createRedditWriter();
   // Layer 2 dedup: fetch + decode + perceptual-hash entirely in the background,
   // returning only the hex so no image bytes cross the message boundary.
   const hashImage = createImageHasher({
@@ -78,10 +79,10 @@ export default defineBackground(() => {
     // serves it; the suggested filename comes from the slide's hint.
     downloadMedia: ({ url, filename }) =>
       browser.downloads.download({ url, filename, saveAs: false }),
-    // Up/down-key post voting through the session (cookie + modhash).
-    vote: (id, dir) => voter.vote(id, dir),
-    block: (name) => voter.blockUser(name),
-    friend: (name, frontend) => voter.friendUser(name, frontend),
+    // Account writes through the session (cookie + modhash).
+    vote: (id, dir) => writer.vote(id, dir),
+    block: (name) => writer.blockUser(name),
+    friend: (name) => writer.friendUser(name),
     openOptionsPage: () => browser.runtime.openOptionsPage(),
     // Minimal popup window (no tab strip / toolbar / URL bar) for AirPlay.
     openPopout: (url) =>

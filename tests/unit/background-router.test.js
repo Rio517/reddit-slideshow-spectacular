@@ -791,42 +791,35 @@ describe("createMessageRouter - block", () => {
 });
 
 describe("createMessageRouter - friend", () => {
-  const friendMsg = (/** @type {any} */ name, /** @type {any} */ frontend) => ({
+  const friendMsg = (/** @type {any} */ name) => ({
     type: "slideshow.friend",
-    payload: { name, frontend },
+    payload: { name },
   });
 
   it("friends a user for a content-script request", async () => {
-    /** @type {Array<[string, string]>} */
+    /** @type {string[]} */
     const friended = [];
     const router = makeRouter({
-      friend: async (
-        /** @type {string} */ name,
-        /** @type {string} */ frontend,
-      ) => {
-        friended.push([name, frontend]);
+      friend: async (/** @type {string} */ name) => {
+        friended.push(name);
         return true;
       },
     });
-    expect(await router(friendMsg("spez", "new"), OWN)).toEqual({ ok: true });
-    expect(friended).toEqual([["spez", "new"]]);
+    expect(await router(friendMsg("spez"), OWN)).toEqual({ ok: true });
+    expect(friended).toEqual(["spez"]);
   });
 
   it("rejects a friend from a non-content-script sender (no tab)", async () => {
     const router = makeRouter({ friend: async () => true });
-    expect(await router(friendMsg("spez", "old"), { id: RUNTIME_ID })).toEqual({
+    expect(await router(friendMsg("spez"), { id: RUNTIME_ID })).toEqual({
       ok: false,
     });
   });
 
-  it("rejects an invalid username or frontend", async () => {
+  it("rejects an invalid username", async () => {
     const router = makeRouter({ friend: async () => true });
-    expect(await router(friendMsg("bad name!", "old"), OWN)).toEqual({
-      ok: false,
-    });
-    expect(await router(friendMsg("spez", "mobile"), OWN)).toEqual({
-      ok: false,
-    });
+    expect(await router(friendMsg("bad name!"), OWN)).toEqual({ ok: false });
+    expect(await router(friendMsg(""), OWN)).toEqual({ ok: false });
   });
 
   it("fails closed when the friend throws", async () => {
@@ -835,6 +828,6 @@ describe("createMessageRouter - friend", () => {
         throw new Error("nope");
       },
     });
-    expect(await router(friendMsg("spez", "old"), OWN)).toEqual({ ok: false });
+    expect(await router(friendMsg("spez"), OWN)).toEqual({ ok: false });
   });
 });

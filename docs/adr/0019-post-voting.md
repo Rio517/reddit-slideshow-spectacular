@@ -17,7 +17,7 @@ listing, the current vote (`likes`: true/false/null).
 Bind the **↑/↓ keys** to upvote/downvote the current post (keys only - no
 persistent buttons), with a brief on-screen flash for feedback.
 
-- **Vote (`lib/reddit-vote.js`).** `createVoter` POSTs `id`/`dir`/`uh` to
+- **Vote (`lib/reddit-write.js`).** `createRedditWriter` POSTs `id`/`dir`/`uh` to
   `old.reddit.com/api/vote` with `credentials: "include"`. The `modhash` comes
   from `/api/me.json`, cached and refreshed once on a 403. `old.reddit.com` is
   used for both regardless of the user's frontend, since the session cookie is

@@ -150,8 +150,8 @@ export default defineContentScript({
           })
           .catch((err) => log.warn("download message failed", url, err));
       },
-      // Which Reddit frontend launched the show: drives the friend/follow
-      // wording and (via the background) the write endpoint.
+      // Which Reddit frontend launched the show: picks the friend/follow
+      // confirmation wording (the write itself is the same on both).
       frontend: window.location.hostname === "old.reddit.com" ? "old" : "new",
       // Block the current author through the session (the background holds the
       // modhash and POSTs with the session cookie).
@@ -166,12 +166,12 @@ export default defineContentScript({
           return { ok: false };
         }
       },
-      // Friend (old.reddit) / follow (new reddit) the current author.
-      friend: async (name, frontend) => {
+      // Friend / follow the current author (same write on both frontends).
+      friend: async (name) => {
         try {
           return await browser.runtime.sendMessage({
             type: "slideshow.friend",
-            payload: { name, frontend },
+            payload: { name },
           });
         } catch (err) {
           log.warn("friend message failed", err);

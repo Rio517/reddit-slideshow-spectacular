@@ -131,7 +131,7 @@ function fakeRequest(pages) {
 }
 
 /**
- * @param {{ pages?: any[], settingsOverrides?: Record<string, unknown>, openUrl?: (url: string) => void, openPopout?: () => void, saveSettings?: (patch: object) => Promise<unknown>, computeImageHash?: (url: string) => Promise<string | null>, createImage?: () => { src: string, decoding?: string }, createVideo?: () => { src: string, preload?: string, muted?: boolean }, resolveMedia?: (url: string) => Promise<string | null>, downloadMedia?: (url: string, filename: string) => void, resolveRedgifs?: (slide: any) => Promise<any>, resolveRedditAudio?: (slide: any) => Promise<string | null>, vote?: (id: string, dir: number) => Promise<any>, block?: (name: string) => Promise<{ ok?: boolean }>, friend?: (name: string, fe: string) => Promise<{ ok?: boolean }>, frontend?: "old" | "new" }} [opts]
+ * @param {{ pages?: any[], settingsOverrides?: Record<string, unknown>, openUrl?: (url: string) => void, openPopout?: () => void, saveSettings?: (patch: object) => Promise<unknown>, computeImageHash?: (url: string) => Promise<string | null>, createImage?: () => { src: string, decoding?: string }, createVideo?: () => { src: string, preload?: string, muted?: boolean }, resolveMedia?: (url: string) => Promise<string | null>, downloadMedia?: (url: string, filename: string) => void, resolveRedgifs?: (slide: any) => Promise<any>, resolveRedditAudio?: (slide: any) => Promise<string | null>, vote?: (id: string, dir: number) => Promise<any>, block?: (name: string) => Promise<{ ok?: boolean }>, friend?: (name: string) => Promise<{ ok?: boolean }>, frontend?: "old" | "new" }} [opts]
  */
 function makeSession({
   pages,
@@ -1252,13 +1252,13 @@ describe("createSlideshowSession", () => {
     expect(blocked).toEqual([]);
   });
 
-  it("friends the author with the A key, passing the frontend", async () => {
-    /** @type {Array<[string, string]>} */
+  it("follows the author with the A key and uses new-reddit wording", async () => {
+    /** @type {string[]} */
     const friended = [];
     const { session } = makeSession({
       frontend: "new",
-      friend: async (name, fe) => {
-        friended.push([name, fe]);
+      friend: async (name) => {
+        friended.push(name);
         return { ok: true };
       },
       pages: [
@@ -1273,7 +1273,9 @@ describe("createSlideshowSession", () => {
     await session.start();
     session.handleKeydown(key("a"));
     await flush();
-    expect(friended).toEqual([["spez", "new"]]);
+    expect(friended).toEqual(["spez"]);
+    // frontend "new" picks the "Following …" wording (vs "Friended …" on old).
+    expect(text(".rs-vote-flash")).toContain("Following");
     expect(text(".rs-vote-flash")).toContain("spez");
   });
 
@@ -1315,7 +1317,41 @@ describe("createSlideshowSession", () => {
     await session.start();
     session.handleKeydown(key("a"));
     await flush();
+    // The optimistic "Following u/spez" flash is replaced by the error flash.
     expect(text(".rs-vote-flash")).toContain("Couldn't");
+    expect(text(".rs-vote-flash")).not.toContain("spez");
+  });
+
+  it("ignores auto-repeat for the block and friend keys", async () => {
+    /** @type {string[]} */
+    const blocked = [];
+    /** @type {string[]} */
+    const friended = [];
+    const { session } = makeSession({
+      block: async (name) => {
+        blocked.push(name);
+        return { ok: true };
+      },
+      friend: async (name) => {
+        friended.push(name);
+        return { ok: true };
+      },
+      pages: [
+        {
+          slides: [imageSlide("a", { author: "spez" })],
+          after: null,
+          exhausted: true,
+          postsScanned: 1,
+        },
+      ],
+    });
+    await session.start();
+    // A held key auto-repeats; the write actions must not fire on the repeats.
+    session.handleKeydown({ ...key("i"), repeat: true });
+    session.handleKeydown({ ...key("a"), repeat: true });
+    await flush();
+    expect(blocked).toEqual([]);
+    expect(friended).toEqual([]);
   });
 });
 
