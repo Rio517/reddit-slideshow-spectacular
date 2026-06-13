@@ -986,11 +986,13 @@ iframe.reddit-slideshow-media {
 /* Small corner spinner shown only while the chrome is idle-hidden and the next
    media is loading - the title-row spinner is faded then, so this is the only
    loading feedback. Stays hidden when the meta is pinned (its title spinner is
-   still visible) or when the chrome is awake. */
+   still visible) or when the chrome is awake. Sits above the buffering
+   indicator (bottom: 34px) so the two never overlap when a slide load and a
+   next-page fetch coincide near the end of a page. */
 .rs-loaddot {
   position: absolute;
   inset-inline-end: 24px;
-  bottom: 34px;
+  bottom: 60px;
   z-index: 8;
   opacity: 0;
   transition: opacity 0.2s ease;
