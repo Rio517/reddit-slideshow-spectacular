@@ -135,6 +135,7 @@ describe("getSettings / saveSettings", () => {
       includeNsfw: false,
       dedupe: false,
       contentDedup: true,
+      alwaysShowCount: true,
       alwaysShowMeta: true,
       maxLoadWaitSeconds: 10,
       transition: "fade",
@@ -172,6 +173,27 @@ describe("locale setting", () => {
   });
   it("exposes the supported set including auto", () => {
     expect(UI_LOCALES).toEqual(["auto", "en", "es", "fr", "de", "it", "ar"]);
+  });
+});
+
+describe("alwaysShowCount split", () => {
+  it("defaults alwaysShowCount to true", () => {
+    expect(normalizeSettings({}).alwaysShowCount).toBe(true);
+  });
+
+  it("carries a pre-split alwaysShowMeta=false over to alwaysShowCount", () => {
+    const s = normalizeSettings({ alwaysShowMeta: false });
+    expect(s.alwaysShowMeta).toBe(false);
+    expect(s.alwaysShowCount).toBe(false);
+  });
+
+  it("lets an explicit alwaysShowCount override the carried value", () => {
+    const s = normalizeSettings({
+      alwaysShowMeta: false,
+      alwaysShowCount: true,
+    });
+    expect(s.alwaysShowCount).toBe(true);
+    expect(s.alwaysShowMeta).toBe(false);
   });
 });
 

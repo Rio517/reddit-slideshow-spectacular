@@ -93,6 +93,7 @@ function settings(overrides) {
     includeNsfw: true,
     dedupe: true,
     contentDedup: false,
+    alwaysShowCount: true,
     alwaysShowMeta: true,
     maxLoadWaitSeconds: 5,
     transition: "fade",
