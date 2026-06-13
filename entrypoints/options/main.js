@@ -37,6 +37,7 @@ const startMuted = requiredElement("#startMuted", HTMLInputElement);
 const includeNsfw = requiredElement("#includeNsfw", HTMLInputElement);
 const dedupe = requiredElement("#dedupe", HTMLInputElement);
 const alwaysShowMeta = requiredElement("#alwaysShowMeta", HTMLInputElement);
+const alwaysShowCount = requiredElement("#alwaysShowCount", HTMLInputElement);
 const maxLoadWait = requiredElement("#maxLoadWaitSeconds", HTMLInputElement);
 const maxLoadWaitValue = requiredElement(
   "#maxLoadWaitValue",
@@ -110,6 +111,7 @@ async function load() {
   includeNsfw.checked = settings.includeNsfw;
   dedupe.checked = settings.dedupe;
   alwaysShowMeta.checked = settings.alwaysShowMeta;
+  alwaysShowCount.checked = settings.alwaysShowCount;
   maxLoadWait.value = String(settings.maxLoadWaitSeconds);
   maxLoadWaitValue.textContent = String(settings.maxLoadWaitSeconds);
   transition.value = settings.transition;
@@ -134,6 +136,7 @@ async function persist() {
       includeNsfw: includeNsfw.checked,
       dedupe: dedupe.checked,
       alwaysShowMeta: alwaysShowMeta.checked,
+      alwaysShowCount: alwaysShowCount.checked,
       maxLoadWaitSeconds: Number(maxLoadWait.value),
       transition: transition.value,
       timerBar: timerBarValue(),
@@ -163,6 +166,7 @@ startMuted.addEventListener("change", persist);
 includeNsfw.addEventListener("change", persist);
 dedupe.addEventListener("change", persist);
 alwaysShowMeta.addEventListener("change", persist);
+alwaysShowCount.addEventListener("change", persist);
 maxLoadWait.addEventListener("input", () => {
   maxLoadWaitValue.textContent = maxLoadWait.value;
 });

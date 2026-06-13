@@ -16,6 +16,7 @@ const SETTINGS = {
   includeNsfw: false,
   dedupe: false,
   contentDedup: false,
+  alwaysShowCount: false,
   alwaysShowMeta: false,
   maxLoadWaitSeconds: 10,
   timerBar: "video",
@@ -47,8 +48,9 @@ describe("createSettingsPanel", () => {
     expect(range.value).toBe(String(imageTimerStopIndex(8)));
     // Max load wait now lives only in the full options page.
     expect(document.querySelector(".rs-set__select")).toBeNull();
-    // autoplay, start-muted, NSFW, dedupe, pan-zoom, always-show-meta - all false here
+    // autoplay, start-muted, NSFW, dedupe, pan-zoom, always-show-count, always-show-meta - all false here
     expect([...checks].map((c) => c.checked)).toEqual([
+      false,
       false,
       false,
       false,
@@ -112,6 +114,24 @@ describe("createSettingsPanel", () => {
     autoplay.checked = true;
     autoplay.dispatchEvent(new Event("change", { bubbles: true }));
     expect(onChange).toHaveBeenCalledWith({ autoplay: true });
+  });
+
+  it("reflects alwaysShowCount and emits its patch on toggle", () => {
+    const { panel, onChange } = make();
+    panel.setValues(
+      /** @type {any} */ ({ ...SETTINGS, alwaysShowCount: true }),
+    );
+    // Checkbox rows are `.rs-set__check`; label text lives in the span child.
+    // After the i18n task the English label is "Always show the count & skips"
+    // - the only one containing "count".
+    const row = [...document.querySelectorAll(".rs-set__check")].find((r) =>
+      /count/i.test(r.querySelector("span")?.textContent ?? ""),
+    );
+    const box = /** @type {HTMLInputElement} */ (row?.querySelector("input"));
+    expect(box.checked).toBe(true);
+    box.checked = false;
+    box.dispatchEvent(new Event("change", { bubbles: true }));
+    expect(onChange).toHaveBeenCalledWith({ alwaysShowCount: false });
   });
 
   it("labels the timer-bar radios as a radiogroup", () => {

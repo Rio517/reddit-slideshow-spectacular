@@ -27,6 +27,13 @@ describe("options page footer", () => {
   });
 });
 
+describe("options page always-show toggles", () => {
+  it("has separate count and meta checkboxes", () => {
+    expect(doc.querySelector("#alwaysShowCount")).not.toBeNull();
+    expect(doc.querySelector("#alwaysShowMeta")).not.toBeNull();
+  });
+});
+
 describe("options page language picker", () => {
   it("has a language select with auto + the six locales", () => {
     const sel = doc.querySelector("#locale");
