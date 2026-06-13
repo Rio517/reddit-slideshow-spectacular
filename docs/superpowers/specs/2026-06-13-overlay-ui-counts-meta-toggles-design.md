@@ -56,8 +56,12 @@ root.classList.toggle("rs-pin-meta", s.alwaysShowMeta);
 The combined idle-exemption rule (`assets/overlay.css:593-596`) splits in two:
 
 ```css
-#reddit-slideshow-root.rs-pin-count.rs-idle .rs-topleft { opacity: 1; }
-#reddit-slideshow-root.rs-pin-meta.rs-idle .rs-meta { opacity: 1; }
+#reddit-slideshow-root.rs-pin-count.rs-idle .rs-topleft {
+  opacity: 1;
+}
+#reddit-slideshow-root.rs-pin-meta.rs-idle .rs-meta {
+  opacity: 1;
+}
 ```
 
 The base idle fade (`overlay.css:578-584`, which fades `.rs-controls`,
@@ -72,7 +76,7 @@ Applies to the **position counter** (`.rs-meta__counter`, base style
 keeping box geometry identical so nothing shifts:
 
 - **Rest:** `background: transparent; border-color: transparent;
-  color: var(--rs-muted)` — keep the existing `padding: 4px 9px` and
+color: var(--rs-muted)` — keep the existing `padding: 4px 9px` and
   `border: 1px solid` (transparent), so the resting box equals the hover box.
 - **Hover:** restore the current pill — `background` + `border-color` + accent
   text (counter) / danger tint (skipped). Only color/background transition;
@@ -101,14 +105,19 @@ hidden **and** the meta isn't pinned (so the visible title spinner already
 covers the other cases — no double spinner):
 
 ```css
-.rs-loaddot { opacity: 0; transition: opacity 0.2s ease; }
-#reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-loaddot--on { opacity: 1; }
+.rs-loaddot {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+#reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-loaddot--on {
+  opacity: 1;
+}
 ```
 
 It lives permanently in the DOM at `opacity: 0`; the `--on` class plus the
 idle-not-pinned selector are the only things that reveal it (no `hidden`
 attribute toggling). It shares the bottom-inline-end corner with `.rs-buffering`,
-which is fine — buffering (a stalled *current* video) and loading (the *next*
+which is fine — buffering (a stalled _current_ video) and loading (the _next_
 media arriving) don't co-occur in practice.
 
 Hand-off: chrome visible → title spinner (unchanged); idle + meta pinned →

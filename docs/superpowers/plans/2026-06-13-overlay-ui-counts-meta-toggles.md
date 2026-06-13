@@ -9,6 +9,7 @@
 **Tech Stack:** WXT (MV3), framework-free JS + JSDoc, Vitest (happy-dom), WebExtension `_locales` i18n, plain CSS in `assets/overlay.css`.
 
 **Conventions for every commit:**
+
 - Commit **locally only — never `git push`** (the maintainer pushes manually).
 - Work stays on `main` (no branches/worktrees).
 - End each commit message with the trailer shown in the commit steps.
@@ -31,6 +32,7 @@
 ## Task 1: Settings model + carry-over migration
 
 **Files:**
+
 - Modify: `lib/settings.js`
 - Test: `tests/unit/settings.test.js`
 
@@ -51,7 +53,10 @@ describe("alwaysShowCount split", () => {
   });
 
   it("lets an explicit alwaysShowCount override the carried value", () => {
-    const s = normalizeSettings({ alwaysShowMeta: false, alwaysShowCount: true });
+    const s = normalizeSettings({
+      alwaysShowMeta: false,
+      alwaysShowCount: true,
+    });
     expect(s.alwaysShowCount).toBe(true);
     expect(s.alwaysShowMeta).toBe(false);
   });
@@ -120,6 +125,7 @@ git commit -m "feat(settings): split alwaysShowMeta into alwaysShowCount + alway
 Add three new keys and reword three existing ones, in all six source catalogs, then regenerate the built catalogs. (The catalog test requires every locale to carry the exact same key set.)
 
 **Files:**
+
 - Modify: `locales/{en,es,fr,de,it,ar}.json`
 - Regenerated: `public/_locales/**`
 - Test: `tests/unit/i18n-catalog.test.js` (existing)
@@ -127,6 +133,7 @@ Add three new keys and reword three existing ones, in all six source catalogs, t
 - [ ] **Step 1: Reword the existing keys in `locales/en.json`**
 
 Replace `settingsAlwaysShowMeta` (`locales/en.json:174-177`) message with `"Always show the title & byline"` (keep its `description`). Then find `optAlwaysShowMeta` and `optAlwaysShowMetaHint` and set:
+
 - `optAlwaysShowMeta` message → `"Always show the title & byline"`
 - `optAlwaysShowMetaHint` message → `"Keep the post's title and byline visible even when the controls auto-hide."`
 
@@ -154,30 +161,35 @@ Add (place `settingsAlwaysShowCount` next to `settingsAlwaysShowMeta`; the `opt*
 In each of `es, fr, de, it, ar`, reword the three existing keys and add the three new ones, keeping each file's English `description` strings. Translated `message` values:
 
 `es.json`:
+
 - settingsAlwaysShowMeta / optAlwaysShowMeta: `"Mostrar siempre el título y la firma"`
 - optAlwaysShowMetaHint: `"Mantén visibles el título y la firma de la publicación aunque los controles se oculten."`
 - settingsAlwaysShowCount / optAlwaysShowCount: `"Mostrar siempre el contador y los omitidos"`
 - optAlwaysShowCountHint: `"Mantén visibles el contador de posición y el indicador de omitidos aunque los controles se oculten, para que un salto en el conteo siga explicado."`
 
 `fr.json`:
+
 - settingsAlwaysShowMeta / optAlwaysShowMeta: `"Toujours afficher le titre et la signature"`
 - optAlwaysShowMetaHint: `"Gardez le titre et la signature de la publication visibles même lorsque les contrôles se masquent."`
 - settingsAlwaysShowCount / optAlwaysShowCount: `"Toujours afficher le compteur et les ignorés"`
 - optAlwaysShowCountHint: `"Gardez le compteur de position et le badge d'ignorés visibles même lorsque les contrôles se masquent, pour qu'un écart dans le décompte reste expliqué."`
 
 `de.json`:
+
 - settingsAlwaysShowMeta / optAlwaysShowMeta: `"Titel und Infozeile immer anzeigen"`
 - optAlwaysShowMetaHint: `"Titel und Infozeile des Beitrags sichtbar halten, auch wenn die Steuerung ausgeblendet wird."`
 - settingsAlwaysShowCount / optAlwaysShowCount: `"Zähler und Übersprungene immer anzeigen"`
 - optAlwaysShowCountHint: `"Positionszähler und Übersprungen-Abzeichen sichtbar halten, auch wenn die Steuerung ausgeblendet wird, damit eine Lücke in der Zählung erklärt bleibt."`
 
 `it.json`:
+
 - settingsAlwaysShowMeta / optAlwaysShowMeta: `"Mostra sempre il titolo e la didascalia"`
 - optAlwaysShowMetaHint: `"Mantieni visibili il titolo e la didascalia del post anche quando i controlli si nascondono."`
 - settingsAlwaysShowCount / optAlwaysShowCount: `"Mostra sempre il contatore e i saltati"`
 - optAlwaysShowCountHint: `"Mantieni visibili il contatore di posizione e il badge dei saltati anche quando i controlli si nascondono, così un salto nel conteggio resta spiegato."`
 
 `ar.json`:
+
 - settingsAlwaysShowMeta / optAlwaysShowMeta: `"إظهار العنوان وسطر المعلومات دائمًا"`
 - optAlwaysShowMetaHint: `"أبقِ عنوان المنشور وسطر معلوماته ظاهرين حتى عند إخفاء عناصر التحكم."`
 - settingsAlwaysShowCount / optAlwaysShowCount: `"إظهار العدّاد والعناصر المتخطّاة دائمًا"`
@@ -205,6 +217,7 @@ git commit -m "i18n: split the always-show label into count and title/byline" -m
 ## Task 3: Overlay — second pin class + corner spinner element
 
 **Files:**
+
 - Modify: `lib/overlay-ui.js`
 - Test: `tests/unit/overlay-ui.test.js`
 
@@ -213,48 +226,48 @@ git commit -m "i18n: split the always-show label into count and title/byline" -m
 In `tests/unit/overlay-ui.test.js`, replace the existing test "pins the meta with rs-pin-meta only when alwaysShowMeta is set" (`:1017-1027`) with two tests covering both classes, and add a loaddot lifecycle test. (The suite's `PANEL_SETTINGS` at `:34` lacks `alwaysShowCount`; spreads with explicit keys below cover it.)
 
 ```js
-  it("pins counts and meta independently via rs-pin-count / rs-pin-meta", () => {
-    const overlay = createOverlay(noopHandlers());
-    overlay.setSettings(
-      /** @type {any} */ ({
-        ...PANEL_SETTINGS,
-        alwaysShowCount: true,
-        alwaysShowMeta: false,
-      }),
-    );
-    expect(overlay.root.classList.contains("rs-pin-count")).toBe(true);
-    expect(overlay.root.classList.contains("rs-pin-meta")).toBe(false);
-    overlay.setSettings(
-      /** @type {any} */ ({
-        ...PANEL_SETTINGS,
-        alwaysShowCount: false,
-        alwaysShowMeta: true,
-      }),
-    );
-    expect(overlay.root.classList.contains("rs-pin-count")).toBe(false);
-    expect(overlay.root.classList.contains("rs-pin-meta")).toBe(true);
-  });
+it("pins counts and meta independently via rs-pin-count / rs-pin-meta", () => {
+  const overlay = createOverlay(noopHandlers());
+  overlay.setSettings(
+    /** @type {any} */ ({
+      ...PANEL_SETTINGS,
+      alwaysShowCount: true,
+      alwaysShowMeta: false,
+    }),
+  );
+  expect(overlay.root.classList.contains("rs-pin-count")).toBe(true);
+  expect(overlay.root.classList.contains("rs-pin-meta")).toBe(false);
+  overlay.setSettings(
+    /** @type {any} */ ({
+      ...PANEL_SETTINGS,
+      alwaysShowCount: false,
+      alwaysShowMeta: true,
+    }),
+  );
+  expect(overlay.root.classList.contains("rs-pin-count")).toBe(false);
+  expect(overlay.root.classList.contains("rs-pin-meta")).toBe(true);
+});
 
-  it("marks the corner load spinner active while a slide is loading", () => {
-    const overlay = createOverlay(noopHandlers());
-    const dot = /** @type {HTMLElement} */ (
-      overlay.root.querySelector(".rs-loaddot")
-    );
-    expect(dot).not.toBeNull();
-    expect(dot.classList.contains("rs-loaddot--on")).toBe(false);
-    // Rendering a slide arms the loading spinner (media never "loads" in the
-    // DOM-less test, so it stays on).
-    overlay.renderCurrent(imageSlide(), {
-      index: 0,
-      total: 1,
-      exhausted: true,
-      effectiveSeconds: 5,
-      playing: true,
-    });
-    expect(dot.classList.contains("rs-loaddot--on")).toBe(true);
-    overlay.hide();
-    expect(dot.classList.contains("rs-loaddot--on")).toBe(false);
+it("marks the corner load spinner active while a slide is loading", () => {
+  const overlay = createOverlay(noopHandlers());
+  const dot = /** @type {HTMLElement} */ (
+    overlay.root.querySelector(".rs-loaddot")
+  );
+  expect(dot).not.toBeNull();
+  expect(dot.classList.contains("rs-loaddot--on")).toBe(false);
+  // Rendering a slide arms the loading spinner (media never "loads" in the
+  // DOM-less test, so it stays on).
+  overlay.renderCurrent(imageSlide(), {
+    index: 0,
+    total: 1,
+    exhausted: true,
+    effectiveSeconds: 5,
+    playing: true,
   });
+  expect(dot.classList.contains("rs-loaddot--on")).toBe(true);
+  overlay.hide();
+  expect(dot.classList.contains("rs-loaddot--on")).toBe(false);
+});
 ```
 
 - [ ] **Step 2: Run the tests to verify they fail**
@@ -267,11 +280,11 @@ Expected: FAIL — `rs-pin-count` never set; `.rs-loaddot` not found.
 In `lib/overlay-ui.js`, right after the `loading` element block (`:456-459`, the `const loading = …; loading.append(...)`), add:
 
 ```js
-  // A small corner spinner shown only while the chrome is hidden and the next
-  // media is loading - the title-row spinner is invisible then (see CSS).
-  const loaddot = doc.createElement("div");
-  loaddot.className = "rs-loaddot";
-  loaddot.append(doc.createElement("span"));
+// A small corner spinner shown only while the chrome is hidden and the next
+// media is loading - the title-row spinner is invisible then (see CSS).
+const loaddot = doc.createElement("div");
+loaddot.className = "rs-loaddot";
+loaddot.append(doc.createElement("span"));
 ```
 
 Add it to the `root.append(...)` list (`:560-575`) — insert `loaddot,` right after `loading,`:
@@ -286,14 +299,14 @@ Add it to the `root.append(...)` list (`:560-575`) — insert `loaddot,` right a
 Replace `showTitleSpinner` / `hideTitleSpinner` (`:682-687`) with:
 
 ```js
-  function showTitleSpinner() {
-    titleSpinner.classList.add("rs-meta__spinner--on");
-    loaddot.classList.add("rs-loaddot--on");
-  }
-  function hideTitleSpinner() {
-    titleSpinner.classList.remove("rs-meta__spinner--on");
-    loaddot.classList.remove("rs-loaddot--on");
-  }
+function showTitleSpinner() {
+  titleSpinner.classList.add("rs-meta__spinner--on");
+  loaddot.classList.add("rs-loaddot--on");
+}
+function hideTitleSpinner() {
+  titleSpinner.classList.remove("rs-meta__spinner--on");
+  loaddot.classList.remove("rs-loaddot--on");
+}
 ```
 
 (`hide()` already calls `hideTitleSpinner()` at `:1482`, so the spinner can't persist across opens.)
@@ -304,8 +317,8 @@ In `setSettings` (`:1572`), replace the single line
 `root.classList.toggle("rs-pin-meta", s.alwaysShowMeta);` with:
 
 ```js
-      root.classList.toggle("rs-pin-count", s.alwaysShowCount);
-      root.classList.toggle("rs-pin-meta", s.alwaysShowMeta);
+root.classList.toggle("rs-pin-count", s.alwaysShowCount);
+root.classList.toggle("rs-pin-meta", s.alwaysShowMeta);
 ```
 
 - [ ] **Step 6: Run the tests to verify they pass**
@@ -327,6 +340,7 @@ git commit -m "feat(overlay): split count/meta pinning and add a corner load spi
 No unit test (CSS rendering isn't asserted in happy-dom). The gate's `format` + `build` must pass, and the existing overlay tests must stay green. Real-browser verification is in Task 6.
 
 **Files:**
+
 - Modify: `assets/overlay.css`
 
 - [ ] **Step 1: Split the idle-exemption rule**
@@ -463,6 +477,7 @@ git commit -m "style(overlay): subtle counts with hover pill, split pin rule, lo
 ## Task 5: Settings UI — overlay panel + options page
 
 **Files:**
+
 - Modify: `lib/overlay-settings.js`, `entrypoints/options/index.html`, `entrypoints/options/main.js`
 - Test: `tests/unit/overlay-settings.test.js`, `tests/unit/options-page.test.js`
 
@@ -471,21 +486,21 @@ git commit -m "style(overlay): subtle counts with hover pill, split pin rule, lo
 (a) In `tests/unit/overlay-settings.test.js`, add `alwaysShowCount: false` to the `SETTINGS` fixture (next to `alwaysShowMeta: false` at `:19`), then add:
 
 ```js
-  it("reflects alwaysShowCount and emits its patch on toggle", () => {
-    const { panel, onChange } = make();
-    panel.setValues(/** @type {any} */ ({ ...SETTINGS, alwaysShowCount: true }));
-    // Checkbox rows are `.rs-set__check`; the label text lives in `.rs-set__label`
-    // (mirrors the existing checkbox-toggle test). After Task 2 the English label
-    // is "Always show the count & skips" — the only one containing "count".
-    const row = [...panel.root.querySelectorAll(".rs-set__check")].find((r) =>
-      /count/i.test(r.querySelector(".rs-set__label")?.textContent ?? ""),
-    );
-    const box = /** @type {HTMLInputElement} */ (row?.querySelector("input"));
-    expect(box.checked).toBe(true);
-    box.checked = false;
-    box.dispatchEvent(new Event("change", { bubbles: true }));
-    expect(onChange).toHaveBeenCalledWith({ alwaysShowCount: false });
-  });
+it("reflects alwaysShowCount and emits its patch on toggle", () => {
+  const { panel, onChange } = make();
+  panel.setValues(/** @type {any} */ ({ ...SETTINGS, alwaysShowCount: true }));
+  // Checkbox rows are `.rs-set__check`; the label text lives in `.rs-set__label`
+  // (mirrors the existing checkbox-toggle test). After Task 2 the English label
+  // is "Always show the count & skips" — the only one containing "count".
+  const row = [...panel.root.querySelectorAll(".rs-set__check")].find((r) =>
+    /count/i.test(r.querySelector(".rs-set__label")?.textContent ?? ""),
+  );
+  const box = /** @type {HTMLInputElement} */ (row?.querySelector("input"));
+  expect(box.checked).toBe(true);
+  box.checked = false;
+  box.dispatchEvent(new Event("change", { bubbles: true }));
+  expect(onChange).toHaveBeenCalledWith({ alwaysShowCount: false });
+});
 ```
 
 (b) In `tests/unit/options-page.test.js`, add:
@@ -509,18 +524,18 @@ Expected: FAIL — no `alwaysShowCount` checkbox / `#alwaysShowCount` element.
 In `lib/overlay-settings.js`, add a checkbox next to `alwaysShowMeta` (`:93-95`):
 
 ```js
-  const alwaysShowCount = checkbox(doc, t("settingsAlwaysShowCount"), (v) =>
-    handlers.onChange({ alwaysShowCount: v }),
-  );
-  const alwaysShowMeta = checkbox(doc, t("settingsAlwaysShowMeta"), (v) =>
-    handlers.onChange({ alwaysShowMeta: v }),
-  );
+const alwaysShowCount = checkbox(doc, t("settingsAlwaysShowCount"), (v) =>
+  handlers.onChange({ alwaysShowCount: v }),
+);
+const alwaysShowMeta = checkbox(doc, t("settingsAlwaysShowMeta"), (v) =>
+  handlers.onChange({ alwaysShowMeta: v }),
+);
 ```
 
 Append its row in `root.append(...)` (`:96-103`) — add `alwaysShowCount.row,` directly before `alwaysShowMeta.row,`. In `setValues` (`:129`), add directly before the `alwaysShowMeta.input.checked` line:
 
 ```js
-    alwaysShowCount.input.checked = s.alwaysShowCount;
+alwaysShowCount.input.checked = s.alwaysShowCount;
 ```
 
 - [ ] **Step 4: Add the options-page checkbox (HTML)**
@@ -530,28 +545,30 @@ In `entrypoints/options/index.html`, insert a new `<label>` block directly befor
 New block (before `:480`):
 
 ```html
-      <label class="check">
-        <input id="alwaysShowCount" type="checkbox" />
-        <span>
-          <span data-i18n="optAlwaysShowCount"
-            >Always show the count &amp; skips</span
-          >
-          <span class="hint" data-i18n="optAlwaysShowCountHint">
-            Keep the position counter and skipped-count badge visible even when
-            the controls auto-hide, so a gap in the count from a skipped item
-            stays explained.
-          </span>
-        </span>
-      </label>
+<label class="check">
+  <input id="alwaysShowCount" type="checkbox" />
+  <span>
+    <span data-i18n="optAlwaysShowCount"
+      >Always show the count &amp; skips</span
+    >
+    <span class="hint" data-i18n="optAlwaysShowCountHint">
+      Keep the position counter and skipped-count badge visible even when the
+      controls auto-hide, so a gap in the count from a skipped item stays
+      explained.
+    </span>
+  </span>
+</label>
 ```
 
 Reword the existing meta block (`:483-489`) inline fallback text:
+
 - the `optAlwaysShowMeta` span text → `Always show the title &amp; byline`
 - the `optAlwaysShowMetaHint` text → `Keep the post's title and byline visible even when the controls auto-hide.`
 
 - [ ] **Step 5: Wire the options-page checkbox (JS)**
 
 In `entrypoints/options/main.js`:
+
 - After the `alwaysShowMeta` element (`:39`):
 
 ```js
@@ -561,7 +578,7 @@ const alwaysShowCount = requiredElement("#alwaysShowCount", HTMLInputElement);
 - In the load function, after `alwaysShowMeta.checked = settings.alwaysShowMeta;` (`:112`):
 
 ```js
-  alwaysShowCount.checked = settings.alwaysShowCount;
+alwaysShowCount.checked = settings.alwaysShowCount;
 ```
 
 - In `persist()`, after `alwaysShowMeta: alwaysShowMeta.checked,` (`:136`):
@@ -604,11 +621,13 @@ npm test
 npm run build
 npm run webext:lint
 ```
+
 Expected: all PASS; web-ext `0 errors, 0 warnings, 0 notices`.
 
 - [ ] **Step 2: Real-browser check (load `.output/firefox-mv3/` as a temporary add-on)**
 
 Confirm the CSS-rendered behavior the unit tests can't:
+
 - The options page and overlay gear each show **two** toggles (counts; title & byline). Toggling each independently pins/unpins only its cluster after the chrome idles.
 - The position counter and skipped badge render as quiet text and gain the pill background/border on hover **without the text shifting**.
 - With the meta unpinned, idle the chrome over a slow-loading slide: the small corner spinner appears (held frame stays visible); it disappears when the slide is ready or on mousemove.
