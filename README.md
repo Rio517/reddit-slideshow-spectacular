@@ -57,8 +57,11 @@ live, no reload:
   hash
 - **Pan & zoom** for images too big to see at once - a slow push-in and drift
   across, with full control of the sequence
-- **Always show the position counter, title & skipped count** so a gap in the
-  count from a skipped item stays explained even after the controls fade
+- **Always show the count & skips** - keep the position counter and
+  skipped-count badge up even after the controls fade, so a gap from a skipped
+  item stays explained
+- **Always show the title & byline** - keep the post's title and byline up even
+  after the controls fade
 
 ## Install
 
