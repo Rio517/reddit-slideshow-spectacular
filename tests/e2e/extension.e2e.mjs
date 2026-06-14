@@ -208,6 +208,44 @@ async function main() {
       assert.equal(slide2.author, "/u/second_user");
       assert.equal(slide2.res, "1600×900");
     });
+
+    // Regression: the chrome must still auto-hide after the idle dwell even when
+    // a control keeps focus from a *mouse* click - focus-visible is false then,
+    // so focusInChrome() no longer pins it open. (jsdom can't tell mouse from
+    // keyboard focus, so this only reproduces in a real browser.)
+    const btnBox = await page.evaluate(() => {
+      const sr = document.querySelector("#reddit-slideshow-host")?.shadowRoot;
+      const r = sr
+        ?.querySelector(".rs-controls .rs-btn")
+        ?.getBoundingClientRect();
+      return r ? { x: r.x + r.width / 2, y: r.y + r.height / 2 } : null;
+    });
+    if (btnBox) {
+      await page.mouse.click(btnBox.x, btnBox.y); // focus lands on the control
+      await page.mouse.move(640, 400); // pointer off the rail, as if watching
+    }
+    const wentIdle = await page
+      .waitForFunction(
+        () => {
+          const sr = document.querySelector(
+            "#reddit-slideshow-host",
+          )?.shadowRoot;
+          const root = sr?.getElementById("reddit-slideshow-root");
+          const controls = sr?.querySelector(".rs-controls");
+          return Boolean(
+            root?.classList.contains("rs-idle") &&
+            controls &&
+            window.getComputedStyle(controls).opacity === "0",
+          );
+        },
+        { timeout: 6000 },
+      )
+      .then(() => true)
+      .catch(() => false);
+    check(
+      "the chrome auto-hides on idle even with a mouse-focused control",
+      () => assert.equal(wentIdle, true),
+    );
   } finally {
     await context.close();
     await rm(userDataDir, { recursive: true, force: true });
