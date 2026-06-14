@@ -16,9 +16,14 @@ Reddit Slideshow Spectacular! convierte tus feeds de Reddit en un pase de diapos
 
 El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves de API, sin inicio de sesión adicional y sin cuentas extra. Recorre las publicaciones multimedia en el orden en que Reddit las devuelve y avanza por el feed de forma automática, de modo que el pase de diapositivas continúa más allá de la primera página.
 
-NOVEDADES - V1.1.0
+NOVEDADES - V1.2.0
 
-Se ha añadido compatibilidad con varios idiomas: español, alemán, francés, italiano y árabe.
+- Nuevos atajos de teclado: D para descargar la imagen o el vídeo actual, I para bloquear al autor (y omitir su publicación), y A para agregarlo como amigo o seguirlo
+- Ajustes independientes «Mostrar siempre el contador y los omitidos» y «Mostrar siempre el título y la firma»
+- Un contador de posición y un indicador de omitidos más discretos, con un pequeño indicador giratorio en la esquina mientras se carga la siguiente diapositiva
+- Corregido: los controles ahora se ocultan al estar inactivos incluso después de hacer clic en uno con el ratón
+
+Notas completas de la versión: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.2.0
 
 QUÉ REPRODUCE
 

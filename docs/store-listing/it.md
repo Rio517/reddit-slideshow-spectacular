@@ -16,9 +16,14 @@ Reddit Slideshow Spectacular! trasforma i tuoi feed Reddit in una presentazione 
 
 La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave API, nessun accesso aggiuntivo, nessun account extra. Scorre i post multimediali nell'ordine in cui Reddit li restituisce e sfoglia automaticamente il feed, così la presentazione prosegue oltre la prima pagina.
 
-NOVITÀ - V1.1.0
+NOVITÀ - V1.2.0
 
-Aggiunto il supporto per più lingue: spagnolo, tedesco, francese, italiano e arabo.
+- Nuove scorciatoie da tastiera: D per scaricare l'immagine o il video corrente, I per bloccare l'autore (e saltare il suo post) e A per aggiungerlo agli amici o seguirlo
+- Impostazioni separate «Mostra sempre il contatore e i saltati» e «Mostra sempre il titolo e la didascalia»
+- Un contatore di posizione e un indicatore dei saltati più discreti, con un piccolo indicatore di caricamento nell'angolo mentre si carica la diapositiva successiva
+- Corretto: i controlli ora si nascondono quando inattivi anche dopo aver fatto clic su uno con il mouse
+
+Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.2.0
 
 COSA RIPRODUCE
 

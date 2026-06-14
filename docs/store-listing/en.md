@@ -16,9 +16,14 @@ Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard
 
 The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
 
-WHAT'S NEW - V1.1.0
+WHAT'S NEW - V1.2.0
 
-Added support for multiple languages - Spanish, German, French, Italian, and Arabic.
+- New keyboard shortcuts: D to download the current image or video, I to block the author (and skip their post), and A to friend/follow the author
+- Separate "always show the count & skips" and "always show the title & byline" toggles
+- A quieter position counter and skipped-count badge, with a small corner spinner while the next slide loads
+- Fixed: the controls now hide when idle even after you click one with the mouse
+
+Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.2.0
 
 WHAT IT PLAYS
 

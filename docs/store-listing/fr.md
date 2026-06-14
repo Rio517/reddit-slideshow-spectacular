@@ -16,9 +16,14 @@ Reddit Slideshow Spectacular! transforme vos fils Reddit en un diaporama multim�
 
 Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API, aucune connexion supplémentaire, aucun compte additionnel. Il parcourt les publications multimédia dans l'ordre où Reddit les renvoie et pagine automatiquement le fil, de sorte que le diaporama se poursuit au-delà de la première page.
 
-NOUVEAUTÉS — V1.1.0
+NOUVEAUTÉS — V1.2.0
 
-Prise en charge de plusieurs langues ajoutée : espagnol, allemand, français, italien et arabe.
+- Nouveaux raccourcis clavier : D pour télécharger l'image ou la vidéo en cours, I pour bloquer l'auteur (et passer sa publication), et A pour l'ajouter en ami ou le suivre
+- Réglages distincts « Toujours afficher le compteur et les ignorés » et « Toujours afficher le titre et la signature »
+- Un compteur de position et un indicateur d'éléments ignorés plus discrets, avec un petit indicateur de chargement dans le coin pendant le chargement de la diapositive suivante
+- Corrigé : les contrôles se masquent désormais en cas d'inactivité, même après avoir cliqué sur l'un d'eux à la souris
+
+Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.2.0
 
 CE QU'IL DIFFUSE
 

@@ -16,9 +16,14 @@ Reddit Slideshow Spectacular! verwandelt deine Reddit-Feeds in eine bildschirmf�
 
 Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüssel, keine separate Anmeldung, kein zusätzliches Konto. Sie geht die Medienbeiträge in der Reihenfolge durch, in der Reddit sie liefert, und blättert automatisch durch den Feed, sodass die Diashow über die erste Seite hinaus weiterläuft.
 
-NEU IN V1.1.0
+NEU IN V1.2.0
 
-Unterstützung für mehrere Sprachen hinzugefügt – Spanisch, Deutsch, Französisch, Italienisch und Arabisch.
+- Neue Tastenkürzel: D zum Herunterladen des aktuellen Bildes oder Videos, I zum Blockieren des Autors (und Überspringen seines Beitrags) und A, um ihn als Freund hinzuzufügen oder ihm zu folgen
+- Getrennte Optionen „Zähler und Übersprungene immer anzeigen“ und „Titel und Infozeile immer anzeigen“
+- Ein dezenterer Positionszähler und Übersprungen-Zähler, mit einem kleinen Ladekreisel in der Ecke, während die nächste Folie lädt
+- Behoben: Die Bedienelemente werden bei Inaktivität jetzt auch dann ausgeblendet, wenn du zuvor mit der Maus auf eines geklickt hast
+
+Vollständige Versionshinweise: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.2.0
 
 WAS ABGESPIELT WIRD
 
