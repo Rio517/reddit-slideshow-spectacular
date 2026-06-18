@@ -941,6 +941,28 @@ describe("createOverlay", () => {
     expect(overlay.root.classList.contains("rs-idle")).toBe(false);
   });
 
+  it("keeps the overlay awake while the pointer rests on the jump list", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    overlay.root.dispatchEvent(new Event("mouseleave")); // force idle
+    expect(overlay.root.classList.contains("rs-idle")).toBe(true);
+    overlay.root
+      .querySelector(".rs-jump-panel")
+      ?.dispatchEvent(new Event("mouseenter"));
+    expect(overlay.root.classList.contains("rs-idle")).toBe(false);
+  });
+
+  it("keeps the overlay awake while the pointer rests on the skipped list", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    overlay.root.dispatchEvent(new Event("mouseleave")); // force idle
+    expect(overlay.root.classList.contains("rs-idle")).toBe(true);
+    overlay.root
+      .querySelector(".rs-skipped-panel")
+      ?.dispatchEvent(new Event("mouseenter"));
+    expect(overlay.root.classList.contains("rs-idle")).toBe(false);
+  });
+
   it("dismisses an open settings panel when the overlay goes idle", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();

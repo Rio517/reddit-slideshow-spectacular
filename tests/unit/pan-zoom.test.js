@@ -3,6 +3,7 @@ import {
   panZoomTotalSeconds,
   panZoomAnimation,
   panZoomConfig,
+  resolutionAwareScale,
 } from "../../lib/pan-zoom.js";
 
 const CFG = {
@@ -54,6 +55,64 @@ describe("panZoomAnimation", () => {
     });
     expect(options.duration).toBe(0);
     expect(keyframes.every((k) => Number.isFinite(k.offset))).toBe(true);
+  });
+});
+
+describe("resolutionAwareScale", () => {
+  const view = {
+    viewportWidth: 1000,
+    viewportHeight: 1000,
+    dpr: 1,
+    maxScale: 6,
+  };
+
+  it("zooms a high-res image toward native density, capped at maxScale", () => {
+    // 9000px tall on a 1000px view ≈ 9× before 1:1, so it hits the 6× cap.
+    expect(
+      resolutionAwareScale({ ...view, sourceWidth: 6000, sourceHeight: 9000 }),
+    ).toBe(6);
+  });
+
+  it("zooms a barely-oversized image only a little", () => {
+    // 1500px on a 1000px view reaches 1:1 at 1.5×, well under the cap.
+    expect(
+      resolutionAwareScale({ ...view, sourceWidth: 1500, sourceHeight: 1200 }),
+    ).toBeCloseTo(1.5);
+  });
+
+  it("never zooms past native 1:1 even when the cap is higher", () => {
+    // 2000px on a 1000px view is 1:1 at 2×; the 6× cap must not push it further.
+    expect(
+      resolutionAwareScale({ ...view, sourceWidth: 2000, sourceHeight: 2000 }),
+    ).toBe(2);
+  });
+
+  it("counts device pixels, so a HiDPI display reaches 1:1 sooner", () => {
+    // 2000 source px over 1000 CSS px × dpr 2 = 2000 device px → already 1:1.
+    expect(
+      resolutionAwareScale({
+        ...view,
+        dpr: 2,
+        sourceWidth: 2000,
+        sourceHeight: 2000,
+      }),
+    ).toBe(1);
+  });
+
+  it("never zooms out below 1 for an image smaller than the view", () => {
+    expect(
+      resolutionAwareScale({ ...view, sourceWidth: 400, sourceHeight: 400 }),
+    ).toBe(1);
+  });
+
+  it("falls back to a gentle zoom when the source size is unknown", () => {
+    expect(
+      resolutionAwareScale({
+        ...view,
+        sourceWidth: undefined,
+        sourceHeight: undefined,
+      }),
+    ).toBe(2);
   });
 });
 

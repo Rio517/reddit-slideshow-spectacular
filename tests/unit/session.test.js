@@ -1061,6 +1061,64 @@ describe("createSlideshowSession", () => {
     expect(renders[1].info.effectiveSeconds).toBe(5); // normal image timer
   });
 
+  it("scales the pan-zoom by image resolution, capped at the configured max", async () => {
+    /** @type {Array<{ slide: any, info: any }>} */
+    const renders = [];
+    const fakeOverlay = () => ({
+      root: document.createElement("div"),
+      host: Object.assign(document.createElement("div"), {
+        id: "reddit-slideshow-host",
+      }),
+      show() {},
+      hide() {},
+      isOpen: () => true,
+      showStatus() {},
+      showLoading() {},
+      showEnd() {},
+      notifyManualNav() {},
+      setSkipped() {},
+      setSettings() {},
+      setMuted() {},
+      setBuffering() {},
+      setPlaying() {},
+      restartTimer() {},
+      setJumpList() {},
+      renderCurrent: (/** @type {any} */ slide, /** @type {any} */ info) =>
+        renders.push({ slide, info }),
+    });
+    // jsdom's view is 1024×768 @ dpr 1. The huge image's native density far
+    // exceeds the 6× cap; the mid image reaches 1:1 at exactly 2×.
+    const huge = imageSlide("huge", { sourceWidth: 12000, sourceHeight: 8000 });
+    const mid = imageSlide("mid", { sourceWidth: 2048, sourceHeight: 1536 });
+    const session = createSlideshowSession({
+      doc: document,
+      createOverlay: /** @type {any} */ (fakeOverlay),
+      getSettings: async () =>
+        /** @type {any} */ (settings({ panZoom: true, panZoomScale: 6 })),
+      saveSettings: async () => {},
+      requestPage: async () => ({
+        ok: true,
+        page: {
+          slides: [huge, mid],
+          after: null,
+          exhausted: true,
+          postsScanned: 2,
+        },
+      }),
+      getStartCursor: () => undefined,
+      openUrl: () => {},
+      createImage: () => ({ src: "", decoding: "" }),
+    });
+    sessions.push(session);
+    await session.start();
+    session.handleKeydown(key("ArrowRight")); // advance to the mid image
+
+    expect(renders[0].slide.id).toBe("huge");
+    expect(renders[0].info.panZoom.scale).toBe(6); // capped
+    expect(renders[1].slide.id).toBe("mid");
+    expect(renders[1].info.panZoom.scale).toBeCloseTo(2); // its own 1:1
+  });
+
   it("pan-zooms every image when the threshold is 'All images' (1×)", async () => {
     /** @type {Array<{ slide: any, info: any }>} */
     const renders = [];

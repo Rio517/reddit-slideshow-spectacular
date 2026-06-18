@@ -25,16 +25,22 @@ Two implementation questions drove the decision:
 
 Animate the image with `transform: scale()` plus `transform-origin` moving from
 top (`50% 0%`) to bottom (`50% 100%`), and let the slide frame (`.rs-slide`,
-`overflow: hidden`) clip the overflow. This is **resolution-independent**: no
-per-image pixel measuring - the origin shift pans the visible window from top to
-bottom at any aspect ratio. The keyframes are built in `lib/pan-zoom.js` and run
-via the **Web Animations API** (`element.animate`), which takes fractional
-`offset`s computed from the phase durations.
+`overflow: hidden`) clip the overflow. The pan needs **no DOM measurement**: the
+origin shift pans the visible window from top to bottom at any aspect ratio. The
+keyframes are built in `lib/pan-zoom.js` and run via the **Web Animations API**
+(`element.animate`), which takes fractional `offset`s computed from the phase
+durations.
 
-The five phases and their durations are settings
-(`panZoomShowSeconds`, `panZoomZoomInSeconds`, `panZoomPanSeconds`,
-`panZoomZoomOutSeconds`, `panZoomShowEndSeconds`), plus a `panZoomScale` zoom
-factor. The whole feature is gated by `panZoom` (off by default).
+The five phases and their durations are settings (`panZoomShowSeconds`,
+`panZoomZoomInSeconds`, `panZoomPanSeconds`, `panZoomZoomOutSeconds`,
+`panZoomShowEndSeconds`). The zoom magnitude is **resolution-aware**
+(`resolutionAwareScale`): each image pushes in toward its own native 1:1 pixel
+density, computed from the slide's source dimensions and the device-pixel
+viewport size, so a high-res image zooms much harder than a barely-oversized
+one, capped at `panZoomScale` (the configurable maximum, default 6) and never
+past 1:1. The source dimensions are already known from the oversize gate, so
+this adds no measurement. The whole feature is gated by `panZoom` (off by
+default).
 
 **Only "UHD" images move.** It runs only on images whose longest side is at
 least `panZoomMinOversize` × the display window's longest side (in device

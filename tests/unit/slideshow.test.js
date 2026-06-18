@@ -234,6 +234,23 @@ describe("SlideshowController", () => {
     expect(controller.evicted).toBe(10);
   });
 
+  it("retains a deep back-history by default so long sessions can rewind far", () => {
+    const { controller } = makeController(); // no maxBackHistory → default window
+    const slides = Array.from({ length: 2002 }, (_, i) => slideWithId(`s${i}`));
+    controller.start({
+      slides,
+      after: null,
+      exhausted: true,
+      postsScanned: 2002,
+    });
+    controller.goTo(2001); // jump to the last slide, which triggers a trim
+    expect(controller.current?.id).toBe("s2001");
+    // With the default ~2000-slide window only the very front falls off, so a
+    // viewer at slide 2001 can still rewind nearly to the start.
+    expect(controller.evicted).toBeLessThanOrEqual(2);
+    expect(controller.slides[0].id).toBe("s1");
+  });
+
   it("peeks upcoming slides for preloading", () => {
     const { controller } = makeController();
     controller.start({

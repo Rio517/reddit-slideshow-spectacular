@@ -557,7 +557,7 @@
     "description": "Pan-and-zoom oversize-threshold output value at the 1x minimum."
   },
   "optPanZoomZoomLevel": {
-    "message": "Zoomstufe",
+    "message": "Maximaler Zoom",
     "description": "Options label for the pan-and-zoom zoom-level slider."
   },
   "optPanZoomSequence": {

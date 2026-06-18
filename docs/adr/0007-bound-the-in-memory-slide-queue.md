@@ -12,14 +12,16 @@ hundreds of `Slide` objects, each holding several URL strings, a title, and
 dimensions, retained for the lifetime of the tab. A self-audit flagged this as
 the main source of session-long memory growth.
 
-Back-navigation is a real feature (left arrow), so the history cannot simply be
-dropped to zero. But in practice no one scrolls back hundreds of slides; the
-useful back-window is small.
+Back-navigation is a real feature (left arrow), and viewers do rewind deep into
+a long session, so the history cannot be kept tight. Each `Slide` is light
+metadata (~1-2 KB), so a generous window costs only a few MB - the bound exists
+to stop _unbounded_ growth over a marathon session, not to keep the window
+small.
 
 ## Decision
 
 Cap the retained **already-shown** history at `maxBackHistory` slides (default
-**50**) behind the current slide. On each render, evict the excess from the
+**2000**) behind the current slide. On each render, evict the excess from the
 front of `slides` and advance an `evicted` counter by the same amount.
 
 - `index` and `evicted` move together, so **absolute position is unchanged** -
@@ -42,10 +44,10 @@ Hamming scan bounded.
 ## Consequences
 
 - Memory is bounded regardless of session length.
-- Back-navigation is limited to the retained window: in a very long session the
-  user cannot return to the very first slides. Going back to an evicted slide
-  would require re-fetching and re-deriving it anyway, so this is an acceptable
-  trade-off for a lean-back tool.
+- Back-navigation reaches ~2000 slides back; only past that, in a marathon
+  session, does the very start become unreachable. Going back to an evicted
+  slide would require re-fetching and re-deriving it anyway, so this is an
+  acceptable trade-off for a lean-back tool.
 - `position` reports absolute index/total via the `evicted` offset, so eviction
   is invisible in the UI.
 

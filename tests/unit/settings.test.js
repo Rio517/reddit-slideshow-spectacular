@@ -90,12 +90,12 @@ describe("normalizeSettings", () => {
   it("defaults pan-zoom off with sensible phase durations", () => {
     const s = normalizeSettings({});
     expect(s.panZoom).toBe(false);
-    expect(s.panZoomScale).toBe(2);
+    expect(s.panZoomScale).toBe(6);
     expect(s.panZoomPanSeconds).toBe(6);
   });
 
   it("clamps the pan-zoom scale and phase durations", () => {
-    expect(normalizeSettings({ panZoomScale: 99 }).panZoomScale).toBe(5);
+    expect(normalizeSettings({ panZoomScale: 99 }).panZoomScale).toBe(10);
     expect(normalizeSettings({ panZoomScale: 1 }).panZoomScale).toBe(1.1);
     expect(
       normalizeSettings({ panZoomPanSeconds: 999 }).panZoomPanSeconds,
@@ -141,7 +141,7 @@ describe("getSettings / saveSettings", () => {
       transition: "fade",
       timerBar: "video",
       panZoom: false,
-      panZoomScale: 2,
+      panZoomScale: 6,
       panZoomShowSeconds: 2,
       panZoomZoomInSeconds: 2,
       panZoomPanSeconds: 6,
