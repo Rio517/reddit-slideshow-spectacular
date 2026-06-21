@@ -3,6 +3,8 @@
   --rs-muted: #9aa4b2;
   --rs-accent: #ff7a18;
   --rs-danger: #ff6b6b;
+  /* Vote arrow tints: orange up (reuses --rs-accent), blue down, soft grey none. */
+  --rs-downvote: #6a9bff;
   /* Slide-change transition timing - keep --rs-tx-dur in sync with
      TRANSITION_MS in lib/overlay-ui.js. */
   --rs-tx-dur: 0.45s;
@@ -476,7 +478,33 @@ iframe.reddit-slideshow-media {
   text-overflow: ellipsis;
 }
 
-/* Byline: /u/author to /r/subreddit from {domain} at {W}×{H}, on one line. */
+/* Vote arrow at the head of the title, sized to the text. The state modifier
+   tints it (orange up / blue down / soft grey none) and flips it for a
+   downvote; both animate. */
+.rs-meta__vote {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  color: rgba(255, 255, 255, 0.28);
+  transition:
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.rs-meta__vote path {
+  fill: currentColor;
+}
+
+.rs-meta__vote--up {
+  color: var(--rs-accent);
+}
+
+.rs-meta__vote--down {
+  color: var(--rs-downvote);
+  transform: rotate(180deg);
+}
+
+/* Byline: /u/author to /r/subreddit, on one line (domain + size sit below). */
 .rs-meta__byline {
   display: flex;
   align-items: baseline;
@@ -530,6 +558,24 @@ iframe.reddit-slideshow-media {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Source line below the byline: "{domain} • {W}×{H}", muted, on its own row so
+   the byline stays narrow. The domain truncates first if it overflows. */
+.rs-meta__source {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  max-width: 64vw;
+  font-size: 12px;
+  color: var(--rs-muted);
+  text-shadow: 0 0 0.2rem #000;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.rs-meta__source[hidden] {
+  display: none;
 }
 
 /* Inline "loading next media" ring. Appears instantly when shown, then fades out

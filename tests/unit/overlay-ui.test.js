@@ -409,7 +409,7 @@ describe("createOverlay", () => {
     expect(author?.href).toBe("https://old.reddit.com/user/alice");
   });
 
-  it("stacks the bottom-left meta as nsfw, title row, byline (bottom)", () => {
+  it("stacks the bottom-left meta as nsfw, title, byline, source (bottom)", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
     overlay.renderCurrent(imageSlide({ over18: true }), {
@@ -428,10 +428,11 @@ describe("createOverlay", () => {
       "rs-meta__nsfw",
       "rs-meta__title",
       "rs-meta__byline",
+      "rs-meta__source",
     ]);
   });
 
-  it("orders the title row as title text, open, download, then spinner", () => {
+  it("orders the title row as vote, title text, open, download, then spinner", () => {
     const overlay = createOverlay({ ...noopHandlers(), onDownload() {} });
     overlay.show();
     overlay.renderCurrent(imageSlide(), {
@@ -446,10 +447,11 @@ describe("createOverlay", () => {
     );
     const order = [
       ...row.querySelectorAll(
-        ".rs-meta__title-text, .rs-meta__open, .rs-meta__download, .rs-meta__spinner",
+        ".rs-meta__vote, .rs-meta__title-text, .rs-meta__open, .rs-meta__download, .rs-meta__spinner",
       ),
     ].map((el) => [...el.classList].find((c) => c.startsWith("rs-meta__")));
     expect(order).toEqual([
+      "rs-meta__vote",
       "rs-meta__title-text",
       "rs-meta__open",
       "rs-meta__download",
@@ -457,7 +459,7 @@ describe("createOverlay", () => {
     ]);
   });
 
-  it("renders the byline as author, subreddit, domain, and resolution", () => {
+  it("keeps author and subreddit on the byline, dropping from/at connectives", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
     overlay.renderCurrent(
@@ -487,15 +489,118 @@ describe("createOverlay", () => {
     );
     expect(sub?.textContent).toBe("/r/aww");
     expect(sub?.href).toBe("https://old.reddit.com/r/aww");
-    expect(byline.querySelector(".rs-meta__domain")?.textContent).toBe(
-      "i.redd.it",
+    // Domain and resolution no longer live on the byline.
+    expect(byline.querySelector(".rs-meta__domain")).toBeNull();
+    expect(byline.querySelector(".rs-meta__res")).toBeNull();
+    // The dropped "from"/"at" words leave only the "to" connective.
+    const seps = [...byline.querySelectorAll(".rs-meta__sep")].filter(
+      (s) => !(/** @type {HTMLElement} */ (s).hidden),
     );
-    expect(byline.querySelector(".rs-meta__res")?.textContent).toBe(
-      "1920×1080",
-    );
+    expect(seps).toHaveLength(1);
   });
 
-  it("hides the resolution in the byline when the slide has no dimensions", () => {
+  it("breaks domain and resolution onto a source line, bulleted between", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    overlay.renderCurrent(
+      imageSlide({
+        sourceWidth: 1920,
+        sourceHeight: 1080,
+        sourceUrl: "https://i.redd.it/x.jpg",
+      }),
+      {
+        index: 0,
+        total: 1,
+        exhausted: true,
+        effectiveSeconds: 5,
+        playing: true,
+      },
+    );
+    const source = /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-meta__source")
+    );
+    expect(source.querySelector(".rs-meta__domain")?.textContent).toBe(
+      "i.redd.it",
+    );
+    expect(source.querySelector(".rs-meta__res")?.textContent).toBe(
+      "1920×1080",
+    );
+    const sep = /** @type {HTMLElement | null} */ (
+      source.querySelector(".rs-meta__sep")
+    );
+    expect(sep?.hidden).toBe(false);
+    expect(sep?.textContent).toBe("•");
+  });
+
+  it("hides the source line entirely when there is no domain or resolution", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    overlay.renderCurrent(
+      imageSlide({
+        sourceUrl: "",
+        mediaUrl: "",
+        sourceWidth: undefined,
+        sourceHeight: undefined,
+      }),
+      {
+        index: 0,
+        total: 1,
+        exhausted: true,
+        effectiveSeconds: 5,
+        playing: true,
+      },
+    );
+    expect(
+      /** @type {HTMLElement | null} */ (
+        overlay.root.querySelector(".rs-meta__source")
+      )?.hidden,
+    ).toBe(true);
+  });
+
+  it("marks the title with a vote arrow reflecting the current vote", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    const vote = () =>
+      /** @type {HTMLElement} */ (overlay.root.querySelector(".rs-meta__vote"));
+    const render = (/** @type {boolean | null} */ likes) =>
+      overlay.renderCurrent(imageSlide({ likes }), {
+        index: 0,
+        total: 1,
+        exhausted: true,
+        effectiveSeconds: 5,
+        playing: true,
+      });
+
+    render(null); // no vote → soft/neutral
+    expect(vote().classList.contains("rs-meta__vote--none")).toBe(true);
+    render(true); // upvoted
+    expect(vote().classList.contains("rs-meta__vote--up")).toBe(true);
+    render(false); // downvoted
+    expect(vote().classList.contains("rs-meta__vote--down")).toBe(true);
+  });
+
+  it("updates the vote arrow live via setVote without a re-render", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    overlay.renderCurrent(imageSlide({ likes: null }), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    const vote = /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-meta__vote")
+    );
+    overlay.setVote(true);
+    expect(vote.classList.contains("rs-meta__vote--up")).toBe(true);
+    overlay.setVote(false);
+    expect(vote.classList.contains("rs-meta__vote--down")).toBe(true);
+    overlay.setVote(null);
+    expect(vote.classList.contains("rs-meta__vote--none")).toBe(true);
+  });
+
+  it("hides the resolution on the source line when the slide has no dimensions", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
     overlay.renderCurrent(
@@ -553,11 +658,14 @@ describe("createOverlay", () => {
         playing: true,
       },
     );
-    // Four data tokens present (author, subreddit, domain, resolution), each a
-    // <bdi> (the anchors wrap an inner one; domain/res are themselves <bdi>).
-    const bdis = overlay.root.querySelectorAll(".rs-meta__byline bdi");
+    // Four data tokens present (author + subreddit on the byline, domain +
+    // resolution on the source line), each a <bdi> (the anchors wrap an inner
+    // one; domain/res are themselves <bdi>).
+    const bdis = overlay.root.querySelectorAll(
+      ".rs-meta__byline bdi, .rs-meta__source bdi",
+    );
     expect(bdis.length).toBeGreaterThanOrEqual(4);
-    // The connectives ("to"/"from"/"at") are NOT bidi-wrapped.
+    // The connectives ("to") and the source bullet are NOT bidi-wrapped.
     for (const sep of overlay.root.querySelectorAll(".rs-meta__sep")) {
       expect(sep.querySelector("bdi")).toBeNull();
     }

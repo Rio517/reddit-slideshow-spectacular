@@ -207,14 +207,6 @@
     "message": "إلى",
     "description": "Byline connective between author and subreddit (e.g. /u/x to /r/y)."
   },
-  "bylineSepFrom": {
-    "message": "من",
-    "description": "Byline connective before the media domain."
-  },
-  "bylineSepAt": {
-    "message": "بدقّة",
-    "description": "Byline connective before the media resolution."
-  },
   "uiPrev": {
     "message": "السابق (←)",
     "description": "Control label: previous slide (with the ← shortcut)."
