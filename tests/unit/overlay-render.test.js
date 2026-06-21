@@ -100,6 +100,67 @@ describe("renderSlide", () => {
     expect(el.loop).toBe(true);
   });
 
+  it("sizes a filled video to the largest viewport-fitting rect of its aspect", () => {
+    // 1000×500 -> 2:1. The box becomes the biggest 2:1 rect inside the viewport,
+    // so the black around it is real backdrop (clickable to close), not part of
+    // the video element (whose native controls would otherwise span the window).
+    const el = renderSlide(
+      slide({
+        provider: "reddit-video",
+        kind: "video",
+        mediaUrl: "https://v.redd.it/x/CMAF_720.mp4",
+        sourceWidth: 1000,
+        sourceHeight: 500,
+      }),
+    );
+    expect(el.style.getPropertyValue("--rs-fit-w")).toBe("min(100vw, 200vh)");
+    expect(el.style.getPropertyValue("--rs-fit-h")).toBe("min(100vh, 50vw)");
+  });
+
+  it("sizes a filled gif image the same way", () => {
+    const el = renderSlide(
+      slide({ isGif: true, sourceWidth: 800, sourceHeight: 800 }),
+    );
+    expect(el.style.getPropertyValue("--rs-fit-w")).toBe("min(100vw, 100vh)");
+    expect(el.style.getPropertyValue("--rs-fit-h")).toBe("min(100vh, 100vw)");
+  });
+
+  it("leaves a dimensionless filled video full-bleed (no fit vars)", () => {
+    const el = renderSlide(
+      slide({
+        provider: "redgifs",
+        kind: "video",
+        mediaUrl: "https://media.redgifs.com/x.mp4",
+        proxied: true,
+        sourceWidth: undefined,
+        sourceHeight: undefined,
+      }),
+    );
+    expect(el.style.getPropertyValue("--rs-fit-w")).toBe("");
+    expect(el.style.getPropertyValue("--rs-fit-h")).toBe("");
+  });
+
+  it("does not constrain an embed iframe's box, only its aspect-ratio", () => {
+    const el = renderSlide(
+      slide({
+        provider: "redgifs",
+        kind: "embed",
+        mediaUrl: "https://www.redgifs.com/ifr/abc",
+        embedUrl: "https://www.redgifs.com/ifr/abc",
+        sourceWidth: 1080,
+        sourceHeight: 1920,
+      }),
+    );
+    expect(el.style.getPropertyValue("--rs-fit-w")).toBe("");
+    expect(el.style.aspectRatio).toBe("1080 / 1920");
+  });
+
+  it("leaves a static image's box unconstrained (no fit vars, no aspect-ratio)", () => {
+    const el = renderSlide(slide({ sourceWidth: 1000, sourceHeight: 500 }));
+    expect(el.style.getPropertyValue("--rs-fit-w")).toBe("");
+    expect(el.style.aspectRatio).toBe("");
+  });
+
   it("refuses a non-HTTPS or data: image URL at the sink", () => {
     expect(
       renderSlide(slide({ mediaUrl: "http://i.redd.it/x.jpg" })).hasAttribute(

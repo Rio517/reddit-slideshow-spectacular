@@ -393,9 +393,13 @@ video.reddit-slideshow-media {
    Static images keep their intrinsic size (and pan & zoom when large). The
    double class outweighs `img.reddit-slideshow-media`'s width/height:auto. */
 .reddit-slideshow-media.reddit-slideshow-media--fill {
-  width: 100vw;
-  height: 100vh;
-  /* Full-bleed: rounded corners would clip oddly at the viewport edge. */
+  /* overlay-render sets the fit vars to the largest viewport-fitting rect of the
+     clip's aspect, so the surrounding black is real backdrop (clickable to close)
+     and the native controls don't span the window. Unknown dimensions fall back
+     to a true full-bleed box. */
+  width: var(--rs-fit-w, 100vw);
+  height: var(--rs-fit-h, 100vh);
+  /* Edge-to-edge in the filled dimension: rounded corners would clip oddly. */
   border-radius: 0;
 }
 
