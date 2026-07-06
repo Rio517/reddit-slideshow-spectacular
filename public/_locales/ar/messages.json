@@ -424,6 +424,34 @@
     "message": "تلقائي (لغة المتصفّح)",
     "description": "Default language option that follows the browser."
   },
+  "optShortcut": {
+    "message": "اختصار عرض الشرائح",
+    "description": "Options label for the trigger-shortcut card."
+  },
+  "optShortcutHint": {
+    "message": "انقر داخل المربع ثم اضغط مجموعة مفاتيح جديدة.",
+    "description": "How to use the shortcut recorder input."
+  },
+  "optShortcutNotSet": {
+    "message": "غير معيَّن",
+    "description": "Shown when the trigger command has no keyboard binding."
+  },
+  "optShortcutReset": {
+    "message": "إعادة التعيين إلى الافتراضي",
+    "description": "Button restoring the default trigger shortcut."
+  },
+  "optShortcutOpenBrowser": {
+    "message": "التغيير من إعدادات المتصفح ↗",
+    "description": "Button opening the browser's own extension-shortcuts page (Chrome)."
+  },
+  "optShortcutInvalid": {
+    "message": "استخدم Ctrl أو Alt (أو ⌘ على Mac) مع حرف أو رقم أو سهم.",
+    "description": "Shown when a recorded combo isn't accepted by the commands API."
+  },
+  "optShortcutUpdateFailed": {
+    "message": "لم يقبل المتصفح هذا الاختصار. عيِّنه من اختصارات الإضافات في إعدادات المتصفح.",
+    "description": "Shown when commands.update() rejects; the section degrades to guidance."
+  },
   "optTimePerImage": {
     "message": "المدّة لكل صورة",
     "description": "Options label for the per-image timer slider."

@@ -424,6 +424,34 @@
     "message": "Automatica (lingua del browser)",
     "description": "Default language option that follows the browser."
   },
+  "optShortcut": {
+    "message": "Scorciatoia della presentazione",
+    "description": "Options label for the trigger-shortcut card."
+  },
+  "optShortcutHint": {
+    "message": "Fai clic sul campo e premi una nuova combinazione di tasti.",
+    "description": "How to use the shortcut recorder input."
+  },
+  "optShortcutNotSet": {
+    "message": "Non impostata",
+    "description": "Shown when the trigger command has no keyboard binding."
+  },
+  "optShortcutReset": {
+    "message": "Ripristina il valore predefinito",
+    "description": "Button restoring the default trigger shortcut."
+  },
+  "optShortcutOpenBrowser": {
+    "message": "Modifica nelle impostazioni del browser ↗",
+    "description": "Button opening the browser's own extension-shortcuts page (Chrome)."
+  },
+  "optShortcutInvalid": {
+    "message": "Usa Ctrl o Alt (o ⌘ su Mac) più una lettera, un numero o una freccia.",
+    "description": "Shown when a recorded combo isn't accepted by the commands API."
+  },
+  "optShortcutUpdateFailed": {
+    "message": "Il browser non ha accettato questa scorciatoia. Impostala nelle scorciatoie delle estensioni del browser.",
+    "description": "Shown when commands.update() rejects; the section degrades to guidance."
+  },
   "optTimePerImage": {
     "message": "Tempo per immagine",
     "description": "Options label for the per-image timer slider."

@@ -424,6 +424,34 @@
     "message": "Automatisch (Sprache des Browsers)",
     "description": "Default language option that follows the browser."
   },
+  "optShortcut": {
+    "message": "Tastenkürzel für die Diashow",
+    "description": "Options label for the trigger-shortcut card."
+  },
+  "optShortcutHint": {
+    "message": "Klicke in das Feld und drücke eine neue Tastenkombination.",
+    "description": "How to use the shortcut recorder input."
+  },
+  "optShortcutNotSet": {
+    "message": "Nicht belegt",
+    "description": "Shown when the trigger command has no keyboard binding."
+  },
+  "optShortcutReset": {
+    "message": "Auf Standard zurücksetzen",
+    "description": "Button restoring the default trigger shortcut."
+  },
+  "optShortcutOpenBrowser": {
+    "message": "In den Browser-Einstellungen ändern ↗",
+    "description": "Button opening the browser's own extension-shortcuts page (Chrome)."
+  },
+  "optShortcutInvalid": {
+    "message": "Verwende Strg oder Alt (bzw. ⌘ am Mac) plus Buchstabe, Ziffer oder Pfeiltaste.",
+    "description": "Shown when a recorded combo isn't accepted by the commands API."
+  },
+  "optShortcutUpdateFailed": {
+    "message": "Der Browser hat dieses Kürzel nicht übernommen. Lege es in den Erweiterungs-Tastenkürzeln des Browsers fest.",
+    "description": "Shown when commands.update() rejects; the section degrades to guidance."
+  },
   "optTimePerImage": {
     "message": "Zeit pro Bild",
     "description": "Options label for the per-image timer slider."

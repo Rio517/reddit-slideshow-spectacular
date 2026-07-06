@@ -424,6 +424,34 @@
     "message": "Automático (idioma del navegador)",
     "description": "Default language option that follows the browser."
   },
+  "optShortcut": {
+    "message": "Atajo del pase de diapositivas",
+    "description": "Options label for the trigger-shortcut card."
+  },
+  "optShortcutHint": {
+    "message": "Haz clic en el cuadro y pulsa una nueva combinación de teclas.",
+    "description": "How to use the shortcut recorder input."
+  },
+  "optShortcutNotSet": {
+    "message": "Sin asignar",
+    "description": "Shown when the trigger command has no keyboard binding."
+  },
+  "optShortcutReset": {
+    "message": "Restablecer el predeterminado",
+    "description": "Button restoring the default trigger shortcut."
+  },
+  "optShortcutOpenBrowser": {
+    "message": "Cambiar en la configuración del navegador ↗",
+    "description": "Button opening the browser's own extension-shortcuts page (Chrome)."
+  },
+  "optShortcutInvalid": {
+    "message": "Usa Ctrl o Alt (o ⌘ en Mac) más una letra, un número o una flecha.",
+    "description": "Shown when a recorded combo isn't accepted by the commands API."
+  },
+  "optShortcutUpdateFailed": {
+    "message": "El navegador no aceptó ese atajo. Configúralo en los atajos de extensiones del navegador.",
+    "description": "Shown when commands.update() rejects; the section degrades to guidance."
+  },
   "optTimePerImage": {
     "message": "Tiempo por imagen",
     "description": "Options label for the per-image timer slider."
