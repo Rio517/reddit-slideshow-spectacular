@@ -47,3 +47,20 @@ describe("options page language picker", () => {
     ).toBe("optLanguageAuto");
   });
 });
+
+describe("options page shortcut card", () => {
+  it("has the shortcut recorder markup with localized labels", () => {
+    expect(doc.querySelector("#shortcutValue")).not.toBeNull();
+    expect(doc.querySelector("#shortcutInput")).not.toBeNull();
+    expect(doc.querySelector("#shortcutReset")?.getAttribute("data-i18n")).toBe(
+      "optShortcutReset",
+    );
+    expect(doc.querySelector("#shortcutOpen")?.getAttribute("data-i18n")).toBe(
+      "optShortcutOpenBrowser",
+    );
+    expect(doc.querySelector("#shortcutHint")?.getAttribute("data-i18n")).toBe(
+      "optShortcutHint",
+    );
+    expect(doc.querySelector("#shortcutError")?.textContent).toBe("");
+  });
+});

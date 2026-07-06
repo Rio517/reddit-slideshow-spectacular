@@ -33,6 +33,7 @@ export default [
         HTMLInputElement: "readonly",
         HTMLOutputElement: "readonly",
         HTMLSelectElement: "readonly",
+        HTMLButtonElement: "readonly",
         AbortController: "readonly",
         Blob: "readonly",
         TextDecoder: "readonly",
@@ -63,6 +64,7 @@ export default [
       globals: {
         process: "readonly",
         DOMParser: "readonly",
+        KeyboardEvent: "readonly",
         chrome: "readonly",
       },
     },

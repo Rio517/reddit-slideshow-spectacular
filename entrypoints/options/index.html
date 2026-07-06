@@ -122,6 +122,53 @@
         border-radius: 8px;
         font: inherit;
       }
+      .shortcut__row {
+        display: flex;
+        gap: 10px;
+      }
+      .shortcut__row input {
+        flex: 1;
+        min-width: 0;
+        padding: 9px 10px;
+        color: var(--fg);
+        background: var(--input-bg);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        font: inherit;
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        text-align: center;
+        cursor: pointer;
+      }
+      .shortcut__row input:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .shortcut__row button {
+        flex: none;
+        padding: 9px 12px;
+        color: var(--fg);
+        background: var(--input-bg);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        font: inherit;
+        cursor: pointer;
+      }
+      .shortcut__row button:hover {
+        border-color: var(--accent);
+      }
+      #shortcutField .hint {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 8px;
+      }
+      #shortcutField .hint:empty,
+      #shortcutField .hint[hidden] {
+        display: none;
+      }
+      #shortcutField .hint--error {
+        color: var(--accent);
+      }
       .radio {
         display: flex;
         flex-wrap: wrap;
@@ -375,6 +422,31 @@
           <option value="ar">العربية</option>
         </select>
       </label>
+
+      <div class="field" id="shortcutField">
+        <span class="field__label">
+          <span data-i18n="optShortcut">Slideshow shortcut</span>
+          <span><output id="shortcutValue">Alt+Shift+S</output></span>
+        </span>
+        <div class="shortcut__row">
+          <input id="shortcutInput" type="text" readonly />
+          <button id="shortcutReset" type="button" data-i18n="optShortcutReset">
+            Reset to default
+          </button>
+          <button
+            id="shortcutOpen"
+            type="button"
+            hidden
+            data-i18n="optShortcutOpenBrowser"
+          >
+            Change in browser settings ↗
+          </button>
+        </div>
+        <span class="hint" id="shortcutHint" data-i18n="optShortcutHint"
+          >Click the box, then press a new key combination.</span
+        >
+        <span class="hint hint--error" id="shortcutError"></span>
+      </div>
 
       <label class="field">
         <span class="field__label">
