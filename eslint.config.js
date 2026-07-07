@@ -26,6 +26,7 @@ export default [
         URL: "readonly",
         URLSearchParams: "readonly",
         window: "readonly",
+        navigator: "readonly",
         Image: "readonly",
         Event: "readonly",
         Element: "readonly",

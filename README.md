@@ -25,7 +25,8 @@ AirPlay or Chromecast that window to your TV for a hands-off, lean-back feed.
 ## Features
 
 - Launch from any `old.reddit.com` or `www.reddit.com` feed via the toolbar icon
-  or **Alt+Shift+S** - it starts at the top of the current feed (its own sort).
+  or **Alt+Shift+S** (changeable in the extension's preferences) - it starts at
+  the top of the current feed (its own sort).
 - Auto-advance on a timer or arrow through manually; videos advance when they end.
 - Pages forever - follows Reddit's pagination so the show keeps going.
 - Per-kind rendering: `<img>` for images/galleries and native `<video>` for
@@ -122,7 +123,7 @@ startup that you can dismiss).
   a small demo feed (and where new releases are announced) - and launch the
   slideshow to see it run.
 - Open any `old.reddit.com` or `www.reddit.com` feed, then click the toolbar
-  icon or press **Alt+Shift+S**.
+  icon or press **Alt+Shift+S** (changeable in the extension's preferences).
 - Keys: **←/→** previous/next, **↑/↓** upvote/downvote, **Space** play/pause,
   **M** mute, **F** fullscreen, **D** download, **I** block the author (and skip
   their post), **A** friend/follow the author, **Esc** close. You can also click

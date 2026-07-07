@@ -8,6 +8,7 @@ import {
 import { requiredElement } from "@/lib/dom.js";
 import { t, resolveLocale } from "@/lib/i18n.js";
 import { localizeDocument, fillTemplate } from "@/lib/i18n-dom.js";
+import { initShortcutSection } from "@/lib/shortcut-section.js";
 
 const uiLang = browser.i18n.getUILanguage();
 
@@ -199,3 +200,12 @@ for (const [id, outId] of PAN_ZOOM_RANGES) {
 contentDedup.addEventListener("change", persist);
 
 load();
+
+initShortcutSection({
+  doc: document,
+  commands: browser.commands,
+  openShortcutsPage: () => {
+    browser.tabs.create({ url: "chrome://extensions/shortcuts" });
+  },
+  mac: navigator.platform.toUpperCase().includes("MAC"),
+});
