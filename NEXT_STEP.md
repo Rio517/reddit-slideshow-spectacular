@@ -104,6 +104,15 @@ logged-in Firefox + Chrome before trusting it:
   renders in that language with correct mirroring and an unscrambled byline. Unit
   tests cover catalog integrity, the per-locale getter, `resolveLocale`, and the
   `dir`/`<bdi>` structure — not rendered glyphs/layout.
+- **Configurable trigger shortcut** — the options page reads the
+  `_execute_action` binding via `commands.getAll()` and, on Firefox, rebinds it
+  with `commands.update()`/`reset()`. Confirm in Firefox that updating
+  `_execute_action` is actually accepted (MDN is fuzzy for MV3), that the new
+  combo launches the slideshow, and that reset restores Alt+Shift+S; on Chrome,
+  confirm the card hides the recorder and its button opens
+  `chrome://extensions/shortcuts`. If Firefox rejects the update, the card must
+  degrade to the guidance-only message. Also eyeball the #ddd title +
+  dimensions text over a bright image.
 
 ### Media providers - the pattern
 
