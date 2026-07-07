@@ -465,7 +465,7 @@ iframe.reddit-slideshow-media {
   gap: 8px;
   max-width: 64vw;
   /* Lighter than --rs-muted so the title reads clearly over busy media. */
-  color: #c1c8d3;
+  color: #ddd;
   font-size: 14px;
   font-weight: 300;
   /* A light glow for legibility over a bright image - small enough that it
@@ -564,7 +564,7 @@ iframe.reddit-slideshow-media {
   text-overflow: ellipsis;
 }
 
-/* Source line below the byline: "{domain} • {W}×{H}", muted, on its own row so
+/* Source line below the byline: "{domain} • {W}×{H}", light, on its own row so
    the byline stays narrow. The domain truncates first if it overflows. */
 .rs-meta__source {
   display: flex;
@@ -572,7 +572,7 @@ iframe.reddit-slideshow-media {
   gap: 5px;
   max-width: 64vw;
   font-size: 12px;
-  color: var(--rs-muted);
+  color: #ddd;
   text-shadow: 0 0 0.2rem #000;
   white-space: nowrap;
   overflow: hidden;
