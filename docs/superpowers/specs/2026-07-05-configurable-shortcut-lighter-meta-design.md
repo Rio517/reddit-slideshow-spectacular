@@ -47,9 +47,9 @@ New `lib/shortcut.js`:
   `Home`, arrows as `Up`/`Down`/`Left`/`Right`, `F1`–`F12`). Returns `null`
   for combos the API rejects (media keys are deliberately unsupported —
   global media controls are a poor fit for a page-scoped trigger).
-- `validateShortcut(str)` — enforces the API rules: exactly one primary
-  modifier (except function keys, which may be bare), a valid key, `Shift`
-  only as secondary.
+- Validation is folded into `eventToShortcut` (the recorder is the only
+  producer): exactly one primary modifier (except function keys, which may
+  be bare), a valid key, `Shift` only as secondary.
 
 Platform note: on macOS the recorder maps `metaKey` to `Command` and
 `ctrlKey` to `MacCtrl`, per the commands-API spec.
