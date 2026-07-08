@@ -44,8 +44,9 @@ New `lib/shortcut.js`:
 - `eventToShortcut(event)` — maps a `KeyboardEvent` to the commands-API
   string: modifiers in canonical order (`Ctrl`/`Alt`/`Command`/`MacCtrl` +
   optional `Shift`), key normalized (letters upper-cased, `Comma`, `Period`,
-  `Home`, arrows as `Up`/`Down`/`Left`/`Right`, `F1`–`F12`, media keys).
-  Returns `null` for combos the API rejects.
+  `Home`, arrows as `Up`/`Down`/`Left`/`Right`, `F1`–`F12`). Returns `null`
+  for combos the API rejects (media keys are deliberately unsupported —
+  global media controls are a poor fit for a page-scoped trigger).
 - `validateShortcut(str)` — enforces the API rules: exactly one primary
   modifier (except function keys, which may be bare), a valid key, `Shift`
   only as secondary.
@@ -72,8 +73,8 @@ alongside the pre-1.3 overlay items.
 ### Tests
 
 - `tests/unit/shortcut.test.js` — normalization and validation as pure
-  functions: letters, arrows, function keys, media keys, missing modifiers,
-  Shift-only, macOS Command/MacCtrl mapping.
+  functions: letters, arrows, function keys, missing modifiers, Shift-only,
+  macOS Command/MacCtrl mapping.
 - `tests/unit/options-page.test.js` — extended: section renders the current
   binding from a mocked `browser.commands`; recorder path calls
   `commands.update` with the normalized string; reset calls
