@@ -129,6 +129,36 @@ describe("initShortcutSection on Firefox (commands.update available)", () => {
     ).toBe(true);
     expect(doc.querySelector("#shortcutError")?.textContent).not.toBe("");
   });
+
+  it("does not trap Tab: preventDefault is skipped and update is not called", async () => {
+    const doc = freshDoc();
+    const commands = firefoxCommands();
+    await initShortcutSection(deps({ doc, commands }));
+    const input = /** @type {HTMLInputElement} */ (
+      doc.querySelector("#shortcutInput")
+    );
+    const notPrevented = press(input, { key: "Tab" });
+    expect(notPrevented).toBe(true);
+    expect(commands.update).not.toHaveBeenCalled();
+  });
+
+  it("re-reads the binding when the tab regains visibility", async () => {
+    const doc = freshDoc();
+    const commands = firefoxCommands("Alt+Shift+S");
+    await initShortcutSection(deps({ doc, commands }));
+    expect(doc.querySelector("#shortcutValue")?.textContent).toBe(
+      "Alt+Shift+S",
+    );
+    commands.getAll = vi.fn(async () => [
+      { name: "_execute_action", shortcut: "Ctrl+Period" },
+    ]);
+    doc.dispatchEvent(new Event("visibilitychange"));
+    await vi.waitFor(() =>
+      expect(doc.querySelector("#shortcutValue")?.textContent).toBe(
+        "Ctrl+Period",
+      ),
+    );
+  });
 });
 
 describe("initShortcutSection on Chrome (no commands.update)", () => {
@@ -155,5 +185,29 @@ describe("initShortcutSection on Chrome (no commands.update)", () => {
     expect(open?.hidden).toBe(false);
     open?.click();
     expect(openShortcutsPage).toHaveBeenCalledOnce();
+  });
+
+  it("re-reads the binding when the tab regains visibility (Chrome's primary rebind flow)", async () => {
+    const doc = freshDoc();
+    const commands = {
+      getAll: vi.fn(async () => [
+        { name: "_execute_action", shortcut: "Alt+Shift+S" },
+      ]),
+    };
+    await initShortcutSection(
+      deps({ doc, commands, openShortcutsPage: vi.fn() }),
+    );
+    expect(doc.querySelector("#shortcutValue")?.textContent).toBe(
+      "Alt+Shift+S",
+    );
+    commands.getAll = vi.fn(async () => [
+      { name: "_execute_action", shortcut: "Ctrl+Period" },
+    ]);
+    doc.dispatchEvent(new Event("visibilitychange"));
+    await vi.waitFor(() =>
+      expect(doc.querySelector("#shortcutValue")?.textContent).toBe(
+        "Ctrl+Period",
+      ),
+    );
   });
 });

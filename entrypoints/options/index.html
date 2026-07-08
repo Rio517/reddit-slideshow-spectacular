@@ -425,11 +425,18 @@
 
       <div class="field" id="shortcutField">
         <span class="field__label">
-          <span data-i18n="optShortcut">Slideshow shortcut</span>
+          <span id="shortcutLabel" data-i18n="optShortcut"
+            >Slideshow shortcut</span
+          >
           <span><output id="shortcutValue">Alt+Shift+S</output></span>
         </span>
         <div class="shortcut__row">
-          <input id="shortcutInput" type="text" readonly />
+          <input
+            id="shortcutInput"
+            type="text"
+            readonly
+            aria-labelledby="shortcutLabel"
+          />
           <button id="shortcutReset" type="button" data-i18n="optShortcutReset">
             Reset to default
           </button>

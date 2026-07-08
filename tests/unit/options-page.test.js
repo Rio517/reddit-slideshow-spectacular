@@ -63,4 +63,11 @@ describe("options page shortcut card", () => {
     );
     expect(doc.querySelector("#shortcutError")?.textContent).toBe("");
   });
+
+  it("associates the recorder input with its label for accessibility", () => {
+    expect(doc.querySelector("#shortcutLabel")).not.toBeNull();
+    expect(
+      doc.querySelector("#shortcutInput")?.getAttribute("aria-labelledby"),
+    ).toBe("shortcutLabel");
+  });
 });
