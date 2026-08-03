@@ -28,6 +28,21 @@ import { createLogger } from "@/lib/log.js";
 
 const log = createLogger("background");
 
+/**
+ * Capped proxy fetch that re-checks the host after any redirect.
+ * @param {number} maxBytes
+ * @param {(host: string) => boolean} isAllowed
+ * @param {string} label
+ * @returns {(url: string) => Promise<ArrayBuffer>}
+ */
+function cappedFetch(maxBytes, isAllowed, label) {
+  return (url) =>
+    fetchCappedBytes(url, maxBytes, {
+      validateFinalUrl: (finalUrl) =>
+        isAllowedFetchUrl(finalUrl, isAllowed, `${label} redirect`),
+    });
+}
+
 export default defineBackground(() => {
   browser.runtime.onInstalled.addListener(() => {
     log.info("installed");
@@ -42,12 +57,7 @@ export default defineBackground(() => {
   // Layer 2 dedup: fetch + decode + perceptual-hash entirely in the background,
   // returning only the hex so no image bytes cross the message boundary.
   const hashImage = createImageHasher({
-    fetchBytes: (url) =>
-      fetchCappedBytes(url, MAX_IMAGE_BYTES, {
-        // A redirect off an allowlisted CDN must be re-checked too.
-        validateFinalUrl: (finalUrl) =>
-          isAllowedFetchUrl(finalUrl, isHashableHost, "hashImage redirect"),
-      }),
+    fetchBytes: cappedFetch(MAX_IMAGE_BYTES, isHashableHost, "hashImage"),
   });
 
   /**
@@ -76,24 +86,21 @@ export default defineBackground(() => {
     // Layer 2 dedup: returns the perceptual hash hex (computed background-side).
     hashImage,
     // Redgifs mp4 bytes, played back as a blob to dodge CDN hotlink protection.
-    fetchMediaBytes: (url) =>
-      fetchCappedBytes(url, MAX_MEDIA_BYTES, {
-        validateFinalUrl: (finalUrl) =>
-          isAllowedFetchUrl(finalUrl, isProxyMediaHost, "fetchMedia redirect"),
-      }),
+    fetchMediaBytes: cappedFetch(
+      MAX_MEDIA_BYTES,
+      isProxyMediaHost,
+      "fetchMedia",
+    ),
     // Lazy redgifs: resolve one embed's native mp4 (+ duration/audio) on demand.
     resolveRedgifsId: (id) => redgifs.resolve(id),
     // v.redd.it audio: fetch the DASH manifest and read its separate audio
     // track URL (null for a silent clip), to play alongside the silent video.
     resolveRedditAudio: async (dashUrl) => {
-      const bytes = await fetchCappedBytes(dashUrl, MAX_MANIFEST_BYTES, {
-        validateFinalUrl: (finalUrl) =>
-          isAllowedFetchUrl(
-            finalUrl,
-            isVredditHost,
-            "resolveRedditAudio redirect",
-          ),
-      });
+      const bytes = await cappedFetch(
+        MAX_MANIFEST_BYTES,
+        isVredditHost,
+        "resolveRedditAudio",
+      )(dashUrl);
       return audioUrlFromDash(new TextDecoder().decode(bytes), dashUrl);
     },
     // Save the displayed media. The downloads API runs from the background and
