@@ -113,6 +113,11 @@ logged-in Firefox + Chrome before trusting it:
   `chrome://extensions/shortcuts`. If Firefox rejects the update, the card must
   degrade to the guidance-only message. Also eyeball the #ddd title +
   dimensions text over a bright image.
+- **Native base64→Blob decode for proxied media** — the content script now
+  decodes the background's base64 payload via `base64ToBlob` (a `data:` URL
+  fetch) instead of a synchronous JS loop. Confirm in logged-in Chrome that a
+  Redgifs clip still plays through the proxy, with no CSP or data-URL-fetch
+  surprise in the content-script context.
 
 ### Media providers - the pattern
 

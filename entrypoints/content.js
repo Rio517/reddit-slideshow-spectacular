@@ -4,7 +4,7 @@ import overlayCss from "@/assets/overlay.css?inline";
 import { createOverlay } from "@/lib/overlay-ui.js";
 import { getSettings, saveSettings } from "@/lib/settings.js";
 import { createSlideshowSession } from "@/lib/session.js";
-import { base64ToArrayBuffer } from "@/lib/bytes-base64.js";
+import { base64ToBlob } from "@/lib/bytes-base64.js";
 import { redgifsVideoSlide } from "@/lib/redgifs.js";
 import { redgifsId } from "@/lib/slides.js";
 import { createLogger } from "@/lib/log.js";
@@ -86,9 +86,7 @@ export default defineContentScript({
           return null;
         }
         if (!res?.ok || !res.b64) return null;
-        return URL.createObjectURL(
-          new Blob([base64ToArrayBuffer(res.b64)], { type: "video/mp4" }),
-        );
+        return URL.createObjectURL(await base64ToBlob(res.b64, "video/mp4"));
       },
       // Lazy redgifs: resolve one embed's native mp4 on approach and return the
       // upgraded video slide (proxied on Chrome, where referrerpolicy is a no-op
