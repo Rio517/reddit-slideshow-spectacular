@@ -35,11 +35,12 @@ AirPlay or Chromecast that window to your TV for a hands-off, lean-back feed.
 - Skips duplicates (reposts, crossposts, repeated galleries) and broken media -
   duplicates are filtered before they show.
 - **Upvote/downvote** the current post with the **↑/↓** keys, through your
-  logged-in session.
+  logged-in session - the arrow at the head of the title shows your vote.
 - **Download** the current media, or open the original post, from the overlay.
 - **Block** an author (**I**) or **friend / follow** them (**A**) - through your
   logged-in session.
-- A byline under each slide: `/u/author to /r/subreddit from {domain} at {W×H}`.
+- A byline under each slide - `/u/author to /r/subreddit`, with the source
+  (`{domain} • {W}×{H}`) on its own line.
 - Lots to tune from the overlay's gear, applied live with no reload - see
   [Settings](#settings).
 
