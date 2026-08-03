@@ -199,6 +199,7 @@ const mediaSrc = () => {
 /** @param {string} k @returns {any} */
 const key = (k) => ({
   key: k,
+  isTrusted: true, // a real keypress, not page-script-dispatched
   preventDefault() {},
   stopImmediatePropagation() {},
 });
@@ -587,6 +588,7 @@ describe("createSlideshowSession", () => {
     session.handleKeydown(
       /** @type {any} */ ({
         key: "ArrowUp",
+        isTrusted: true,
         target: slider,
         preventDefault() {},
         stopImmediatePropagation() {},
@@ -859,6 +861,7 @@ describe("createSlideshowSession", () => {
     let stopped = 0;
     const ev = (/** @type {string} */ k) => ({
       key: k,
+      isTrusted: true,
       preventDefault: () => {
         prevented += 1;
       },
@@ -1252,6 +1255,7 @@ describe("createSlideshowSession", () => {
     session.handleKeydown(
       /** @type {any} */ ({
         key: " ",
+        isTrusted: true,
         target: range,
         preventDefault: () => {
           prevented = true;
@@ -1409,6 +1413,60 @@ describe("createSlideshowSession", () => {
     expect(text(".rs-vote-flash")).not.toContain("spez");
   });
 
+  it("ignores a synthetic (non-trusted) keydown for a write action", async () => {
+    // A compromised/XSS'd page script dispatching a fake "i" keydown must not
+    // block a user as the logged-in account.
+    /** @type {string[]} */
+    const blocked = [];
+    const { session } = makeSession({
+      block: async (name) => {
+        blocked.push(name);
+        return { ok: true };
+      },
+      pages: [
+        {
+          slides: [imageSlide("a", { author: "spez" })],
+          after: null,
+          exhausted: true,
+          postsScanned: 1,
+        },
+      ],
+    });
+    await session.start();
+    session.handleKeydown({ ...key("i"), isTrusted: false });
+    await flush();
+    expect(blocked).toEqual([]);
+  });
+
+  it("ignores a keydown with isTrusted unset (fails closed)", async () => {
+    /** @type {string[]} */
+    const blocked = [];
+    const { session } = makeSession({
+      block: async (name) => {
+        blocked.push(name);
+        return { ok: true };
+      },
+      pages: [
+        {
+          slides: [imageSlide("a", { author: "spez" })],
+          after: null,
+          exhausted: true,
+          postsScanned: 1,
+        },
+      ],
+    });
+    await session.start();
+    session.handleKeydown(
+      /** @type {any} */ ({
+        key: "i",
+        preventDefault() {},
+        stopImmediatePropagation() {},
+      }),
+    );
+    await flush();
+    expect(blocked).toEqual([]);
+  });
+
   it("ignores auto-repeat for the block and friend keys", async () => {
     /** @type {string[]} */
     const blocked = [];
@@ -1480,6 +1538,7 @@ describe("PageUp / PageDown ±10", () => {
     let stopped = 0;
     const ev = {
       key: "PageDown",
+      isTrusted: true,
       preventDefault: () => (prevented += 1),
       stopImmediatePropagation: () => (stopped += 1),
       target: document.body,
@@ -1529,6 +1588,7 @@ describe("Shift+ArrowRight skips the current gallery", () => {
   const shiftRight = () =>
     /** @type {any} */ ({
       key: "ArrowRight",
+      isTrusted: true,
       shiftKey: true,
       preventDefault() {},
       stopImmediatePropagation() {},
