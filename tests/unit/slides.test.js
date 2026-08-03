@@ -50,6 +50,48 @@ describe("slidesFromListing", () => {
     });
   });
 
+  it("captures reddit's smallest preview resolution as hashUrl for dedup hashing", () => {
+    const slides = slidesFromListing(fixture);
+    expect(slides[0].hashUrl).toBe(
+      "https://preview.redd.it/alpha.jpg?width=108&crop=smart&auto=webp&s=fake108",
+    );
+  });
+
+  it("leaves hashUrl undefined when the post has no preview resolutions", () => {
+    const slides = slidesFromListing(fixture);
+    expect(slides[1].hashUrl).toBeUndefined();
+  });
+
+  it("leaves hashUrl undefined when the smallest resolution is on a non-hashable host", () => {
+    const slides = slidesFromListing({
+      data: {
+        children: [
+          {
+            kind: "t3",
+            data: {
+              name: "t3_offhost",
+              title: "Off-host preview",
+              permalink: "/r/x/comments/offhost/x/",
+              url: "https://i.redd.it/offhost.jpg",
+              post_hint: "image",
+              preview: {
+                images: [
+                  {
+                    source: { url: "https://i.redd.it/offhost.jpg" },
+                    resolutions: [
+                      { url: "https://evil.example/offhost.jpg?width=108" },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    });
+    expect(slides[0].hashUrl).toBeUndefined();
+  });
+
   it("resolves permalinks against the given page origin", () => {
     const slides = slidesFromListing(fixture, "https://www.reddit.com");
     expect(slides[0].permalink).toBe(

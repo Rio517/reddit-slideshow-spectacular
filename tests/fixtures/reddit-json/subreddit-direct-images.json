@@ -23,7 +23,19 @@
                   "url": "https://preview.redd.it/alpha.jpg?auto=webp&s=fake",
                   "width": 7680,
                   "height": 4320
-                }
+                },
+                "resolutions": [
+                  {
+                    "url": "https://preview.redd.it/alpha.jpg?width=108&crop=smart&auto=webp&s=fake108",
+                    "width": 108,
+                    "height": 61
+                  },
+                  {
+                    "url": "https://preview.redd.it/alpha.jpg?width=216&crop=smart&auto=webp&s=fake216",
+                    "width": 216,
+                    "height": 122
+                  }
+                ]
               }
             ]
           }

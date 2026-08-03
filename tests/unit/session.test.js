@@ -418,6 +418,34 @@ describe("createSlideshowSession", () => {
     expect(mediaSrc()).toBe("https://i.redd.it/c.jpg");
   });
 
+  it("hashes a slide's small preview URL instead of re-fetching the full mediaUrl", async () => {
+    /** @type {string[]} */
+    const hashedUrls = [];
+    const { session } = makeSession({
+      settingsOverrides: { contentDedup: true },
+      computeImageHash: async (url) => {
+        hashedUrls.push(url);
+        return null;
+      },
+      pages: [
+        {
+          slides: [
+            imageSlide("a", {
+              hashUrl: "https://preview.redd.it/a-small.jpg",
+            }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 1,
+        },
+      ],
+    });
+    await session.start();
+    await flush();
+    expect(hashedUrls).toContain("https://preview.redd.it/a-small.jpg");
+    expect(hashedUrls).not.toContain("https://i.redd.it/a.jpg");
+  });
+
   it("resolves v.redd.it audio for an upcoming video and plays it from a companion element", async () => {
     const audioTrack = "https://v.redd.it/b/DASH_AUDIO_128.mp4";
     const { session } = makeSession({
