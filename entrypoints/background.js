@@ -1,5 +1,11 @@
 import { fetchQueuePage } from "@/lib/queue.js";
-import { createMessageRouter } from "@/lib/background-router.js";
+import {
+  createMessageRouter,
+  isAllowedFetchUrl,
+  isHashableHost,
+  isProxyMediaHost,
+  isVredditHost,
+} from "@/lib/background-router.js";
 import { createRedgifsResolver } from "@/lib/redgifs.js";
 import {
   createStreamableResolver,
@@ -36,7 +42,12 @@ export default defineBackground(() => {
   // Layer 2 dedup: fetch + decode + perceptual-hash entirely in the background,
   // returning only the hex so no image bytes cross the message boundary.
   const hashImage = createImageHasher({
-    fetchBytes: (url) => fetchCappedBytes(url, MAX_IMAGE_BYTES),
+    fetchBytes: (url) =>
+      fetchCappedBytes(url, MAX_IMAGE_BYTES, {
+        // A redirect off an allowlisted CDN must be re-checked too.
+        validateFinalUrl: (finalUrl) =>
+          isAllowedFetchUrl(finalUrl, isHashableHost, "hashImage redirect"),
+      }),
   });
 
   /**
@@ -65,13 +76,24 @@ export default defineBackground(() => {
     // Layer 2 dedup: returns the perceptual hash hex (computed background-side).
     hashImage,
     // Redgifs mp4 bytes, played back as a blob to dodge CDN hotlink protection.
-    fetchMediaBytes: (url) => fetchCappedBytes(url, MAX_MEDIA_BYTES),
+    fetchMediaBytes: (url) =>
+      fetchCappedBytes(url, MAX_MEDIA_BYTES, {
+        validateFinalUrl: (finalUrl) =>
+          isAllowedFetchUrl(finalUrl, isProxyMediaHost, "fetchMedia redirect"),
+      }),
     // Lazy redgifs: resolve one embed's native mp4 (+ duration/audio) on demand.
     resolveRedgifsId: (id) => redgifs.resolve(id),
     // v.redd.it audio: fetch the DASH manifest and read its separate audio
     // track URL (null for a silent clip), to play alongside the silent video.
     resolveRedditAudio: async (dashUrl) => {
-      const bytes = await fetchCappedBytes(dashUrl, MAX_MANIFEST_BYTES);
+      const bytes = await fetchCappedBytes(dashUrl, MAX_MANIFEST_BYTES, {
+        validateFinalUrl: (finalUrl) =>
+          isAllowedFetchUrl(
+            finalUrl,
+            isVredditHost,
+            "resolveRedditAudio redirect",
+          ),
+      });
       return audioUrlFromDash(new TextDecoder().decode(bytes), dashUrl);
     },
     // Save the displayed media. The downloads API runs from the background and

@@ -3,16 +3,22 @@ import { fetchCappedBytes } from "../../lib/proxy-fetch.js";
 
 /**
  * @param {Uint8Array[]} chunks
- * @param {{ contentLength?: number, ok?: boolean, status?: number }} [opts]
+ * @param {{ contentLength?: number, ok?: boolean, status?: number, url?: string }} [opts]
  */
 function streamResponse(
   chunks,
-  { contentLength, ok = true, status = 200 } = {},
+  {
+    contentLength,
+    ok = true,
+    status = 200,
+    url = "https://media.redgifs.com/x.mp4",
+  } = {},
 ) {
   let i = 0;
   return {
     ok,
     status,
+    url,
     headers: {
       get: (/** @type {string} */ k) =>
         k.toLowerCase() === "content-length" && contentLength != null
@@ -73,6 +79,36 @@ describe("fetchCappedBytes", () => {
         fetchImpl: /** @type {any} */ (fetchImpl),
       }),
     ).rejects.toThrow(/404/);
+  });
+
+  it("rejects when the final (post-redirect) URL fails the validator", async () => {
+    const fetchImpl = async () =>
+      /** @type {any} */ (
+        streamResponse([new Uint8Array(4)], {
+          url: "https://internal.example.com/x.mp4",
+        })
+      );
+    await expect(
+      fetchCappedBytes("https://media.redgifs.com/x.mp4", 100, {
+        fetchImpl: /** @type {any} */ (fetchImpl),
+        validateFinalUrl: (url) =>
+          new URL(url).hostname === "media.redgifs.com",
+      }),
+    ).rejects.toThrow(/final-url/);
+  });
+
+  it("returns the bytes when the final URL stays on an allowed host", async () => {
+    const fetchImpl = async () =>
+      /** @type {any} */ (
+        streamResponse([new Uint8Array(4)], {
+          url: "https://media.redgifs.com/x.mp4",
+        })
+      );
+    const buf = await fetchCappedBytes("https://media.redgifs.com/x.mp4", 100, {
+      fetchImpl: /** @type {any} */ (fetchImpl),
+      validateFinalUrl: (url) => new URL(url).hostname === "media.redgifs.com",
+    });
+    expect(buf.byteLength).toBe(4);
   });
 
   it("aborts and rejects on timeout", async () => {
