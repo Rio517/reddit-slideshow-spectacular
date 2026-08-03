@@ -16,14 +16,15 @@ Reddit Slideshow Spectacular! trasforma i tuoi feed Reddit in una presentazione 
 
 La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave API, nessun accesso aggiuntivo, nessun account extra. Scorre i post multimediali nell'ordine in cui Reddit li restituisce e sfoglia automaticamente il feed, così la presentazione prosegue oltre la prima pagina.
 
-NOVITÀ - V1.2.0
+NOVITÀ - V1.3.0
 
-- Nuove scorciatoie da tastiera: D per scaricare l'immagine o il video corrente, I per bloccare l'autore (e saltare il suo post) e A per aggiungerlo agli amici o seguirlo
-- Impostazioni separate «Mostra sempre il contatore e i saltati» e «Mostra sempre il titolo e la didascalia»
-- Un contatore di posizione e un indicatore dei saltati più discreti, con un piccolo indicatore di caricamento nell'angolo mentre si carica la diapositiva successiva
-- Corretto: i controlli ora si nascondono quando inattivi anche dopo aver fatto clic su uno con il mouse
+- Cambia la scorciatoia da tastiera della presentazione dalle impostazioni dell'estensione: su Firefox, fai clic sul campo e premi una nuova combinazione; su Chrome, un pulsante ti porta alla pagina delle scorciatoie del browser (Alt+Shift+S resta quella predefinita)
+- La freccia sul titolo ora mostra il tuo voto attuale: arancione se hai votato positivamente, blu se hai votato negativamente
+- Una firma più ordinata, con la fonte e la risoluzione ora su una riga propria, e un testo più leggibile sopra le immagini
+- Corretto: i clip video ora si adattano alla propria forma invece di stirarsi da un bordo all'altro, così lo sfondo scuro attorno torna cliccabile per chiudere e i controlli del player non si estendono più su tutta la finestra
+- L'elenco che apri dal contatore di posizione ora resta aperto mentre lo consulti, si può tornare molto più indietro, e panoramica e zoom si adattano ora alla risoluzione di ciascuna immagine
 
-Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.2.0
+Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
 
 COSA RIPRODUCE
 

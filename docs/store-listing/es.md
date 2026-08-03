@@ -16,14 +16,15 @@ Reddit Slideshow Spectacular! convierte tus feeds de Reddit en un pase de diapos
 
 El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves de API, sin inicio de sesión adicional y sin cuentas extra. Recorre las publicaciones multimedia en el orden en que Reddit las devuelve y avanza por el feed de forma automática, de modo que el pase de diapositivas continúa más allá de la primera página.
 
-NOVEDADES - V1.2.0
+NOVEDADES - V1.3.0
 
-- Nuevos atajos de teclado: D para descargar la imagen o el vídeo actual, I para bloquear al autor (y omitir su publicación), y A para agregarlo como amigo o seguirlo
-- Ajustes independientes «Mostrar siempre el contador y los omitidos» y «Mostrar siempre el título y la firma»
-- Un contador de posición y un indicador de omitidos más discretos, con un pequeño indicador giratorio en la esquina mientras se carga la siguiente diapositiva
-- Corregido: los controles ahora se ocultan al estar inactivos incluso después de hacer clic en uno con el ratón
+- Cambia el atajo de teclado del pase de diapositivas desde los ajustes de la extensión: en Firefox, haz clic en el cuadro y pulsa una nueva combinación; en Chrome, un botón te lleva a la página de atajos del navegador (Alt+Shift+S sigue siendo el predeterminado)
+- La flecha del título ahora muestra tu voto actual: naranja si es positivo, azul si es negativo
+- Una línea de créditos más ordenada, con la fuente y la resolución en su propia línea, y un texto más claro y fácil de leer sobre las imágenes
+- Corregido: los clips de vídeo ahora se ajustan a su propia forma en vez de estirarse de borde a borde, así que el fondo oscuro alrededor vuelve a poder cerrarse con un clic y los controles del reproductor ya no se extienden por toda la ventana
+- La lista que abres desde el contador de posición ahora permanece abierta mientras la recorres, el retroceso llega mucho más atrás, y el paneo y zoom se adapta ahora a la resolución de cada imagen
 
-Notas completas de la versión: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.2.0
+Notas completas de la versión: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
 
 QUÉ REPRODUCE
 

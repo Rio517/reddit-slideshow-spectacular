@@ -16,14 +16,15 @@ Reddit Slideshow Spectacular! verwandelt deine Reddit-Feeds in eine bildschirmf�
 
 Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüssel, keine separate Anmeldung, kein zusätzliches Konto. Sie geht die Medienbeiträge in der Reihenfolge durch, in der Reddit sie liefert, und blättert automatisch durch den Feed, sodass die Diashow über die erste Seite hinaus weiterläuft.
 
-NEU IN V1.2.0
+NEU IN V1.3.0
 
-- Neue Tastenkürzel: D zum Herunterladen des aktuellen Bildes oder Videos, I zum Blockieren des Autors (und Überspringen seines Beitrags) und A, um ihn als Freund hinzuzufügen oder ihm zu folgen
-- Getrennte Optionen „Zähler und Übersprungene immer anzeigen“ und „Titel und Infozeile immer anzeigen“
-- Ein dezenterer Positionszähler und Übersprungen-Zähler, mit einem kleinen Ladekreisel in der Ecke, während die nächste Folie lädt
-- Behoben: Die Bedienelemente werden bei Inaktivität jetzt auch dann ausgeblendet, wenn du zuvor mit der Maus auf eines geklickt hast
+- Ändere das Tastenkürzel für die Diashow in den Einstellungen der Erweiterung: Klicke in Firefox in das Feld und drücke eine neue Tastenkombination; in Chrome führt dich ein Button zur Tastenkürzel-Seite des Browsers (Alt+Shift+S bleibt das Standardkürzel)
+- Der Pfeil im Titel zeigt jetzt deine Stimme: orange, wenn du hochgevotet hast, blau, wenn du runtergevotet hast
+- Eine übersichtlichere Infozeile: Quelle und Auflösung stehen jetzt in einer eigenen Zeile, und der Text ist über Bildern leichter lesbar
+- Behoben: Video-Clips passen sich jetzt ihrem eigenen Format an, statt sich randlos zu strecken, sodass der dunkle Hintergrund wieder anklickbar ist, um zu schließen, und die Steuerelemente des Players nicht mehr über das ganze Fenster reichen
+- Die Liste, die du über den Positionszähler öffnest, bleibt jetzt offen, während du sie durchsiehst, das Zurückspulen reicht viel weiter zurück, und Schwenken & Zoomen passt sich jetzt der Auflösung jedes Bildes an
 
-Vollständige Versionshinweise: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.2.0
+Vollständige Versionshinweise: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
 
 WAS ABGESPIELT WIRD
 

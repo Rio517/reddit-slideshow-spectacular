@@ -16,14 +16,15 @@ Reddit Slideshow Spectacular! transforme vos fils Reddit en un diaporama multim�
 
 Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API, aucune connexion supplémentaire, aucun compte additionnel. Il parcourt les publications multimédia dans l'ordre où Reddit les renvoie et pagine automatiquement le fil, de sorte que le diaporama se poursuit au-delà de la première page.
 
-NOUVEAUTÉS — V1.2.0
+NOUVEAUTÉS — V1.3.0
 
-- Nouveaux raccourcis clavier : D pour télécharger l'image ou la vidéo en cours, I pour bloquer l'auteur (et passer sa publication), et A pour l'ajouter en ami ou le suivre
-- Réglages distincts « Toujours afficher le compteur et les ignorés » et « Toujours afficher le titre et la signature »
-- Un compteur de position et un indicateur d'éléments ignorés plus discrets, avec un petit indicateur de chargement dans le coin pendant le chargement de la diapositive suivante
-- Corrigé : les contrôles se masquent désormais en cas d'inactivité, même après avoir cliqué sur l'un d'eux à la souris
+- Changez le raccourci clavier du diaporama depuis les paramètres de l'extension : sur Firefox, cliquez sur le champ puis appuyez sur une nouvelle combinaison ; sur Chrome, un bouton vous mène à la page des raccourcis du navigateur (Alt+Shift+S reste le raccourci par défaut)
+- La flèche du titre affiche désormais votre vote actuel : orange si vous avez voté pour, bleu si vous avez voté contre
+- Une ligne d'informations plus compacte, avec la source et la résolution sur leur propre ligne, et un texte plus lisible sur les images
+- Corrigé : les clips vidéo s'adaptent désormais à leur propre format au lieu de s'étirer d'un bord à l'autre, si bien que le fond sombre autour d'eux est de nouveau cliquable pour fermer, et les commandes du lecteur ne s'étendent plus sur toute la fenêtre
+- La liste que vous ouvrez depuis le compteur de position reste désormais ouverte pendant que vous la parcourez, le retour en arrière va beaucoup plus loin, et le zoom s'adapte maintenant à la résolution de chaque image
 
-Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.2.0
+Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
 
 CE QU'IL DIFFUSE
 

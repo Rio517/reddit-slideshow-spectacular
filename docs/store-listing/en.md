@@ -16,14 +16,15 @@ Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard
 
 The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
 
-WHAT'S NEW - V1.2.0
+WHAT'S NEW - V1.3.0
 
-- New keyboard shortcuts: D to download the current image or video, I to block the author (and skip their post), and A to friend/follow the author
-- Separate "always show the count & skips" and "always show the title & byline" toggles
-- A quieter position counter and skipped-count badge, with a small corner spinner while the next slide loads
-- Fixed: the controls now hide when idle even after you click one with the mouse
+- Change the slideshow's keyboard shortcut from the extension's settings: on Firefox, click the box and press a new combination; on Chrome, a button takes you to the browser's shortcut page (Alt+Shift+S stays the default)
+- The vote arrow on the title now shows your current vote: orange for an upvote, blue for a downvote
+- A tidier byline, with the source and resolution split onto their own line, and lighter, easier-to-read text over images
+- Fixed: video clips now scale to their own shape instead of stretching edge-to-edge, so the dark backdrop around them is clickable to close again and the on-screen player controls no longer stretch across the whole window
+- The list you open from the position counter now stays open while you browse it, rewind reaches much further back, and pan & zoom adapts to each image's resolution
 
-Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.2.0
+Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
 
 WHAT IT PLAYS
 
