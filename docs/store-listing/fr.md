@@ -18,12 +18,11 @@ Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API
 
 NOUVEAUTÉS — V1.3.0
 
-- Changez le raccourci clavier du diaporama depuis les paramètres de l'extension : sur Firefox, cliquez sur le champ puis appuyez sur une nouvelle combinaison ; sur Chrome, un bouton vous mène à la page des raccourcis du navigateur (Alt+Shift+S reste le raccourci par défaut)
-- La flèche du titre affiche désormais votre vote actuel : orange si vous avez voté pour, bleu si vous avez voté contre — et elle reste affichée sur chaque image d'une galerie
-- Une ligne d'informations plus compacte, avec la source et la résolution sur leur propre ligne, et un texte plus lisible sur les images
-- Corrigé : les clips vidéo s'adaptent désormais à leur propre format au lieu de s'étirer d'un bord à l'autre, si bien que le fond sombre autour d'eux est de nouveau cliquable pour fermer, et les commandes du lecteur ne s'étendent plus sur toute la fenêtre
-- La liste que vous ouvrez depuis le compteur de position reste désormais ouverte pendant que vous la parcourez, le retour en arrière va beaucoup plus loin, et le zoom s'adapte maintenant à la résolution de chaque image
-- L'infobulle du bouton de téléchargement affiche désormais son raccourci clavier (D), comme les autres commandes
+- NOUVEAU : raccourci clavier d'ouverture configurable
+- NOUVEAU : la flèche du titre affiche désormais votre vote actuel
+- AMÉLIORÉ : une ligne d'informations plus compacte, un texte plus lisible sur les images
+- AMÉLIORÉ : la liste ne se ferme plus toute seule et remonte plus loin en arrière
+- CORRIGÉ : les clips vidéo s'adaptent désormais, si bien que les commandes du lecteur ne s'étendent plus sur toute la fenêtre
 
 Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
 

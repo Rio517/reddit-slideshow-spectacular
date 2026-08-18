@@ -18,12 +18,11 @@ The Slideshow reuses your existing logged-in Reddit session - no API keys, no si
 
 WHAT'S NEW - V1.3.0
 
-- Change the slideshow's keyboard shortcut from the extension's settings: on Firefox, click the box and press a new combination; on Chrome, a button takes you to the browser's shortcut page (Alt+Shift+S stays the default)
-- The vote arrow on the title now shows your current vote: orange for an upvote, blue for a downvote - and it stays put as you move through a gallery's images
-- A tidier byline, with the source and resolution split onto their own line, and lighter, easier-to-read text over images
-- Fixed: video clips now scale to their own shape instead of stretching edge-to-edge, so the dark backdrop around them is clickable to close again and the on-screen player controls no longer stretch across the whole window
-- The list you open from the position counter now stays open while you browse it, rewind reaches much further back, and pan & zoom adapts to each image's resolution
-- The download button's tooltip now shows its keyboard shortcut (D), like the rest of the controls
+- NEW: Configurable open keyboard shortcut
+- NEW: The vote arrow on the title now shows your current vote
+- IMPROVED: A tidier byline, easier-to-read text over images
+- IMPROVED: The list won't close on you and goes further back
+- FIXED: video clips now scale so the on-screen player controls no longer stretch across the whole window
 
 Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
 

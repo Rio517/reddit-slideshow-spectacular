@@ -18,12 +18,11 @@ La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave
 
 NOVITÀ - V1.3.0
 
-- Cambia la scorciatoia da tastiera della presentazione dalle impostazioni dell'estensione: su Firefox, fai clic sul campo e premi una nuova combinazione; su Chrome, un pulsante ti porta alla pagina delle scorciatoie del browser (Alt+Shift+S resta quella predefinita)
-- La freccia sul titolo ora mostra il tuo voto attuale: arancione se hai votato positivamente, blu se hai votato negativamente - e resta visibile su ogni immagine di una galleria
-- Una firma più ordinata, con la fonte e la risoluzione ora su una riga propria, e un testo più leggibile sopra le immagini
-- Corretto: i clip video ora si adattano alla propria forma invece di stirarsi da un bordo all'altro, così lo sfondo scuro attorno torna cliccabile per chiudere e i controlli del player non si estendono più su tutta la finestra
-- L'elenco che apri dal contatore di posizione ora resta aperto mentre lo consulti, si può tornare molto più indietro, e panoramica e zoom si adattano ora alla risoluzione di ciascuna immagine
-- Il suggerimento del pulsante di download ora mostra la sua scorciatoia da tastiera (D), come gli altri controlli
+- NUOVO: scorciatoia da tastiera di apertura configurabile
+- NUOVO: la freccia sul titolo ora mostra il tuo voto attuale
+- MIGLIORATO: una firma più ordinata, testo più leggibile sopra le immagini
+- MIGLIORATO: l'elenco non si chiude più da solo e arriva più indietro
+- CORRETTO: i clip video ora si ridimensionano, così i controlli del player non si estendono più su tutta la finestra
 
 Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
 
