@@ -182,6 +182,13 @@ Both stores take the `wxt zip` output; submission is manual (no automated
 release yet). Bump `version` in `package.json` before each release - both
 stores reject a re-used version.
 
+The store listing copy - the marketing text plus each version's "what's new" /
+release notes - lives in `docs/store-listing/<lang>.md`, one file per locale.
+Update it alongside the release, then paste it into each store's per-locale
+listing and release-notes fields at submission. The GitHub release body is
+written when the release is published (**New** / **Fixed** sections; see the
+v1.2.0 release for the format).
+
 **Firefox (AMO):**
 
 1. `npm run zip:firefox` → a `.zip` in `.output/` (built extension + a sources zip).
@@ -219,6 +226,7 @@ The core logic in `lib/` is DOM/extension-agnostic and unit-tested; the
 
 - Architecture decisions: `docs/adr/` (see `docs/README.md` for the index).
 - Product spec and research: `docs/product/`, `docs/research/`.
+- Store listing & release-notes copy: `docs/store-listing/` (one file per locale).
 - Current status and next steps: `NEXT_STEP.md`.
 
 ## Status

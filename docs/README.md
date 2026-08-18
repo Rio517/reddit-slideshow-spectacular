@@ -5,6 +5,7 @@ This directory holds planning material for a Firefox-first browser extension tha
 ## Documents
 
 - [Product spec draft](product/reddit-slideshow-product-spec.md): product goals, scope, user experience, open questions, and acceptance criteria.
+- [Store listings](store-listing/en.md): the store copy in all six locales (`store-listing/<lang>.md`) - the marketing text and each version's what's-new / release notes, pasted into the Chrome Web Store and Firefox Add-ons at submission.
 - [Research notes](research/initial-research.md): source-backed notes on Firefox extensions, old Reddit behavior, Reddit listing pagination, RES, and external media providers.
 - [Extension development best practices](research/extension-development-best-practices.md): architecture, security, permissions, testing, Reddit access, and release guidance.
 - [Prior art and tool options](research/prior-art-and-tool-options.md): existing slideshow/gallery tools, reuse candidates, and gaps.

@@ -19,10 +19,11 @@ El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves d
 NOVEDADES - V1.3.0
 
 - Cambia el atajo de teclado del pase de diapositivas desde los ajustes de la extensión: en Firefox, haz clic en el cuadro y pulsa una nueva combinación; en Chrome, un botón te lleva a la página de atajos del navegador (Alt+Shift+S sigue siendo el predeterminado)
-- La flecha del título ahora muestra tu voto actual: naranja si es positivo, azul si es negativo
+- La flecha del título ahora muestra tu voto actual: naranja si es positivo, azul si es negativo, y se mantiene en cada imagen de una galería
 - Una línea de créditos más ordenada, con la fuente y la resolución en su propia línea, y un texto más claro y fácil de leer sobre las imágenes
 - Corregido: los clips de vídeo ahora se ajustan a su propia forma en vez de estirarse de borde a borde, así que el fondo oscuro alrededor vuelve a poder cerrarse con un clic y los controles del reproductor ya no se extienden por toda la ventana
 - La lista que abres desde el contador de posición ahora permanece abierta mientras la recorres, el retroceso llega mucho más atrás, y el paneo y zoom se adapta ahora a la resolución de cada imagen
+- La descripción emergente del botón de descarga ahora muestra su atajo de teclado (D), como el resto de los controles
 
 Notas completas de la versión: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
 

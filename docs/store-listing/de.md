@@ -19,10 +19,11 @@ Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüs
 NEU IN V1.3.0
 
 - Ändere das Tastenkürzel für die Diashow in den Einstellungen der Erweiterung: Klicke in Firefox in das Feld und drücke eine neue Tastenkombination; in Chrome führt dich ein Button zur Tastenkürzel-Seite des Browsers (Alt+Shift+S bleibt das Standardkürzel)
-- Der Pfeil im Titel zeigt jetzt deine Stimme: orange, wenn du hochgevotet hast, blau, wenn du runtergevotet hast
+- Der Pfeil im Titel zeigt jetzt deine Stimme: orange, wenn du hochgevotet hast, blau, wenn du runtergevotet hast - und sie bleibt bei jedem Bild einer Galerie sichtbar
 - Eine übersichtlichere Infozeile: Quelle und Auflösung stehen jetzt in einer eigenen Zeile, und der Text ist über Bildern leichter lesbar
 - Behoben: Video-Clips passen sich jetzt ihrem eigenen Format an, statt sich randlos zu strecken, sodass der dunkle Hintergrund wieder anklickbar ist, um zu schließen, und die Steuerelemente des Players nicht mehr über das ganze Fenster reichen
 - Die Liste, die du über den Positionszähler öffnest, bleibt jetzt offen, während du sie durchsiehst, das Zurückspulen reicht viel weiter zurück, und Schwenken & Zoomen passt sich jetzt der Auflösung jedes Bildes an
+- Der Tooltip des Download-Buttons zeigt jetzt sein Tastenkürzel (D), wie die übrigen Bedienelemente
 
 Vollständige Versionshinweise: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
 
