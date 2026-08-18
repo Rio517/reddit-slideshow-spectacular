@@ -1,21 +1,19 @@
 # NEXT_STEP - Reddit Slideshow Spectacular!
 
-**Branch:** `main` · **Status:** CI-green on `main`. v1.0.0 is live on both
-stores. **v1.1.0 — localization (i18n + RTL — en/es/fr/de/it/ar, full RTL for
-Arabic) plus an in-app Language picker — is pushed and released on GitHub**
-(tag `v1.1.0`; `release.yml` built + attached the Firefox / AMO-sources / Chrome
-zips). The UI auto-detects the browser language and can be overridden under
-**Language** on the options page. What remains for v1.1.0 to reach users:
-upload the release zips to the Chrome Web Store + Firefox Add-ons dashboards and
-submit for review, paste the localized listing copy from
-`docs/store-listing/{en,es,fr,de,it,ar}.md` into each store's per-locale fields,
-and (optional, recommended) a native-speaker pass on the machine-drafted
-translations — especially Arabic (~25% of installs); English fallback covers any
-gap meanwhile. Streaming the proxy fallback is parked (see the §1 note).
+**Branch:** `main` · **Status:** CI-green on `main`. **v1.3.0 is tagged and
+released on GitHub** (tag `v1.3.0`; `release.yml` built + attached the
+Firefox / AMO-sources / Chrome zips), and its overlay work is verified in real
+Chrome and Firefox. The stores currently serve v1.2.0; the v1.3.0 uploads are
+in progress: submit the release zips to both store dashboards and paste the
+per-locale listing copy from `docs/store-listing/{en,es,fr,de,it,ar}.md`
+(each version's what's-new block included). `npm run ship` regenerates the
+store zips, the live hero shots for both stores + the website, and the Chrome
+Web Store promo tiles (see README → Publishing). Streaming the proxy fallback
+is parked (see the §1 note).
 
 > **Hard rule:** work directly on `main`. Do not create branches or worktrees unless the user explicitly asks. See `AGENTS.md`.
 
-This is a Firefox-first (also Chrome) WebExtension that turns the current `old.reddit.com` or `www.reddit.com` feed into a keyboard-driven media slideshow. It reuses the logged-in session (no API keys) and resolves images, galleries, v.redd.it video, Redgifs, Imgur `.gifv`, Imgur albums, Streamable, Giphy, Catbox video, and crossposts via the provider dispatch in `lib/slides.js`. The overlay does a gap-free, decode-gated slide swap with six transitions (none/fade/slide/push/zoom/flip), a top-right close + a backdrop close-confirm with countdown, an idle auto-hide that respects focus, a popout/AirPlay window, a jump-to-post list (title + domain/type, auto-skipped slides dimmed and tagged with their reason), a skipped list with a per-item reason, a position counter that pulses on manual nav (with a dim/spinner when the next slide is slow), an end-of-show replay card, and ARIA + a real focus trap. The bottom-left is a bottom-anchored stack: NSFW on top, then the title row (title + open-original + download + loading spinner), then a byline reading `/u/author to /r/subreddit from {domain} at {W}×{H}` (domain + resolution in mono). The ↑/↓ keys upvote/downvote the current post through the session (modhash + `/api/vote`), with a brief toast. Redgifs resolves lazily on approach; v.redd.it audio plays from a companion `<audio>` synced to the silent fallback video. The overlay mounts inside a shadow root (its CSS injected there, isolated from old.reddit/RES page styles) and makes the page `inert` while open. Settings (per-image timer, transition, top-timer-bar mode, load-wait, autoplay, mute, Include-NSFW, dedup, pan & zoom) live in an in-overlay gear panel and a light/dark options page (with a Sponsors link), applied live. A DEV-gated logger (`lib/log.js`) aids debugging; CI runs typecheck/lint/format/test + build (both browsers) + web-ext lint; `npm run screenshots` regenerates the options shots and an offline, deterministic slideshow shot (the real overlay + session over fixture slides in `scripts/slideshow-harness/`). old.reddit.com sets no CSP, so injected cross-origin media loads directly; on www.reddit a blocked direct load falls back to the background blob proxy. The image/video sinks are host/HTTPS-gated (`safeMediaUrl`). Content-dedup hashes the preload window so duplicates are filtered before they show.
+This is a Firefox-first (also Chrome) WebExtension that turns the current `old.reddit.com` or `www.reddit.com` feed into a keyboard-driven media slideshow. It reuses the logged-in session (no API keys) and resolves images, galleries, v.redd.it video, Redgifs, Imgur `.gifv`, Imgur albums, Streamable, Giphy, Catbox video, and crossposts via the provider dispatch in `lib/slides.js`. The overlay does a gap-free, decode-gated slide swap with six transitions (none/fade/slide/push/zoom/flip), a top-right close + a backdrop close-confirm with countdown, an idle auto-hide that respects focus, a popout/AirPlay window, a jump-to-post list (title + domain/type, auto-skipped slides dimmed and tagged with their reason), a skipped list with a per-item reason, a position counter that pulses on manual nav (with a dim/spinner when the next slide is slow), an end-of-show replay card, and ARIA + a real focus trap. The bottom-left is a bottom-anchored stack: NSFW on top, then the title row (vote arrow + title + open-original + download + loading spinner), then a byline reading `/u/author to /r/subreddit`, with the source (`{domain} • {W}×{H}`) on its own mono line. The ↑/↓ keys upvote/downvote the current post through the session (modhash + `/api/vote`), with a brief toast; the title's vote arrow tints to the current vote and follows the post across a gallery's slides. Redgifs resolves lazily on approach; v.redd.it audio plays from a companion `<audio>` synced to the silent fallback video. The overlay mounts inside a shadow root (its CSS injected there, isolated from old.reddit/RES page styles) and makes the page `inert` while open. Settings (per-image timer, transition, top-timer-bar mode, load-wait, autoplay, mute, Include-NSFW, dedup, resolution-aware pan & zoom, Language, and the launch shortcut) live in an in-overlay gear panel and a light/dark options page (with a Sponsors link), applied live. A DEV-gated logger (`lib/log.js`) aids debugging; CI runs typecheck/lint/format/test + build (both browsers) + web-ext lint; `npm run screenshots` regenerates the options shots and an offline, deterministic slideshow shot (the real overlay + session over fixture slides in `scripts/slideshow-harness/`). old.reddit.com sets no CSP, so injected cross-origin media loads directly; on www.reddit a blocked direct load falls back to the background blob proxy. The image/video sinks are host/HTTPS-gated (`safeMediaUrl`). Content-dedup hashes the preload window so duplicates are filtered before they show.
 
 ---
 
@@ -36,7 +34,8 @@ Key decisions already made:
 - Use offline fixtures for unit tests instead of live Reddit.
 - Resolve images, galleries, video, Redgifs, Imgur `.gifv`, Imgur albums, Streamable, Giphy, Catbox, and crossposts via the provider dispatch in `lib/slides.js`; CDN-subdomain providers use a dot-prefixed host-suffix allowlist (`lib/provider-hosts.js`).
 - Move bytes off the `runtime.sendMessage` boundary: the background returns a perceptual-hash hex for dedup and base64 for the blob proxy (raw `ArrayBuffer` is dropped by the JSON-serialized message channel).
-- Launch from the toolbar action (icon) or Alt+Shift+S; the slideshow starts from the top of the current listing (the page's own sort).
+- Launch from the toolbar action (icon) or a configurable shortcut (default Alt+Shift+S; recorder on the options page for Firefox, a browser-shortcuts-page link on Chrome); the slideshow starts from the top of the current listing (the page's own sort).
+- i18n: source of truth is `locales/<lang>.json` (6 locales); `lib/i18n.js` bundles all six catalogs and `setLocale(resolveLocale(setting, uiLang))` switches strings + direction + plurals together ("auto" → browser UI language). `browser.i18n` is used only for `getUILanguage()` and the manifest `__MSG__` fields. `npm run locales` generates the committed `public/_locales/**`; the catalog integrity test enforces sync + key + placeholder parity.
 
 ---
 
@@ -47,77 +46,22 @@ giant commit.
 
 ### Requested, not yet done
 
-- **Localization release (1.1.0) — submit to the stores.** v1.1.0 (i18n + RTL +
-  in-app Language picker) is pushed and released on GitHub (tag `v1.1.0`, store
-  zips attached by `release.yml`). To reach users: download the release zips and
+- **v1.3.0 store rollout.** The GitHub release has all three zips attached;
   upload `*-chrome.zip` to the Chrome Web Store and `*-firefox.zip` (+
   `*-sources.zip`, the build minifies) to Firefox Add-ons, submit both for
-  review, and paste the localized listing copy from
-  `docs/store-listing/{en,es,fr,de,it,ar}.md` into each store's per-locale fields.
-  A native-speaker pass on the machine-drafted translations (especially Arabic,
-  ~25% of installs) is recommended but optional — English fallback covers gaps,
-  and any locale file can be refreshed without code changes. Architecture
-  reference: source of truth is
-  `locales/<lang>.json` (6 files, 129 keys); `lib/i18n.js` bundles all six
-  catalogs and the default getter reads `CATALOGS[activeLocale]` with per-key
-  English fallback, so `setLocale(resolveLocale(setting, uiLang))` switches
-  strings + direction + plurals together. Entrypoints resolve the locale from the
-  `locale` setting ("auto" → browser UI language → a supported locale, or an
-  explicit pick); `browser.i18n` is used only for `getUILanguage()` and the
-  manifest `__MSG__` name/description/action (browser-locale — it can't follow the
-  in-app override). The options page has a **Language** `<select>` that
-  re-localizes live; the overlay applies the choice on its next start.
-  `scripts/build-locales.mjs` (npm run locales) generates the committed
-  `public/_locales/**`; the catalog integrity test enforces sync + key +
-  placeholder parity. (Catalogs ship both bundled in JS and in `_locales` for the
-  manifest, so the package is ~516 KB — fine for an extension.)
+  review, and paste the per-locale listing copy from
+  `docs/store-listing/{en,es,fr,de,it,ar}.md` into each store's fields (the
+  brief NEW/IMPROVED/FIXED what's-new block included). Fresh store heroes
+  (1280×800) and promo tiles are committed under `docs/` and regenerate any
+  time with `npm run ship`.
+- Optional, recommended: a native-speaker pass on the machine-drafted
+  translations — especially Arabic (~25% of installs). English fallback covers
+  any gap, and any locale file can be refreshed without code changes.
 
 > **Not planned:** streaming the proxy fallback (MediaSource) was investigated
 > and parked - it needs a few-hundred-KB in-browser remuxer for a narrow
 > Chrome-only win. The full reasoning + the Playwright evidence are in
 > `docs/research/proxy-streaming-mediasource.md`.
-
-### Needs a real-browser confirm
-
-These have unit tests but can't be exercised offline. Confirm each in a
-logged-in Firefox + Chrome before trusting it:
-
-- **Redgifs lazy resolution** (ADR 0016) - the page now ships iframe embeds and
-  the session resolves each to native video on approach; confirm the on-approach
-  upgrade plays on both browsers and the iframe fallback still shows on failure.
-- **v.redd.it audio** (ADR 0018) - a companion `<audio>` plays the separate DASH
-  audio track synced to the silent video; confirm sync, the mute-follow (it
-  mirrors the video's `volumechange`), the autoplay-unmute path, and that the
-  manifest's audio BaseURL actually matches.
-- **Download the current media** (ADR 0017) - confirm cross-origin saves (incl.
-  hotlink-protected CDNs, with no reddit Referer) land with the filename hint.
-- **Up/down-key voting** (ADR 0019) - confirm a real cast vote, the toggle/clear,
-  the modhash 403-refresh, and the not-logged-in optimistic revert.
-- **Neon "Spectacular!" wordmark** - the overlay splash + end card draw it as an
-  inline SVG outline (`lib/wordmark-spectacular.js`, traced from Monoton), so it
-  no longer depends on a webfont or the page CSP (the web-accessible font fell
-  back to sans in Firefox over reddit). Confirm it renders on both browsers. The
-  options page still uses the Monoton `@font-face` (extension-origin, works).
-- **Localization + RTL** — on the options page, switch **Language** to each of
-  Spanish/French/German/Italian/Arabic and confirm the page re-localizes and (for
-  Arabic) flips to RTL live; then start a slideshow and confirm the overlay
-  renders in that language with correct mirroring and an unscrambled byline. Unit
-  tests cover catalog integrity, the per-locale getter, `resolveLocale`, and the
-  `dir`/`<bdi>` structure — not rendered glyphs/layout.
-- **Configurable trigger shortcut** — the options page reads the
-  `_execute_action` binding via `commands.getAll()` and, on Firefox, rebinds it
-  with `commands.update()`/`reset()`. Confirm in Firefox that updating
-  `_execute_action` is actually accepted (MDN is fuzzy for MV3), that the new
-  combo launches the slideshow, and that reset restores Alt+Shift+S; on Chrome,
-  confirm the card hides the recorder and its button opens
-  `chrome://extensions/shortcuts`. If Firefox rejects the update, the card must
-  degrade to the guidance-only message. Also eyeball the #ddd title +
-  dimensions text over a bright image.
-- **Native base64→Blob decode for proxied media** — the content script now
-  decodes the background's base64 payload via `base64ToBlob` (a `data:` URL
-  fetch) instead of a synchronous JS loop. Confirm in logged-in Chrome that a
-  Redgifs clip still plays through the proxy, with no CSP or data-URL-fetch
-  surprise in the content-script context.
 
 ### Media providers - the pattern
 
@@ -157,6 +101,7 @@ For each task or feature:
 5. **Run broader verification**
    - `npm run typecheck`
    - `npm run lint`
+   - `npm run format`
    - `npm test`
    - `npm run build`
    - `npm run webext:lint`
@@ -191,20 +136,30 @@ These commands are available:
 npm install
 npm run typecheck
 npm run lint
+npm run format
 npm test
+npm run test:prod
 npm run build
 npm run webext:lint
 npm run dev
+npm run locales
+npm run screenshots
+npm run ship
 ```
 
 Roles:
 
 - `npm run typecheck`: JS/JSDoc type checking via TypeScript.
 - `npm run lint`: ESLint, including unsafe DOM sink checks.
+- `npm run format`: Prettier check (a CI gate; fix with `npx prettier --write .`).
 - `npm test`: Vitest unit tests with WXT fake browser.
+- `npm run test:prod`: e2e - drives the built Chrome extension in Chromium over a mocked listing.
 - `npm run build`: WXT MV3 build (both Firefox and Chrome).
 - `npm run webext:lint`: Mozilla extension lint against built output.
 - `npm run dev`: WXT dev runner for Firefox (DEV logger on).
+- `npm run locales`: regenerate the committed `public/_locales/**` from `locales/`.
+- `npm run screenshots`: offline docs shots (options page + deterministic slideshow).
+- `npm run ship`: store zips + live hero shots (`heroes`) + promo tiles (`promo`), in one pass.
 
 Visual/browser tooling:
 

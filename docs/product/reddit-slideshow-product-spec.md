@@ -96,33 +96,48 @@ with title/source context and an action to open the original Redgifs page.
 
 ### Other hosts
 
-Other external hosts are out of v1 unless they are simple direct media links. The provider system should make later additions straightforward.
+Shipped providers beyond Redgifs: Imgur `.gifv` and albums, Streamable, Giphy,
+and Catbox direct files (ADRs 0011-0015). Further hosts follow the same
+provider pattern: detection in `lib/slides.js`, a background resolver where a
+network resolve is needed, a scoped host permission, and an ADR.
 
 ## Settings
 
-- Image timer: any value from 1 to 60 seconds via a slider (default 5).
+- Image timer: 1 second to 5 minutes on a slider with fine-at-the-low-end
+  stops (default 5s), plus a max-load-wait for slow media.
+- Slide transition (none/fade/slide/push/zoom/flip) and the top timer-bar mode
+  (video slides / every slide / never).
 - Start muted: on/off (governs Reddit-video audio and provider clips with sound).
 - Autoplay slideshow: on/off (off starts the slideshow paused).
 - Include NSFW: follow Reddit / always hide. **Default: follow Reddit** - show over-18 content only insofar as the signed-in session already exposes it. This is the least-surprising default and avoids the extension becoming an NSFW-unlocking tool.
-- Provider permissions: Redgifs should be requested only if needed or clearly disclosed.
+- Duplicate skipping: URL-level dedup plus content-based re-upload detection
+  (perceptual hash, on by default).
+- Pan & zoom for large images, with the full phase sequence configurable and
+  the zoom scale adapting to each image's resolution.
+- Interface Language (auto → browser language, or an explicit pick) and a
+  configurable launch shortcut (default Alt+Shift+S).
 
 ## Permissions
 
 Install-time host permissions are scoped to the hosts the extension actually
-fetches from (see ADR 0004):
+fetches from (see ADR 0004 and the manifest in `wxt.config.ts`):
 
 - `https://old.reddit.com/*`, `https://www.reddit.com/*` - listing JSON for both
-  frontends (ADR 0008).
-- `https://i.redd.it/*`, `https://v.redd.it/*` - Reddit image and video media.
+  frontends (ADR 0008), and the keypress-driven account writes (vote/block/friend).
+- `https://i.redd.it/*`, `https://preview.redd.it/*`,
+  `https://external-preview.redd.it/*` - fetch Reddit images/previews to hash
+  for re-upload detection.
+- `https://v.redd.it/*` - fetch the DASH manifest for the separate audio track.
 - `https://api.redgifs.com/*`, `https://media.redgifs.com/*` - resolve native
   Redgifs video and fetch its bytes for the CSP fallback (ADR 0016).
+- `https://imgur.com/*`, `https://i.imgur.com/*` - `.gifv` mp4 fetch and the
+  keyless album expansion (ADRs 0011, 0015).
+- `https://*.streamable.com/*`, `https://*.giphy.com/*` - resolve and fetch
+  provider clips (ADRs 0013, 0014). Catbox files load directly in the page and
+  need no host permission (ADR 0012).
 
-Plus the `storage` API permission for settings.
-
-`preview.redd.it` / `external-preview.redd.it` are **optional** host permissions,
-requested from a user gesture only when content-based duplicate detection is
-enabled and removed when it is disabled. No all-URLs or broad host access is
-requested.
+Plus the `storage` API permission for settings and `downloads` for the
+save-media control (ADR 0017). No all-URLs or broad host access is requested.
 
 ## Error Handling
 

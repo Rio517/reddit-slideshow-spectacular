@@ -1,6 +1,6 @@
 # Privacy Policy - Reddit Slideshow Spectacular!
 
-_Last updated: 2026-06-13_
+_Last updated: 2026-08-18_
 
 **Short version: Reddit Slideshow Spectacular! collects nothing, sends nothing to
 the developer, and has no analytics, tracking, ads, or accounts. Everything it
@@ -9,8 +9,9 @@ already viewing into a full-screen media slideshow.
 
 ## What the extension stores
 
-Only your own settings - the per-image timer, autoplay, start-muted,
-Include-NSFW, the two de-duplication toggles, and the max-load-wait. These are
+Only your own settings - the per-image timer, slide transition, timer-bar
+mode, autoplay, start-muted, Include-NSFW, the two de-duplication toggles, the
+max-load-wait, the pan & zoom options, and your interface language. These are
 saved with the browser's local extension storage (`storage.local`) **on your
 computer**. They are not synced, uploaded, or shared, and contain no personal
 information. Removing the extension removes them.
@@ -89,10 +90,11 @@ operated by the developer (there is none):
 - **Host access to `v.redd.it`** - so the background can fetch a Reddit video's
   DASH manifest (without cookies) to find its separate audio track. The video and
   audio themselves load directly in the page and need no permission.
-- **Host access to `api.redgifs.com`, `media.redgifs.com`, `i.imgur.com`,
-  `*.streamable.com`, `*.giphy.com`** - so the background can resolve and fetch
-  provider clips (Redgifs, Imgur, Streamable, Giphy) and play them as native
-  video. These fetches are made without cookies.
+- **Host access to `api.redgifs.com`, `media.redgifs.com`, `imgur.com`,
+  `i.imgur.com`, `*.streamable.com`, `*.giphy.com`** - so the background can
+  resolve and fetch provider clips (Redgifs, Imgur, Streamable, Giphy) and play
+  them as native video, and expand an Imgur album into its images via Imgur's
+  keyless album endpoint. These fetches are made without cookies.
 - **`downloads`** - so the download control can save the media you are viewing to
   your computer, with a sensible filename.
 

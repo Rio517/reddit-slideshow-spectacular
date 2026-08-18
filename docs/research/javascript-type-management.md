@@ -41,20 +41,19 @@ pipeline, so the same type decisions are not re-derived each time.
   (`lib/redgifs.js`).
 - `typescript` is `^5.5.0`, so the modern `@import` JSDoc tag is available.
 
-The remaining `any` debt is concentrated in three places: the **Reddit listing
-JSON** (`slides.js`, `reddit-listing.js`, `queue.js`), the **message-router
-boundary** (`background-router.js`, `entrypoints/content.js`), and a few
-**injected-dep signatures** in `session.js`.
+The remaining `any` debt is concentrated at the **message-router boundary**
+(`background-router.js`, `entrypoints/content.js`) and a few **injected-dep
+signatures** in `session.js`. The **Reddit listing JSON** is typed via
+`lib/reddit-types.js`, as described below.
 
 ## Typing the Reddit listing JSON
 
-This is the highest-value type work: the media resolvers in `lib/slides.js` are
-the part most likely to break silently when Reddit changes its JSON shape, and
-they currently lean entirely on `any`.
+The media resolvers in `lib/slides.js` are the part most likely to break
+silently when Reddit changes its JSON shape, so the listing shapes are typed.
 
 ### Where the types live
 
-Put listing types in a **types-only module `lib/reddit-types.js`** - a `.js`
+Listing types live in a **types-only module `lib/reddit-types.js`** - a `.js`
 file containing only `@typedef`s plus a trailing `export {};` so it stays an ES
 module. Do **not** use a `.d.ts`: that would be the codebase's only non-JS,
 non-WXT source file and breaks the "plain JS by design" invariant.

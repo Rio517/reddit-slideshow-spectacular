@@ -88,8 +88,8 @@ Prefer to build it yourself — or want the Firefox build now? First build it:
 
 ```sh
 npm install
-npm run build         # Firefox → .output/firefox-mv3/
-npm run build:chrome  # Chrome  → .output/chrome-mv3/
+npm run build:firefox  # Firefox → .output/firefox-mv3/
+npm run build:chrome   # Chrome  → .output/chrome-mv3/
 ```
 
 #### Firefox
@@ -97,7 +97,7 @@ npm run build:chrome  # Chrome  → .output/chrome-mv3/
 1. Open `about:debugging#/runtime/this-firefox`.
 2. Click **Load Temporary Add-on…** and pick
    `.output/firefox-mv3/manifest.json`.
-3. After code changes, re-run `npm run build` and click **Reload**.
+3. After code changes, re-run `npm run build:firefox` and click **Reload**.
 
 Temporary add-ons are removed when you restart Firefox - just load it again. For
 a permanent install, use Firefox Developer Edition / Nightly / ESR, set
@@ -149,6 +149,11 @@ npm run typecheck    # tsc --noEmit over JSDoc-typed JS
 npm run lint         # ESLint (incl. unsafe-DOM checks)
 npm run format       # Prettier check
 npm run webext:lint  # Mozilla addons-linter on the built (Firefox) output
+npm run locales      # regenerate public/_locales from locales/
+npm run screenshots  # offline docs shots: options page + deterministic slideshow
+npm run heroes       # live store/site hero shots via the built extensions
+npm run promo        # Chrome Web Store promo tiles around the hero
+npm run ship         # store zips + heroes + promo tiles, in one pass
 ```
 
 The same source builds both browsers; WXT emits a Chrome `service_worker`
@@ -186,9 +191,10 @@ Reddit, so prefer the temporary-add-on flow above for real testing.
 
 ## Publishing
 
-Both stores take the `wxt zip` output; submission is manual (no automated
-release yet). Bump `version` in `package.json` before each release - both
-stores reject a re-used version.
+Both stores take the `wxt zip` output. Publishing a GitHub release triggers
+`release.yml`, which builds and attaches all three store zips to it; the
+store submissions themselves are manual. Bump `version` in `package.json`
+before each release - both stores reject a re-used version.
 
 `npm run ship` prepares everything the submissions need in one pass: both
 store zips, fresh live hero shots for both stores and the website (see
@@ -201,7 +207,7 @@ release notes - lives in `docs/store-listing/<lang>.md`, one file per locale.
 Update it alongside the release, then paste it into each store's per-locale
 listing and release-notes fields at submission. The GitHub release body is
 written when the release is published (**New** / **Fixed** sections; see the
-v1.2.0 release for the format).
+v1.3.0 release for the format).
 
 **Firefox (AMO):**
 
@@ -245,9 +251,12 @@ The core logic in `lib/` is DOM/extension-agnostic and unit-tested; the
 
 ## Status
 
-v1 is feature-complete and unit-tested, and published on both the
+Published on both the
 [Chrome Web Store](https://chromewebstore.google.com/detail/reddit-slideshow-spectacu/pcfajhfnnkkpadnfedkgjfgclffeoenp)
 and [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/reddit-slideshow-spectacular/).
+The latest release is on the
+[GitHub releases page](https://github.com/Rio517/reddit-slideshow-spectacular/releases),
+with the store zips attached.
 
 ## Privacy
 

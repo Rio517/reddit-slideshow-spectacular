@@ -47,6 +47,12 @@ Do not use live Reddit as the normal unit-test path.
   silent loop - covering `fallback_url`/`dash_url`/`hls_url`/`has_audio`.
 - `redgifs.json`: Redgifs post with `secure_media.oembed` aspect ratio.
 - `crosspost.json`: outer post whose media lives in `crosspost_parent_list[0]`.
+- `imgur-gifv.json`: Imgur `.gifv` post played as a looping native video.
+- `imgur-album.json`: Imgur album post expanded via the keyless `ajaxalbums`
+  endpoint.
+- `streamable.json`: Streamable post resolved to its mp4 via the public API.
+- `giphy.json`: Giphy watch-page post played as a looping native video.
+- `catbox-video.json`: Catbox direct video file played in the page.
 
 These JSON fixtures are sanitized and hand-authored from shapes captured from a
 logged-in session; the resolver is also exercised against unsanitized real
@@ -74,6 +80,7 @@ WXT rebuilds `.output/firefox-mv3/` and `web-ext` can race the output directory.
 ```sh
 npm run typecheck
 npm run lint
+npm run format
 npm test
 npm run build
 npm run webext:lint

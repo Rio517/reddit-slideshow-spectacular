@@ -1,13 +1,15 @@
-# Store Listing Copy & Metadata
+# Store Listing Metadata
 
-Copy-paste-ready submission text for the Firefox Add-ons site (AMO) and the
-Chrome Web Store. Every claim here is grounded in the extension's actual
-behaviour (see `README.md`, `PRIVACY.md`, `wxt.config.ts`, `lib/`, and
-`docs/product/`). Keep it accurate - do not add features that aren't shipped.
+Submission metadata for the Firefox Add-ons site (AMO) and the Chrome Web
+Store: categories, permission justifications, questionnaire answers, reviewer
+notes, and screenshot captions. The listing copy itself (name, summary,
+description, what's-new) lives per locale in `store-listing/<lang>.md`. Every
+claim in either place is grounded in the extension's actual behaviour (see
+`README.md`, `PRIVACY.md`, `wxt.config.ts`, `lib/`, and `docs/product/`);
+keep it accurate - do not add features that aren't shipped.
 
-The detailed description and the per-permission justifications are written as
-**plain text** because the stores don't render Markdown the same way. Paste them
-as-is.
+The justifications are written as **plain text** because the stores don't
+render Markdown the same way. Paste them as-is.
 
 ---
 
@@ -27,80 +29,20 @@ https://rio517.github.io/reddit-slideshow-spectacular/
 
 ## 2. Summary / short description
 
-**Chrome Web Store - short description (must be ≤ 132 chars):**
-
-Turn your old or new Reddit feeds into a full-screen, keyboard-driven media slideshow. Free, Private, Local, No Ads.
+The summary lives per locale in `store-listing/<lang>.md` (the `## Summary`
+section) - paste from there. For Chrome's short-description field (≤ 132
+chars), use the summary with the site URL appended on its own line:
 
 https://rio517.github.io/reddit-slideshow-spectacular/
-
-(126 characters.)
-
-**AMO - short "summary" field:**
-
-Turn your Reddit feeds into a full-screen,
-keyboard-driven media slideshow. Works on old and new Reddit, reuses your
-logged-in session (no API keys), and plays images, galleries, video, and clips
-from Redgifs, Imgur, Streamable, Giphy, and Catbox. No analytics, no tracking,
-settings stored locally.
 
 ---
 
 ## 3. Detailed description (plain text - paste as-is)
 
-Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard-driven media slideshow. Open a feed, subreddit, multireddit, or search results on old.reddit.com or www.reddit.com, click the toolbar icon (or press Alt+Shift+S), and lean back.
-
-The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
-
-WHAT IT PLAYS
-
-- Direct Reddit images (full-resolution i.redd.it where available)
-- Reddit galleries, expanded into one slide per image
-- Reddit-hosted video (v.redd.it), with its sound (the separate audio track)
-- Redgifs, Imgur (.gifv), Streamable, and Giphy clips, played as native video
-- Imgur albums, expanded into one slide per image
-- Catbox video and image files
-- Crossposts, resolved to the original post's media
-
-The queue is media-only: text/self posts, outbound article links, stickied announcements, and promoted/ad posts are skipped, and media that fails to load is skipped too - so the slideshow never lands on a dead slide.
-
-CONTROLS
-
-- Keyboard: Left/Right to move (Shift+Right skips to the next post; Page Up/Page Down jump back/ahead 10), Up/Down to upvote/downvote the post, Space to play/pause, M to mute, F for fullscreen, D to download, I to block the author (and skip their post), A to friend/follow the author, Esc to close
-- An on-screen control rail: previous, play/pause, next, mute, fullscreen, open in a window, and settings
-- Under each slide: a byline (who posted it, to which subreddit, the source and resolution), with buttons to open the original post or download the media
-- Click the position counter to jump straight to any post in the loaded queue
-- Click the dark backdrop to close
-- Images advance on a timer you set; the timer keeps running even after you arrow through manually, and videos advance when the clip ends
-
-NICE TOUCHES
-
-- Slide transitions: fade, slide, push, zoom, flip, or none
-- Optional top countdown timer bar (on video slides, every slide, or never)
-- Optional slow pan & zoom for images too big to see at once
-- A pinned position counter and post title so you always know where you are
-- "Open in a window" reopens the slideshow in a minimal popup window, ready to AirPlay or Chromecast to a TV or second screen for a lean-back, big-screen feed
-- Duplicate skipping: reposts, crossposts, and repeated galleries are skipped, and a perceptual hash (on by default) also catches the same image re-uploaded under a new link - solo vs. in a gallery
-- "Open original" jumps to the source post
-
-SETTINGS (apply live, no reload)
-
-- Time per image (1 second to 5 minutes, on a fine-at-the-low-end scale)
-- Slide transition
-- Timer bar visibility
-- How long to wait for slow media before moving on
-- Autoplay videos on/off, start muted on/off
-- Include NSFW - by default follows your Reddit session, showing over-18 content only insofar as your account already does
-- Skip duplicate media, including re-uploaded images (on by default)
-- Pan & zoom large images (or all images), with full control over the sequence
-
-PRIVACY
-
-No analytics, no tracking, no ads, no accounts, and no developer servers (there are none). The extension only fetches the media you're viewing: the feed and its media from Reddit, and provider clips from Imgur, Redgifs, Streamable, Giphy, and Catbox. The only things that write to your Reddit account are voting (up/down keys), blocking an author (I), and friending/following an author (A) - each only when you press its key. Your settings are stored locally on your computer, and it ships no remote code. Full policy: see the privacy policy link.
-
-Open source, MIT licensed.
-
-Built as a Manifest V3 WebExtension for Firefox and Chromium browsers (Chrome,
-Edge, Brave). Open source, MIT licensed.
+The full description - including each version's what's-new block - lives per
+locale in `store-listing/<lang>.md` (the `## Description` section), mirroring
+the live listings. Paste each locale's text into the matching per-locale store
+field; every claim there must stay grounded in shipped behaviour.
 
 ---
 
@@ -224,15 +166,19 @@ copy of it.
 
 ## 7. Screenshots
 
-Two screenshots ship in the repo. Both stores accept PNGs; upload these (or
-regenerate the options shots with `npm run screenshots`).
+The store assets ship in the repo; `npm run ship` regenerates all of them
+(zips + live hero shots + promo tiles), and `npm run screenshots` refreshes
+the offline options shots on their own.
 
-**docs/slideshow-demo.png** - the slideshow running full-screen over
-r/SlideShowSpectacular: a golden-retriever puppy bounding through a sunlit meadow
-fills the stage, with the position counter top-left, a bottom-left byline
-(`/u/rio517 to /r/SlideShowSpectacular from i.redd.it at 1122×1482`) plus the
-open-original and download buttons, and the vertical control rail (prev / play /
-next, mute, fullscreen, open-in-window, help, and settings) down the right edge.
+**docs/screenshots/hero-chrome.jpg** (1280×800 JPEG, the Chrome Web Store's
+screenshot canvas) and **docs/screenshots/hero-firefox.png** (1280×800 PNG,
+for Firefox Add-ons) - the slideshow running full-screen over
+r/SlideShowSpectacular, captured live in each browser: a golden-retriever
+puppy bounding through a sunlit meadow fills the stage, with the position
+counter top-left, the title's vote arrow and open-original / download buttons
+above a byline (`/u/rio517 to /r/SlideShowSpectacular` with the source
+`i.redd.it • 1122×1402` on its own line), and the vertical control rail down
+the right edge.
 
 Suggested caption: "Full-screen slideshow over your current feed - keyboard-driven, with a position counter and a minimal control rail."
 
@@ -245,7 +191,9 @@ Suggested caption: "Every setting in one place - changes apply live to a
 running slideshow."
 
 (There's also a dark-mode variant at `docs/screenshots/options-dark.png` if you
-want a third tile.)
+want a third tile, and the website/README hero at `docs/slideshow-demo.png`.
+Chrome Web Store promo tiles - small 440×280 and marquee 1400×560 - are at
+`docs/promo/`.)
 
 ---
 

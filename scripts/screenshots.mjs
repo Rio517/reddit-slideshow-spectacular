@@ -1,5 +1,7 @@
-// Regenerates the README screenshots: the options page (light + dark) and a
-// slideshow shot. Options shots build firefox-mv3, serve it statically, and
+// Regenerates the offline docs/store screenshots under docs/screenshots/: the
+// options page (light + dark) and a deterministic slideshow shot. The live
+// store/site hero shots are scripts/ship-heroes.mjs's job.
+// Options shots build firefox-mv3, serve it statically, and
 // drive Chromium to render entrypoints/options/index.html. The slideshow shot
 // is fully offline and deterministic: it bundles a tiny harness that mounts the
 // REAL overlay + session over fixture image slides (scripts/slideshow-harness/)

@@ -1,6 +1,6 @@
 # Reddit Slideshow Spectacular! - Documentation
 
-This directory holds planning material for a Firefox-first browser extension that turns the current old Reddit feed into a keyboard-driven media slideshow.
+This directory holds the product, research, and decision docs for a Firefox-first (also Chrome) browser extension that turns the current Reddit feed into a keyboard-driven media slideshow - plus the shipped-product assets: the published website (`index.html`), the store listing copy, the promo tiles, and the store/site screenshots.
 
 ## Documents
 
@@ -8,6 +8,7 @@ This directory holds planning material for a Firefox-first browser extension tha
 - [Store listings](store-listing/en.md): the store copy in all six locales (`store-listing/<lang>.md`) - the marketing text and each version's what's-new / release notes, pasted into the Chrome Web Store and Firefox Add-ons at submission.
 - [Research notes](research/initial-research.md): source-backed notes on Firefox extensions, old Reddit behavior, Reddit listing pagination, RES, and external media providers.
 - [Extension development best practices](research/extension-development-best-practices.md): architecture, security, permissions, testing, Reddit access, and release guidance.
+- [Offline fixtures](development/offline-fixtures.md): the sanitized Reddit-JSON fixtures the unit tests run on, and the rules for adding one per provider.
 - [Prior art and tool options](research/prior-art-and-tool-options.md): existing slideshow/gallery tools, reuse candidates, and gaps.
 - [New Reddit support](research/new-reddit-support.md): supporting `www.reddit.com` (shreddit) - data, CSP, and the start cursor.
 - [Chrome support](research/chrome-support.md): building a Chrome MV3 target from the same source.
@@ -36,4 +37,4 @@ This directory holds planning material for a Firefox-first browser extension tha
 
 ## Status
 
-These are living planning docs capturing current research and decisions. v1 of the extension is built and feature-complete.
+These are living docs capturing current research and decisions. The extension is published on both stores; `NEXT_STEP.md` at the repo root tracks release status and open work.
