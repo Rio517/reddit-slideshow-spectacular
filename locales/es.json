@@ -196,8 +196,8 @@
     "description": "Control label: open the post's original media."
   },
   "uiDownload": {
-    "message": "Descargar",
-    "description": "Control label: download the current media."
+    "message": "Descargar (D)",
+    "description": "Control label: download the current media (with the D shortcut)."
   },
   "uiNsfw": {
     "message": "NSFW",

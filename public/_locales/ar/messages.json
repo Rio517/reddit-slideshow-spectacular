@@ -196,8 +196,8 @@
     "description": "Control label: open the post's original media."
   },
   "uiDownload": {
-    "message": "تنزيل",
-    "description": "Control label: download the current media."
+    "message": "تنزيل (D)",
+    "description": "Control label: download the current media (with the D shortcut)."
   },
   "uiNsfw": {
     "message": "غير لائق",

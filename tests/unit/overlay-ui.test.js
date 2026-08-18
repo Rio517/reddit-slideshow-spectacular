@@ -163,6 +163,14 @@ describe("createOverlay", () => {
     expect(onPopout).toHaveBeenCalledTimes(1);
   });
 
+  it("shows the D shortcut in the download control's tooltip", () => {
+    const overlay = createOverlay(noopHandlers());
+    const btn = /** @type {HTMLButtonElement | null} */ (
+      overlay.root.querySelector(".rs-meta__download")
+    );
+    expect(btn?.title).toBe("Download (D)");
+  });
+
   it("wires the download control to onDownload", () => {
     const onDownload = vi.fn();
     const overlay = createOverlay({ ...noopHandlers(), onDownload });
