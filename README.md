@@ -171,16 +171,30 @@ Reddit, so prefer the temporary-add-on flow above for real testing.
 
 ## Regenerating Screenshots
 
-> Maintainer note: `npm run screenshots` regenerates the add-on-store assets - a
-> slideshow shot plus the options page in light and dark. The Chromium binary
-> isn't fetched by `npm install`, so run `npx playwright install chromium` once
-> first.
+> Maintainer note: `npm run screenshots` regenerates the offline store assets -
+> a deterministic slideshow shot plus the options page in light and dark. The
+> Chromium binary isn't fetched by `npm install`, so run
+> `npx playwright install chromium` once first.
+>
+> `npm run heroes` (part of `npm run ship`) retakes the live hero shots over
+> r/SlideShowSpectacular through the built extensions, seeded with the local
+> Firefox session: the Chrome Web Store hero (`docs/screenshots/hero-chrome.jpg`,
+> 1280×800 JPEG), the Firefox Add-ons hero (`docs/screenshots/hero-firefox.png`,
+> 1280×800 PNG), and the README/website hero (`docs/slideshow-demo.png`). It
+> needs geckodriver on PATH (`brew install geckodriver`) and a logged-in
+> Firefox profile. `SHIP_HERO_TITLE` overrides which post the shot pauses on.
 
 ## Publishing
 
 Both stores take the `wxt zip` output; submission is manual (no automated
 release yet). Bump `version` in `package.json` before each release - both
 stores reject a re-used version.
+
+`npm run ship` prepares everything the submissions need in one pass: both
+store zips, fresh live hero shots for both stores and the website (see
+[Regenerating Screenshots](#regenerating-screenshots)), and the Chrome Web
+Store promo tiles (`docs/promo/`). Commit and push the refreshed `docs/`
+assets to update the website.
 
 The store listing copy - the marketing text plus each version's "what's new" /
 release notes - lives in `docs/store-listing/<lang>.md`, one file per locale.
