@@ -19,7 +19,7 @@ AirPlay or Chromecast that window to your TV for a hands-off, lean-back feed.
 
 <a href="docs/slideshow-demo.png">
   <img src="docs/slideshow-demo.png" width="820"
-    alt="A full-screen slideshow over r/SlideShowSpectacular showing a golden-retriever puppy bounding through a sunlit meadow: the position counter top-left, the control rail (prev/play/next, mute, fullscreen, open-in-window, help, settings) down the right, and a bottom-left byline reading /u/rio517 to /r/SlideShowSpectacular from i.redd.it at 1122×1482 with open-original and download buttons">
+    alt="A full-screen slideshow over r/SlideShowSpectacular showing a golden-retriever puppy bounding through a sunlit meadow: the position counter top-left, the control rail (prev/play/next, mute, fullscreen, open-in-window, help, settings) down the right, and bottom-left the title Spectacular Puppy - with a vote arrow, open-original and download buttons - over a byline reading /u/rio517 to /r/SlideShowSpectacular with the source i.redd.it on its own line">
 </a>
 
 ## Features
