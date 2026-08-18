@@ -30,6 +30,12 @@ so the build steps must run before it.
 - builds: both finish with a `Built extension` success line.
 - web-ext: `0 errors`, `0 warnings`, `0 notices`.
 
+Judge each step by its **exit code**, not by eyeballing output. Piping through
+`tail` or `grep` masks both the failure lines and the exit status (the pipe
+returns the last command's status) - a lint failure once slipped through the
+gate exactly this way. When trimming output, print the status explicitly:
+`bash -c 'npm run lint > /tmp/gate.log 2>&1; echo "lint: $?"'`.
+
 ## On failure
 
 Fix the cause, then **re-run the entire gate from the top** - a fix in one step
