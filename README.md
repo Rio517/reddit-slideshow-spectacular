@@ -153,7 +153,7 @@ npm run locales      # regenerate public/_locales from locales/
 npm run screenshots  # offline docs shots: options page + deterministic slideshow
 npm run heroes       # live store/site hero shots via the built extensions
 npm run promo        # Chrome Web Store promo tiles around the hero
-npm run ship         # store zips + heroes + promo tiles, in one pass
+npm run ship         # store zips + hero shots + promo tiles
 ```
 
 The same source builds both browsers; WXT emits a Chrome `service_worker`
@@ -176,38 +176,37 @@ Reddit, so prefer the temporary-add-on flow above for real testing.
 
 ## Regenerating Screenshots
 
-> Maintainer note: `npm run screenshots` regenerates the offline store assets -
-> a deterministic slideshow shot plus the options page in light and dark. The
+> Maintainer note: `npm run screenshots` regenerates the offline assets - a
+> deterministic slideshow shot plus the options page in light and dark. The
 > Chromium binary isn't fetched by `npm install`, so run
 > `npx playwright install chromium` once first.
 >
 > `npm run heroes` (part of `npm run ship`) retakes the live hero shots over
-> r/SlideShowSpectacular through the built extensions, seeded with the local
-> Firefox session: the Chrome Web Store hero (`docs/screenshots/hero-chrome.jpg`,
-> 1280×800 JPEG), the Firefox Add-ons hero (`docs/screenshots/hero-firefox.png`,
-> 1280×800 PNG), and the README/website hero (`docs/slideshow-demo.png`). It
-> needs geckodriver on PATH (`brew install geckodriver`) and a logged-in
-> Firefox profile. `SHIP_HERO_TITLE` overrides which post the shot pauses on.
+> r/SlideShowSpectacular in both built extensions, using the logged-in session
+> from the local Firefox profile: `docs/screenshots/hero-chrome.jpg` (1280×800
+> JPEG, Chrome Web Store), `docs/screenshots/hero-firefox.png` (1280×800 PNG,
+> Firefox Add-ons), and the website hero `docs/slideshow-demo.png`. It needs
+> geckodriver (`brew install geckodriver`). `SHIP_HERO_TITLE` selects a
+> different post.
 
 ## Publishing
 
 Both stores take the `wxt zip` output. Publishing a GitHub release triggers
-`release.yml`, which builds and attaches all three store zips to it; the
-store submissions themselves are manual. Bump `version` in `package.json`
-before each release - both stores reject a re-used version.
+`release.yml`, which builds the three store zips and attaches them; the store
+submissions themselves are manual. Bump `version` in `package.json` before
+each release - both stores reject a re-used version.
 
-`npm run ship` prepares everything the submissions need in one pass: both
-store zips, fresh live hero shots for both stores and the website (see
+`npm run ship` regenerates the store zips, the hero screenshots for both
+stores and the website (see
 [Regenerating Screenshots](#regenerating-screenshots)), and the Chrome Web
 Store promo tiles (`docs/promo/`). Commit and push the refreshed `docs/`
-assets to update the website.
+files to update the website.
 
-The store listing copy - the marketing text plus each version's "what's new" /
-release notes - lives in `docs/store-listing/<lang>.md`, one file per locale.
-Update it alongside the release, then paste it into each store's per-locale
-listing and release-notes fields at submission. The GitHub release body is
-written when the release is published (**New** / **Fixed** sections; see the
-v1.3.0 release for the format).
+The listing copy, including each version's what's-new text, lives in
+`docs/store-listing/<lang>.md`, one file per locale. Update it with the
+release and paste it into each store's per-locale fields at submission. The
+GitHub release body is written when the release is published (New/Fixed
+sections, as in the v1.3.0 release).
 
 **Firefox (AMO):**
 

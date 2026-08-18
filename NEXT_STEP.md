@@ -1,15 +1,10 @@
 # NEXT_STEP - Reddit Slideshow Spectacular!
 
-**Branch:** `main` · **Status:** CI-green on `main`. **v1.3.0 is tagged and
-released on GitHub** (tag `v1.3.0`; `release.yml` built + attached the
-Firefox / AMO-sources / Chrome zips), and its overlay work is verified in real
-Chrome and Firefox. The stores currently serve v1.2.0; the v1.3.0 uploads are
-in progress: submit the release zips to both store dashboards and paste the
-per-locale listing copy from `docs/store-listing/{en,es,fr,de,it,ar}.md`
-(each version's what's-new block included). `npm run ship` regenerates the
-store zips, the live hero shots for both stores + the website, and the Chrome
-Web Store promo tiles (see README → Publishing). Streaming the proxy fallback
-is parked (see the §1 note).
+**Branch:** `main` · **Status:** CI-green. v1.3.0 is tagged and released on
+GitHub with the three store zips attached, and its overlay work is verified in
+real Chrome and Firefox. The stores serve v1.2.0 until the pending v1.3.0
+uploads clear review; §1 has the submission steps. Streaming the proxy
+fallback is parked (see the §1 note).
 
 > **Hard rule:** work directly on `main`. Do not create branches or worktrees unless the user explicitly asks. See `AGENTS.md`.
 
@@ -46,17 +41,14 @@ giant commit.
 
 ### Requested, not yet done
 
-- **v1.3.0 store rollout.** The GitHub release has all three zips attached;
-  upload `*-chrome.zip` to the Chrome Web Store and `*-firefox.zip` (+
-  `*-sources.zip`, the build minifies) to Firefox Add-ons, submit both for
-  review, and paste the per-locale listing copy from
-  `docs/store-listing/{en,es,fr,de,it,ar}.md` into each store's fields (the
-  brief NEW/IMPROVED/FIXED what's-new block included). Fresh store heroes
-  (1280×800) and promo tiles are committed under `docs/` and regenerate any
-  time with `npm run ship`.
-- Optional, recommended: a native-speaker pass on the machine-drafted
-  translations — especially Arabic (~25% of installs). English fallback covers
-  any gap, and any locale file can be refreshed without code changes.
+- **v1.3.0 store rollout.** From the GitHub release, upload `*-chrome.zip` to
+  the Chrome Web Store and `*-firefox.zip` plus `*-sources.zip` (the build
+  minifies) to Firefox Add-ons, and paste the per-locale listing copy from
+  `docs/store-listing/<lang>.md`. The store heroes and promo tiles are
+  committed under `docs/`; `npm run ship` regenerates them.
+- Optional: a native-speaker pass on the machine-drafted translations,
+  especially Arabic (~25% of installs). English fallback covers any gap, and a
+  locale file can be refreshed without code changes.
 
 > **Not planned:** streaming the proxy fallback (MediaSource) was investigated
 > and parked - it needs a few-hundred-KB in-browser remuxer for a narrow
@@ -159,7 +151,7 @@ Roles:
 - `npm run dev`: WXT dev runner for Firefox (DEV logger on).
 - `npm run locales`: regenerate the committed `public/_locales/**` from `locales/`.
 - `npm run screenshots`: offline docs shots (options page + deterministic slideshow).
-- `npm run ship`: store zips + live hero shots (`heroes`) + promo tiles (`promo`), in one pass.
+- `npm run ship`: store zips, live hero shots (`heroes`), and promo tiles (`promo`).
 
 Visual/browser tooling:
 

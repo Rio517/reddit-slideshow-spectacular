@@ -57,6 +57,16 @@ export default [
     },
   },
   {
+    // Maintainer scripts run on Node (build, screenshot, and hero harnesses).
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+        Buffer: "readonly",
+      },
+    },
+  },
+  {
     // Tests run on Node (vitest, or the Playwright e2e runner), so they see both
     // Node and extra DOM/extension globals the source files don't reach for. The
     // e2e .mjs also runs callbacks in the browser/extension (chrome.*).

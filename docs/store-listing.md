@@ -2,14 +2,12 @@
 
 Submission metadata for the Firefox Add-ons site (AMO) and the Chrome Web
 Store: categories, permission justifications, questionnaire answers, reviewer
-notes, and screenshot captions. The listing copy itself (name, summary,
-description, what's-new) lives per locale in `store-listing/<lang>.md`. Every
-claim in either place is grounded in the extension's actual behaviour (see
-`README.md`, `PRIVACY.md`, `wxt.config.ts`, `lib/`, and `docs/product/`);
-keep it accurate - do not add features that aren't shipped.
+notes, and screenshot captions. The listing copy (name, summary, description,
+what's-new) lives per locale in `store-listing/<lang>.md`. Keep every claim
+grounded in shipped behaviour.
 
-The justifications are written as **plain text** because the stores don't
-render Markdown the same way. Paste them as-is.
+The justifications are plain text because the stores don't render Markdown
+the same way. Paste them as-is.
 
 ---
 
@@ -29,9 +27,9 @@ https://rio517.github.io/reddit-slideshow-spectacular/
 
 ## 2. Summary / short description
 
-The summary lives per locale in `store-listing/<lang>.md` (the `## Summary`
-section) - paste from there. For Chrome's short-description field (≤ 132
-chars), use the summary with the site URL appended on its own line:
+The summary lives per locale in `store-listing/<lang>.md` (`## Summary`). For
+Chrome's short-description field (≤ 132 chars), append the site URL on its
+own line:
 
 https://rio517.github.io/reddit-slideshow-spectacular/
 
@@ -39,10 +37,9 @@ https://rio517.github.io/reddit-slideshow-spectacular/
 
 ## 3. Detailed description (plain text - paste as-is)
 
-The full description - including each version's what's-new block - lives per
-locale in `store-listing/<lang>.md` (the `## Description` section), mirroring
-the live listings. Paste each locale's text into the matching per-locale store
-field; every claim there must stay grounded in shipped behaviour.
+The description, including each version's what's-new block, lives per locale
+in `store-listing/<lang>.md` (`## Description`). Paste each locale's text
+into the matching store field.
 
 ---
 
@@ -166,19 +163,15 @@ copy of it.
 
 ## 7. Screenshots
 
-The store assets ship in the repo; `npm run ship` regenerates all of them
-(zips + live hero shots + promo tiles), and `npm run screenshots` refreshes
-the offline options shots on their own.
+The store assets ship in the repo. `npm run ship` regenerates all of them;
+`npm run screenshots` refreshes the offline options shots on their own.
 
-**docs/screenshots/hero-chrome.jpg** (1280×800 JPEG, the Chrome Web Store's
-screenshot canvas) and **docs/screenshots/hero-firefox.png** (1280×800 PNG,
-for Firefox Add-ons) - the slideshow running full-screen over
-r/SlideShowSpectacular, captured live in each browser: a golden-retriever
-puppy bounding through a sunlit meadow fills the stage, with the position
-counter top-left, the title's vote arrow and open-original / download buttons
-above a byline (`/u/rio517 to /r/SlideShowSpectacular` with the source
-`i.redd.it • 1122×1402` on its own line), and the vertical control rail down
-the right edge.
+**docs/screenshots/hero-chrome.jpg** (1280×800 JPEG, Chrome Web Store) and
+**docs/screenshots/hero-firefox.png** (1280×800 PNG, Firefox Add-ons) - the
+slideshow running full-screen over r/SlideShowSpectacular, captured live in
+each browser: a golden-retriever puppy in a sunlit meadow, the position
+counter top-left, the title row with its vote arrow and buttons above the
+byline, and the control rail down the right edge.
 
 Suggested caption: "Full-screen slideshow over your current feed - keyboard-driven, with a position counter and a minimal control rail."
 
@@ -190,10 +183,9 @@ count & title, detect re-uploaded images, and the pan & zoom sequence.
 Suggested caption: "Every setting in one place - changes apply live to a
 running slideshow."
 
-(There's also a dark-mode variant at `docs/screenshots/options-dark.png` if you
-want a third tile, and the website/README hero at `docs/slideshow-demo.png`.
-Chrome Web Store promo tiles - small 440×280 and marquee 1400×560 - are at
-`docs/promo/`.)
+(A dark-mode variant is at `docs/screenshots/options-dark.png`, the website
+hero at `docs/slideshow-demo.png`, and the Chrome Web Store promo tiles -
+small 440×280, marquee 1400×560 - at `docs/promo/`.)
 
 ---
 

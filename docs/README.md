@@ -1,11 +1,11 @@
 # Reddit Slideshow Spectacular! - Documentation
 
-This directory holds the product, research, and decision docs for a Firefox-first (also Chrome) browser extension that turns the current Reddit feed into a keyboard-driven media slideshow - plus the shipped-product assets: the published website (`index.html`), the store listing copy, the promo tiles, and the store/site screenshots.
+Product, research, and decision docs for the extension, plus the shipped assets: the website (`index.html`), the store listing copy, the promo tiles, and the screenshots.
 
 ## Documents
 
 - [Product spec draft](product/reddit-slideshow-product-spec.md): product goals, scope, user experience, open questions, and acceptance criteria.
-- [Store listings](store-listing/en.md): the store copy in all six locales (`store-listing/<lang>.md`) - the marketing text and each version's what's-new / release notes, pasted into the Chrome Web Store and Firefox Add-ons at submission.
+- [Store listings](store-listing/en.md): the store copy in six locales (`store-listing/<lang>.md`), including each version's what's-new text; pasted into the store fields at submission. Submission metadata (categories, permission justifications, reviewer notes) is in [store-listing.md](store-listing.md).
 - [Research notes](research/initial-research.md): source-backed notes on Firefox extensions, old Reddit behavior, Reddit listing pagination, RES, and external media providers.
 - [Extension development best practices](research/extension-development-best-practices.md): architecture, security, permissions, testing, Reddit access, and release guidance.
 - [Offline fixtures](development/offline-fixtures.md): the sanitized Reddit-JSON fixtures the unit tests run on, and the rules for adding one per provider.
