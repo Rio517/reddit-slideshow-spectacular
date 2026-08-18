@@ -103,6 +103,10 @@
     "message": "Ajouter l'auteur en ami ou le suivre",
     "description": "Help-panel shortcut description: friend/follow author."
   },
+  "helpShortcutHelp": {
+    "message": "Afficher ou masquer ces raccourcis",
+    "description": "Help-panel shortcut description: toggle the shortcuts panel."
+  },
   "helpShortcutEscape": {
     "message": "Fermer, ou masquer un panneau ouvert",
     "description": "Help-panel shortcut description: escape/dismiss."

@@ -103,6 +103,10 @@
     "message": "إضافة صاحب المنشور كصديق أو متابعته",
     "description": "Help-panel shortcut description: friend/follow author."
   },
+  "helpShortcutHelp": {
+    "message": "إظهار هذه الاختصارات أو إخفاؤها",
+    "description": "Help-panel shortcut description: toggle the shortcuts panel."
+  },
   "helpShortcutEscape": {
     "message": "الإغلاق، أو إخفاء لوحة مفتوحة",
     "description": "Help-panel shortcut description: escape/dismiss."

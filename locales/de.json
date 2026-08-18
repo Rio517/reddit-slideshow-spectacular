@@ -103,6 +103,10 @@
     "message": "Autor als Freund hinzufügen oder folgen",
     "description": "Help-panel shortcut description: friend/follow author."
   },
+  "helpShortcutHelp": {
+    "message": "Diese Tastenkürzel ein- oder ausblenden",
+    "description": "Help-panel shortcut description: toggle the shortcuts panel."
+  },
   "helpShortcutEscape": {
     "message": "Schließen oder geöffnetes Panel verwerfen",
     "description": "Help-panel shortcut description: escape/dismiss."

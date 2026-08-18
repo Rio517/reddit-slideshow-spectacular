@@ -103,6 +103,10 @@
     "message": "Aggiungi l'autore agli amici o seguilo",
     "description": "Help-panel shortcut description: friend/follow author."
   },
+  "helpShortcutHelp": {
+    "message": "Mostra o nascondi queste scorciatoie",
+    "description": "Help-panel shortcut description: toggle the shortcuts panel."
+  },
   "helpShortcutEscape": {
     "message": "Chiudi, o chiudi un pannello aperto",
     "description": "Help-panel shortcut description: escape/dismiss."
