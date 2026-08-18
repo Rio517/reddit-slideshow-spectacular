@@ -1060,6 +1060,24 @@ describe("createOverlay", () => {
     expect(overlay.root.classList.contains("rs-idle")).toBe(false);
   });
 
+  it("keeps the overlay awake while the pointer rests on the counter cluster", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    clickByLabel(overlay.root, "Jump to a post");
+    const panel = /** @type {HTMLElement | null} */ (
+      overlay.root.querySelector(".rs-jump-panel")
+    );
+    expect(panel?.hidden).toBe(false);
+    // Pointer resting on the counter (no further movement) must not let the
+    // idle timer yank the open jump list closed.
+    overlay.root
+      .querySelector(".rs-topleft")
+      ?.dispatchEvent(new Event("mouseenter"));
+    vi.advanceTimersByTime(10_000);
+    expect(panel?.hidden).toBe(false);
+    expect(overlay.root.classList.contains("rs-idle")).toBe(false);
+  });
+
   it("keeps the overlay awake while the pointer rests on the skipped list", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
