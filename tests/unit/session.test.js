@@ -621,6 +621,52 @@ describe("createSlideshowSession", () => {
     expect(votes).toEqual([["t3_a", 0]]);
   });
 
+  it("keeps the upvote tint when advancing to the next image of the same post", async () => {
+    const { session } = makeSession({
+      vote: async () => ({ ok: true }),
+      pages: [
+        {
+          slides: [
+            imageSlide("t3_g0", { postId: "t3_g" }),
+            imageSlide("t3_g1", { postId: "t3_g" }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 1,
+        },
+      ],
+    });
+    await session.start();
+    session.handleKeydown(key("ArrowUp"));
+    await flush();
+    expect(q(".rs-meta__vote--up")).toBeTruthy();
+    session.handleKeydown(key("ArrowRight")); // next image of the same gallery
+    expect(q(".rs-meta__vote--up")).toBeTruthy();
+  });
+
+  it("reverts the vote tint on every image of the post when the write fails", async () => {
+    const { session } = makeSession({
+      vote: async () => ({ ok: false }),
+      pages: [
+        {
+          slides: [
+            imageSlide("t3_g0", { postId: "t3_g" }),
+            imageSlide("t3_g1", { postId: "t3_g" }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 1,
+        },
+      ],
+    });
+    await session.start();
+    session.handleKeydown(key("ArrowUp"));
+    await flush(); // rejected write reverts the optimistic vote
+    session.handleKeydown(key("ArrowRight"));
+    expect(q(".rs-meta__vote--up")).toBeNull();
+    expect(q(".rs-meta__vote--none")).toBeTruthy();
+  });
+
   it("downloads the current slide's media via the download control", async () => {
     /** @type {Array<{ url: string, filename: string }>} */
     const calls = [];
