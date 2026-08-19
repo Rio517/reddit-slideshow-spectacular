@@ -24,9 +24,13 @@ Two implementation questions drove the decision:
 ## Decision
 
 Animate the image with `transform: scale()` plus `transform-origin` moving from
-top (`50% 0%`) to bottom (`50% 100%`), and let the slide frame (`.rs-slide`,
-`overflow: hidden`) clip the overflow. The pan needs **no DOM measurement**: the
-origin shift pans the visible window from top to bottom at any aspect ratio. The
+top (`50% 0%`) to bottom (`50% 100%`), and let the stage (`.rs-stage`,
+`overflow: hidden`) clip the overflow at the viewport. Clipping at the viewport
+rather than at the image's own fit box lets a zoomed portrait image spread into
+the side letterbox space instead of staying cropped to a narrow column (and a
+zoomed landscape image spread into the top/bottom bars). The pan needs **no DOM
+measurement**: the origin shift pans the visible window from top to bottom at
+any aspect ratio. The
 keyframes are built in `lib/pan-zoom.js` and run via the **Web Animations API**
 (`element.animate`), which takes fractional `offset`s computed from the phase
 durations.

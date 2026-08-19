@@ -45,10 +45,21 @@ const LISTING = {
         1600,
         900,
       ),
+      // Portrait and far past the pan & zoom oversize gate at any window size,
+      // for the mid-pan clipping check.
+      post(
+        "tall",
+        "A tall test tower",
+        "third_user",
+        "https://i.redd.it/tall.jpg",
+        3500,
+        6250,
+      ),
     ],
   },
 };
 const SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080"><rect width="1920" height="1080" fill="#356"/></svg>`;
+const TALL_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="3500" height="6250"><rect width="3500" height="6250" fill="#635"/></svg>`;
 
 /** @param {string} id @param {string} title @param {string} author @param {string} url @param {number} w @param {number} h */
 function post(id, title, author, url, w, h) {
@@ -140,7 +151,10 @@ async function main() {
       }),
     );
     await context.route("https://i.redd.it/**", (route) =>
-      route.fulfill({ contentType: "image/svg+xml", body: SVG }),
+      route.fulfill({
+        contentType: "image/svg+xml",
+        body: route.request().url().includes("tall") ? TALL_SVG : SVG,
+      }),
     );
 
     const page = await context.newPage();
@@ -163,7 +177,7 @@ async function main() {
       assert.equal(slide1.status, null);
     });
     check("the counter reflects the listing length", () =>
-      assert.equal(slide1.counter, "1 / 2"),
+      assert.equal(slide1.counter, "1 / 3"),
     );
     check("the byline shows author, subreddit, domain, and resolution", () => {
       assert.equal(slide1.title, "A test sunset");
@@ -182,7 +196,7 @@ async function main() {
     );
     const jump = await readMeta(page);
     check("the jump-to-post list lists every loaded post", () =>
-      assert.equal(jump.jumpItems, 2),
+      assert.equal(jump.jumpItems, 3),
     );
 
     // The right arrow advances to the next slide.
@@ -198,13 +212,13 @@ async function main() {
           document
             .querySelector("#reddit-slideshow-host")
             ?.shadowRoot?.querySelector(".rs-meta__counter")
-            ?.textContent?.trim() === "2 / 2",
+            ?.textContent?.trim() === "2 / 3",
         { timeout: 8000 },
       )
       .catch(() => {});
     const slide2 = await readMeta(page);
     check("the right arrow advances to the second slide", () => {
-      assert.equal(slide2.counter, "2 / 2");
+      assert.equal(slide2.counter, "2 / 3");
       assert.equal(slide2.author, "/u/second_user");
       assert.equal(slide2.res, "1600×900");
     });
@@ -246,6 +260,86 @@ async function main() {
       "the chrome auto-hides on idle even with a mouse-focused control",
       () => assert.equal(wentIdle, true),
     );
+
+    // Regression: a pan-zoomed portrait image must spread into the viewport's
+    // side space, not stay clipped to its own fitted column (the .rs-slide
+    // frame). Enable the toggle through the inline settings panel (synchronous
+    // with the overlay's live settings - no storage-propagation race), advance
+    // to the tall slide, seek the animation to mid-pan, and hit-test a point in
+    // what was the side letterbox: the zoomed image must be painted there.
+    await page.evaluate(() => {
+      const sr = document.querySelector("#reddit-slideshow-host")?.shadowRoot;
+      const rows = sr?.querySelectorAll(".rs-set__check") ?? [];
+      for (const row of rows) {
+        if (!row.textContent?.includes("Pan & zoom")) continue;
+        const input = row.querySelector("input");
+        input.checked = true;
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    });
+    await page.evaluate(() =>
+      document
+        .querySelector("#reddit-slideshow-host")
+        ?.shadowRoot?.host?.focus?.(),
+    );
+    // Step forward until the tall slide is current (the idle check's control
+    // click above may have navigated), then wait for its animation.
+    const onTallSlide = () =>
+      page
+        .waitForFunction(
+          () =>
+            document
+              .querySelector("#reddit-slideshow-host")
+              ?.shadowRoot?.querySelector(".reddit-slideshow-media")
+              ?.getAttribute("src") === "https://i.redd.it/tall.jpg" &&
+            (document
+              .querySelector("#reddit-slideshow-host")
+              ?.shadowRoot?.querySelector(".reddit-slideshow-media")
+              ?.getAnimations()?.length ?? 0) > 0,
+          { timeout: 3000 },
+        )
+        .then(() => true)
+        .catch(() => false);
+    for (let presses = 0; presses < 4; presses += 1) {
+      await page.keyboard.press("ArrowRight");
+      if (await onTallSlide()) break;
+    }
+    const panZoom = await page.evaluate(() => {
+      const sr = document.querySelector("#reddit-slideshow-host")?.shadowRoot;
+      const img = sr?.querySelector("img.reddit-slideshow-media");
+      const anim = img?.getAnimations()?.[0];
+      if (!img || !anim) {
+        // Failure context: which link of the chain broke.
+        return {
+          animated: false,
+          src: img?.getAttribute("src") ?? null,
+          counter: sr?.querySelector(".rs-meta__counter")?.textContent ?? null,
+          toggleChecked: [...(sr?.querySelectorAll(".rs-set__check") ?? [])]
+            .find((r) => r.textContent?.includes("Pan & zoom"))
+            ?.querySelector("input")?.checked,
+          reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)")
+            .matches,
+        };
+      }
+      const sideX = window.innerWidth * 0.05;
+      const midY = window.innerHeight / 2;
+      const hits = () => sr.elementFromPoint(sideX, midY) === img;
+      // At time 0 (scale 1) the probe point must sit outside the fitted
+      // column, or it wouldn't prove anything about the zoomed phase.
+      const probeOutsideFit = img.getBoundingClientRect().left > sideX;
+      const sideHitAtRest = hits();
+      anim.currentTime = Number(anim.effect.getTiming().duration) / 2;
+      const sideHitMidPan = hits();
+      return { animated: true, probeOutsideFit, sideHitAtRest, sideHitMidPan };
+    });
+    check("the tall slide runs the pan & zoom animation", () =>
+      assert.equal(panZoom.animated, true, JSON.stringify(panZoom)),
+    );
+    check("mid-pan, the zoomed image fills the side letterbox space", () => {
+      assert.equal(panZoom.probeOutsideFit, true);
+      assert.equal(panZoom.sideHitAtRest, false);
+      assert.equal(panZoom.sideHitMidPan, true);
+    });
   } finally {
     await context.close();
     await rm(userDataDir, { recursive: true, force: true });

@@ -115,12 +115,12 @@
 
 .rs-slide {
   /* Stack every frame in the one grid cell so the incoming slide can transition
-     over the outgoing one (gap-free swap). */
+     over the outgoing one (gap-free swap). No overflow clip here: the pan &
+     zoom (scaled media) must spread past the image's fit box into the
+     letterbox space - the stage clips it at the viewport. */
   grid-area: 1 / 1;
   display: grid;
   place-items: center;
-  /* Clip the pan & zoom (scaled media) to the image's fit box. */
-  overflow: hidden;
 }
 
 /* Held invisible until its media is decoded, so the entrance never animates a
