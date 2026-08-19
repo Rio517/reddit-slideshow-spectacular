@@ -1,10 +1,10 @@
 # NEXT_STEP - Reddit Slideshow Spectacular!
 
-**Branch:** `main` · **Status:** CI-green. v1.3.0 is tagged and released on
-GitHub with the three store zips attached, and its overlay work is verified in
-real Chrome and Firefox. The stores serve v1.2.0 until the pending v1.3.0
-uploads clear review; §1 has the submission steps. Streaming the proxy
-fallback is parked (see the §1 note).
+**Branch:** `main` · **Status:** CI-green. v1.3.1 is tagged and released on
+GitHub with the three store zips attached (pan & zoom letterbox fix + the
+download-folder setting, both verified in real Chrome and Firefox). v1.3.0 is
+submitted to both stores and pending review; §1 has the v1.3.1 submission
+steps. Streaming the proxy fallback is parked (see the §1 note).
 
 > **Hard rule:** work directly on `main`. Do not create branches or worktrees unless the user explicitly asks. See `AGENTS.md`.
 
@@ -41,11 +41,12 @@ giant commit.
 
 ### Requested, not yet done
 
-- **v1.3.0 store rollout.** From the GitHub release, upload `*-chrome.zip` to
+- **v1.3.1 store rollout.** From the GitHub release, upload `*-chrome.zip` to
   the Chrome Web Store and `*-firefox.zip` plus `*-sources.zip` (the build
-  minifies) to Firefox Add-ons, and paste the per-locale listing copy from
-  `docs/store-listing/<lang>.md`. The store heroes and promo tiles are
-  committed under `docs/`; `npm run ship` regenerates them.
+  minifies) to Firefox Add-ons. The per-locale listing copy in
+  `docs/store-listing/<lang>.md` stays at its 1.3.0 what's-new (owner's call).
+  The store heroes and promo tiles are committed under `docs/`; `npm run ship`
+  regenerates them.
 - Optional: a native-speaker pass on the machine-drafted translations,
   especially Arabic (~25% of installs). English fallback covers any gap, and a
   locale file can be refreshed without code changes.
