@@ -42,6 +42,8 @@ jobs:
   e2e:
     name: e2e (loaded extension, Chromium)
     runs-on: ubuntu-latest
+    # A hung install can't burn runner minutes for hours.
+    timeout-minutes: 15
     # This job DOES need the browser, unlike the others.
     env:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "0"
@@ -53,5 +55,7 @@ jobs:
           cache: npm
       - run: npm ci
       # Drives a real Chromium with the built extension loaded (--headless=new).
-      - run: npx playwright install --with-deps chromium
+      # No --with-deps: the runner image already ships Chromium's OS libraries,
+      # and the apt run it triggers hung CI twice on the Azure Ubuntu mirror.
+      - run: npx playwright install chromium
       - run: npm run test:prod
