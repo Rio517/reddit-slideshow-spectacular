@@ -149,6 +149,7 @@ describe("getSettings / saveSettings", () => {
       panZoomShowEndSeconds: 2,
       panZoomMinOversize: 1.5,
       locale: "auto",
+      downloadSubfolder: "",
     });
   });
 
@@ -173,6 +174,56 @@ describe("locale setting", () => {
   });
   it("exposes the supported set including auto", () => {
     expect(UI_LOCALES).toEqual(["auto", "en", "es", "fr", "de", "it", "ar"]);
+  });
+});
+
+describe("downloadSubfolder setting", () => {
+  it("defaults to empty (the browser's normal Downloads folder)", () => {
+    expect(DEFAULT_SETTINGS.downloadSubfolder).toBe("");
+    expect(normalizeSettings({}).downloadSubfolder).toBe("");
+  });
+
+  it("keeps a plain or nested folder name", () => {
+    expect(
+      normalizeSettings({ downloadSubfolder: "Reddit Slideshow" })
+        .downloadSubfolder,
+    ).toBe("Reddit Slideshow");
+    expect(
+      normalizeSettings({ downloadSubfolder: "reddit/pics" }).downloadSubfolder,
+    ).toBe("reddit/pics");
+  });
+
+  it("strips traversal and separator tricks down to safe segments", () => {
+    expect(
+      normalizeSettings({ downloadSubfolder: "../../etc" }).downloadSubfolder,
+    ).toBe("etc");
+    expect(
+      normalizeSettings({ downloadSubfolder: "..\\..\\evil" })
+        .downloadSubfolder,
+    ).toBe("evil");
+    expect(
+      normalizeSettings({ downloadSubfolder: "/leading//and/trailing/" })
+        .downloadSubfolder,
+    ).toBe("leading/and/trailing");
+  });
+
+  it("strips characters and dot affixes that break Windows paths", () => {
+    expect(
+      normalizeSettings({ downloadSubfolder: 'a<b>:c"|d?*' }).downloadSubfolder,
+    ).toBe("abcd");
+    expect(
+      normalizeSettings({ downloadSubfolder: ".hidden./sub." })
+        .downloadSubfolder,
+    ).toBe("hidden/sub");
+  });
+
+  it("falls back to the default for non-string or dot-only input", () => {
+    expect(normalizeSettings({ downloadSubfolder: 7 }).downloadSubfolder).toBe(
+      "",
+    );
+    expect(
+      normalizeSettings({ downloadSubfolder: ".." }).downloadSubfolder,
+    ).toBe("");
   });
 });
 

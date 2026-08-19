@@ -560,6 +560,14 @@
     "message": "Erkennt dasselbe Bild unter einem neuen Link (einzeln oder in einer Galerie). Standardmäßig aktiv; deaktivieren, falls zu viele Bilder übersprungen werden.",
     "description": "Options hint under the also-skip-re-uploaded-images checkbox."
   },
+  "optDownloadSubfolder": {
+    "message": "Download-Ordner",
+    "description": "Options label for the download folder text field."
+  },
+  "optDownloadSubfolderHint": {
+    "message": "Ein Ordner im Downloads-Ordner deines Browsers. Leer lassen, um direkt in Downloads zu speichern.",
+    "description": "Options hint under the download folder field. Browsers only let extensions save inside the Downloads folder."
+  },
   "optPanZoom": {
     "message": "Große Bilder schwenken & zoomen",
     "description": "Options pan-and-zoom card title."

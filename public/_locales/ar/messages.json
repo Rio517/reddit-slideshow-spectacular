@@ -560,6 +560,14 @@
     "message": "يلتقط الصورة نفسها عند إعادة نشرها برابط جديد (منفردة مقابل ضمن معرض). مُفعَّل افتراضيًا؛ أوقِفه إن أفرط في التخطّي.",
     "description": "Options hint under the also-skip-re-uploaded-images checkbox."
   },
+  "optDownloadSubfolder": {
+    "message": "مجلد التنزيل",
+    "description": "Options label for the download folder text field."
+  },
+  "optDownloadSubfolderHint": {
+    "message": "مجلد داخل مجلد التنزيلات في متصفحك. اتركه فارغًا للحفظ مباشرة في التنزيلات.",
+    "description": "Options hint under the download folder field. Browsers only let extensions save inside the Downloads folder."
+  },
   "optPanZoom": {
     "message": "التحريك والتكبير للصور الكبيرة",
     "description": "Options pan-and-zoom card title."

@@ -52,6 +52,10 @@ const timerBarRadios = /** @type {NodeListOf<HTMLInputElement>} */ (
 const timerBarValue = () =>
   [...timerBarRadios].find((r) => r.checked)?.value ?? "video";
 const contentDedup = requiredElement("#contentDedup", HTMLInputElement);
+const downloadSubfolder = requiredElement(
+  "#downloadSubfolder",
+  HTMLInputElement,
+);
 const panZoom = requiredElement("#panZoom", HTMLInputElement);
 const panZoomCard = requiredElement("#panZoomCard", HTMLElement);
 
@@ -120,6 +124,7 @@ async function load() {
     radio.checked = radio.value === settings.timerBar;
   }
   contentDedup.checked = settings.contentDedup;
+  downloadSubfolder.value = settings.downloadSubfolder;
   panZoom.checked = settings.panZoom;
   for (const [id] of PAN_ZOOM_RANGES) {
     panZoomInputs[id].value = String(/** @type {any} */ (settings)[id]);
@@ -142,6 +147,7 @@ async function persist() {
       transition: transition.value,
       timerBar: timerBarValue(),
       contentDedup: contentDedup.checked,
+      downloadSubfolder: downloadSubfolder.value,
       panZoom: panZoom.checked,
       panZoomMinOversize: Number(panZoomInputs.panZoomMinOversize.value),
       panZoomScale: Number(panZoomInputs.panZoomScale.value),
@@ -198,6 +204,13 @@ for (const [id, outId] of PAN_ZOOM_RANGES) {
 }
 
 contentDedup.addEventListener("change", persist);
+
+// Reflect the sanitized value back (e.g. stripped "../" or trailing slashes),
+// so the field always shows what will actually be used.
+downloadSubfolder.addEventListener("change", async () => {
+  await persist();
+  downloadSubfolder.value = (await getSettings()).downloadSubfolder;
+});
 
 load();
 

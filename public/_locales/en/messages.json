@@ -560,6 +560,14 @@
     "message": "Catches the same image re-posted under a new link (solo vs in a gallery). On by default; turn off if it ever over-skips.",
     "description": "Options hint under the also-skip-re-uploaded-images checkbox."
   },
+  "optDownloadSubfolder": {
+    "message": "Download folder",
+    "description": "Options label for the download folder text field."
+  },
+  "optDownloadSubfolderHint": {
+    "message": "A folder inside your browser's Downloads folder. Leave empty to save straight into Downloads.",
+    "description": "Options hint under the download folder field. Browsers only let extensions save inside the Downloads folder."
+  },
   "optPanZoom": {
     "message": "Pan & zoom large images",
     "description": "Options pan-and-zoom card title."

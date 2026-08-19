@@ -611,6 +611,63 @@ describe("createMessageRouter - download", () => {
     expect(calls[1].filename).toBe("evil.exe");
   });
 
+  it("saves into the configured subfolder under the Downloads folder", async () => {
+    /** @type {Array<{ url: string, filename: string }>} */
+    const calls = [];
+    const router = makeRouter({
+      downloadMedia: async (/** @type {any} */ opts) => {
+        calls.push(opts);
+        return 1;
+      },
+      getDownloadSubfolder: async () => "Reddit Slideshow",
+    });
+    const result = await router(
+      dlMsg({ url: "https://i.redd.it/a.jpg", filename: "t3_a.jpg" }),
+      OWN,
+    );
+    expect(result).toEqual({ ok: true });
+    expect(calls[0].filename).toBe("Reddit Slideshow/t3_a.jpg");
+  });
+
+  it("re-sanitizes the subfolder value at the download boundary", async () => {
+    /** @type {Array<{ url: string, filename: string }>} */
+    const calls = [];
+    const router = makeRouter({
+      downloadMedia: async (/** @type {any} */ opts) => {
+        calls.push(opts);
+        return 1;
+      },
+      // Bypasses settings normalization (e.g. a corrupted storage value); the
+      // boundary must still confine it to the Downloads folder.
+      getDownloadSubfolder: async () => "..\\..\\evil",
+    });
+    await router(
+      dlMsg({ url: "https://i.redd.it/a.jpg", filename: "t3_a.jpg" }),
+      OWN,
+    );
+    expect(calls[0].filename).toBe("evil/t3_a.jpg");
+  });
+
+  it("downloads to the plain Downloads folder when the subfolder read fails", async () => {
+    /** @type {Array<{ url: string, filename: string }>} */
+    const calls = [];
+    const router = makeRouter({
+      downloadMedia: async (/** @type {any} */ opts) => {
+        calls.push(opts);
+        return 1;
+      },
+      getDownloadSubfolder: async () => {
+        throw new Error("storage gone");
+      },
+    });
+    const result = await router(
+      dlMsg({ url: "https://i.redd.it/a.jpg", filename: "t3_a.jpg" }),
+      OWN,
+    );
+    expect(result).toEqual({ ok: true });
+    expect(calls[0].filename).toBe("t3_a.jpg");
+  });
+
   it("fails closed when the download throws", async () => {
     const router = makeRouter({
       downloadMedia: async () => {

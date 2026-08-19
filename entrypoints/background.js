@@ -24,6 +24,7 @@ import {
 import { audioUrlFromDash } from "@/lib/reddit-audio.js";
 import { createRedditWriter } from "@/lib/reddit-write.js";
 import { createImageHasher } from "@/lib/image-hash.js";
+import { getSettings } from "@/lib/settings.js";
 import { createLogger } from "@/lib/log.js";
 
 const log = createLogger("background");
@@ -108,6 +109,8 @@ export default defineBackground(() => {
     // serves it; the suggested filename comes from the slide's hint.
     downloadMedia: ({ url, filename }) =>
       browser.downloads.download({ url, filename, saveAs: false }),
+    // Optional per-user folder inside the browser's Downloads folder.
+    getDownloadSubfolder: async () => (await getSettings()).downloadSubfolder,
     // Account writes through the session (cookie + modhash).
     vote: (id, dir) => writer.vote(id, dir),
     block: (name) => writer.blockUser(name),

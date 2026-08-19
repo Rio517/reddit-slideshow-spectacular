@@ -560,6 +560,14 @@
     "message": "Individua la stessa immagine ripubblicata con un nuovo link (singola o in una galleria). Attivo per impostazione predefinita; disattivalo se salta troppi contenuti.",
     "description": "Options hint under the also-skip-re-uploaded-images checkbox."
   },
+  "optDownloadSubfolder": {
+    "message": "Cartella di download",
+    "description": "Options label for the download folder text field."
+  },
+  "optDownloadSubfolderHint": {
+    "message": "Una cartella dentro la cartella Download del tuo browser. Lascia vuoto per salvare direttamente in Download.",
+    "description": "Options hint under the download folder field. Browsers only let extensions save inside the Downloads folder."
+  },
   "optPanZoom": {
     "message": "Pan e zoom sulle immagini grandi",
     "description": "Options pan-and-zoom card title."

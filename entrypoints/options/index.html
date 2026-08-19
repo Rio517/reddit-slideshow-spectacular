@@ -113,14 +113,26 @@
         width: 100%;
         accent-color: var(--accent);
       }
-      select {
+      select,
+      .field input[type="text"] {
         width: 100%;
+        box-sizing: border-box;
         padding: 9px 10px;
         color: var(--fg);
         background: var(--input-bg);
         border: 1px solid var(--line);
         border-radius: 8px;
         font: inherit;
+      }
+      .field input[type="text"]:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .field > .hint {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 8px;
       }
       .shortcut__row {
         display: flex;
@@ -592,6 +604,23 @@
             gallery). On by default; turn off if it ever over-skips.
           </span>
         </span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">
+          <span data-i18n="optDownloadSubfolder">Download folder</span>
+        </span>
+        <input
+          id="downloadSubfolder"
+          type="text"
+          placeholder="Reddit Slideshow"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <span class="hint" data-i18n="optDownloadSubfolderHint"
+          >A folder inside your browser's Downloads folder. Leave empty to save
+          straight into Downloads.</span
+        >
       </label>
 
       <section class="panzoom" id="panZoomCard" data-off="true">

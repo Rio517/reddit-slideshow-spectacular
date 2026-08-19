@@ -107,6 +107,7 @@ function settings(overrides) {
     panZoomShowEndSeconds: 2,
     panZoomMinOversize: 1.5,
     locale: "auto",
+    downloadSubfolder: "",
     ...overrides,
   };
 }

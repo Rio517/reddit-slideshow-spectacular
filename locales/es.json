@@ -560,6 +560,14 @@
     "message": "Detecta la misma imagen publicada con un nuevo enlace (sola o en una galería). Activada por defecto; desactívala si omite demasiado.",
     "description": "Options hint under the also-skip-re-uploaded-images checkbox."
   },
+  "optDownloadSubfolder": {
+    "message": "Carpeta de descargas",
+    "description": "Options label for the download folder text field."
+  },
+  "optDownloadSubfolderHint": {
+    "message": "Una carpeta dentro de la carpeta de Descargas de tu navegador. Déjala vacía para guardar directamente en Descargas.",
+    "description": "Options hint under the download folder field. Browsers only let extensions save inside the Downloads folder."
+  },
   "optPanZoom": {
     "message": "Paneo y zoom en imágenes grandes",
     "description": "Options pan-and-zoom card title."

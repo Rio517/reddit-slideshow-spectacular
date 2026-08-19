@@ -560,6 +560,14 @@
     "message": "Détecte la même image repostée sous un nouveau lien (seule ou dans une galerie). Activé par défaut ; désactivez si trop d'éléments sont ignorés à tort.",
     "description": "Options hint under the also-skip-re-uploaded-images checkbox."
   },
+  "optDownloadSubfolder": {
+    "message": "Dossier de téléchargement",
+    "description": "Options label for the download folder text field."
+  },
+  "optDownloadSubfolderHint": {
+    "message": "Un dossier dans le dossier Téléchargements de votre navigateur. Laissez vide pour enregistrer directement dans Téléchargements.",
+    "description": "Options hint under the download folder field. Browsers only let extensions save inside the Downloads folder."
+  },
   "optPanZoom": {
     "message": "Panoramique et zoom sur les grandes images",
     "description": "Options pan-and-zoom card title."

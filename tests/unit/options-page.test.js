@@ -34,6 +34,20 @@ describe("options page always-show toggles", () => {
   });
 });
 
+describe("options page download folder", () => {
+  it("has a text field with a localized label and hint", () => {
+    const input = doc.querySelector("#downloadSubfolder");
+    expect(input?.getAttribute("type")).toBe("text");
+    const field = input?.closest(".field");
+    expect(
+      field?.querySelector('[data-i18n="optDownloadSubfolder"]'),
+    ).not.toBeNull();
+    expect(
+      field?.querySelector('[data-i18n="optDownloadSubfolderHint"]'),
+    ).not.toBeNull();
+  });
+});
+
 describe("options page language picker", () => {
   it("has a language select with auto + the six locales", () => {
     const sel = doc.querySelector("#locale");

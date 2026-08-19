@@ -114,6 +114,9 @@ network resolve is needed, a scoped host permission, and an ADR.
   (perceptual hash, on by default).
 - Pan & zoom for large images, with the full phase sequence configurable and
   the zoom scale adapting to each image's resolution.
+- Download folder: an optional folder inside the browser's Downloads folder for
+  saved media (empty by default - straight into Downloads). Browsers do not let
+  extensions write outside the Downloads folder.
 - Interface Language (auto → browser language, or an explicit pick) and a
   configurable launch shortcut (default Alt+Shift+S).
 

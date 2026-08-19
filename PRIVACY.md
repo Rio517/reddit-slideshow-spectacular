@@ -1,6 +1,6 @@
 # Privacy Policy - Reddit Slideshow Spectacular!
 
-_Last updated: 2026-08-18_
+_Last updated: 2026-08-19_
 
 **Short version: Reddit Slideshow Spectacular! collects nothing, sends nothing to
 the developer, and has no analytics, tracking, ads, or accounts. Everything it
@@ -11,7 +11,8 @@ already viewing into a full-screen media slideshow.
 
 Only your own settings - the per-image timer, slide transition, timer-bar
 mode, autoplay, start-muted, Include-NSFW, the two de-duplication toggles, the
-max-load-wait, the pan & zoom options, and your interface language. These are
+max-load-wait, the pan & zoom options, your download folder name, and your
+interface language. These are
 saved with the browser's local extension storage (`storage.local`) **on your
 computer**. They are not synced, uploaded, or shared, and contain no personal
 information. Removing the extension removes them.
