@@ -1723,4 +1723,38 @@ describe("manual zoom keys (paused)", () => {
     const frame = /** @type {HTMLElement | null} */ (q(".rs-slide"));
     expect(frame?.style.transform ?? "").toBe("");
   });
+
+  it("leaves browser shortcuts alone: a modified key is neither swallowed nor acted on", async () => {
+    let downloads = 0;
+    const { session } = makeSession({
+      downloadMedia: async () => {
+        downloads += 1;
+        return { ok: true };
+      },
+    });
+    await session.start();
+    q("img")?.dispatchEvent(new Event("load"));
+    await flush();
+    let prevented = 0;
+    // Ctrl/Cmd+"=" is the browser's page zoom; Cmd+D is its bookmark key.
+    session.handleKeydown({
+      ...key("="),
+      ctrlKey: true,
+      preventDefault: () => {
+        prevented += 1;
+      },
+    });
+    session.handleKeydown({
+      ...key("d"),
+      metaKey: true,
+      preventDefault: () => {
+        prevented += 1;
+      },
+    });
+    await flush();
+    expect(prevented).toBe(0);
+    expect(downloads).toBe(0);
+    const frame = /** @type {HTMLElement | null} */ (q(".rs-slide"));
+    expect(frame?.style.transform ?? "").toBe("");
+  });
 });

@@ -2095,15 +2095,14 @@ describe("manual zoom while paused", () => {
     expect(frame.classList.contains("rs-slide--zoomed")).toBe(true);
   });
 
-  it("ignores the wheel while playing", async () => {
-    const overlay = createOverlay(noopHandlers());
+  it("ignores the wheel when the session reports playing", async () => {
+    const overlay = createOverlay({ ...noopHandlers(), isPaused: () => false });
     const frame = await renderPausedImage(overlay);
-    overlay.setPlaying(true);
     spinWheel(frame, -100);
     expect(frame.style.transform).toBe("");
   });
 
-  it("steps in and out via manualZoomStep, and Esc-dismiss resets", async () => {
+  it("steps in via manualZoomStep, and Esc-dismiss resets it", async () => {
     const overlay = createOverlay(noopHandlers());
     const frame = await renderPausedImage(overlay);
     overlay.manualZoomStep(1);
@@ -2137,26 +2136,28 @@ describe("manual zoom while paused", () => {
    * @param {string} type
    * @param {number} x
    * @param {number} y
+   * @param {number} [pointerId]
    */
-  function pointer(target, type, x, y) {
-    target.dispatchEvent(
-      new MouseEvent(type, {
-        clientX: x,
-        clientY: y,
-        button: 0,
-        bubbles: true,
-        cancelable: true,
-      }),
-    );
+  function pointer(target, type, x, y, pointerId) {
+    const event = new MouseEvent(type, {
+      clientX: x,
+      clientY: y,
+      button: 0,
+      bubbles: true,
+      cancelable: true,
+    });
+    if (pointerId != null) {
+      Object.defineProperty(event, "pointerId", { value: pointerId });
+    }
+    target.dispatchEvent(event);
   }
 
-  it("dragging a zoomed slide pans it (clamped by the frame box)", async () => {
-    const overlay = createOverlay(noopHandlers());
-    const frame = await renderPausedImage(overlay);
-    overlay.manualZoomStep(1);
-    const before = frame.style.transform;
-    // happy-dom rects are all zeros; give the frame a real oversized box so
-    // the clamp allows movement.
+  /**
+   * happy-dom rects are all zeros; give the frame a real oversized box so
+   * the pan clamp allows movement.
+   * @param {HTMLElement} frame
+   */
+  function stubOversizedRect(frame) {
     frame.getBoundingClientRect = () =>
       /** @type {DOMRect} */ ({
         left: -200,
@@ -2164,6 +2165,14 @@ describe("manual zoom while paused", () => {
         width: 1600,
         height: 1200,
       });
+  }
+
+  it("dragging a zoomed slide pans it", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    overlay.manualZoomStep(1);
+    const before = frame.style.transform;
+    stubOversizedRect(frame);
     pointer(frame, "pointerdown", 300, 300);
     expect(frame.classList.contains("rs-slide--panning")).toBe(true);
     pointer(frame, "pointermove", 260, 320);
@@ -2178,13 +2187,7 @@ describe("manual zoom while paused", () => {
     const overlay = createOverlay({ ...noopHandlers(), onClose });
     const frame = await renderPausedImage(overlay);
     overlay.manualZoomStep(1);
-    frame.getBoundingClientRect = () =>
-      /** @type {DOMRect} */ ({
-        left: -200,
-        top: -150,
-        width: 1600,
-        height: 1200,
-      });
+    stubOversizedRect(frame);
     pointer(frame, "pointerdown", 300, 300);
     pointer(frame, "pointermove", 250, 250);
     pointer(frame, "pointerup", 250, 250);
@@ -2205,6 +2208,71 @@ describe("manual zoom while paused", () => {
     pointer(frame, "pointerup", 250, 250);
     expect(frame.style.transform).toBe("");
     expect(frame.classList.contains("rs-slide--panning")).toBe(false);
+  });
+
+  it("a second pointer can neither hijack nor end an active drag", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    overlay.manualZoomStep(1);
+    stubOversizedRect(frame);
+    pointer(frame, "pointerdown", 300, 300, 1);
+    pointer(frame, "pointermove", 260, 300, 1);
+    const afterFirstMove = frame.style.transform;
+    // A second touch presses and releases mid-drag; the first drag survives.
+    pointer(frame, "pointerdown", 500, 500, 2);
+    pointer(frame, "pointerup", 500, 500, 2);
+    expect(frame.classList.contains("rs-slide--panning")).toBe(true);
+    pointer(frame, "pointermove", 220, 300, 1);
+    expect(frame.style.transform).not.toBe(afterFirstMove);
+    pointer(frame, "pointerup", 220, 300, 1);
+    expect(frame.classList.contains("rs-slide--panning")).toBe(false);
+  });
+
+  it("a fullscreen or viewport change resets the zoom (its anchors are stale)", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    overlay.manualZoomStep(1);
+    expect(frame.style.transform).not.toBe("");
+    document.dispatchEvent(new Event("fullscreenchange"));
+    expect(frame.style.transform).toBe("");
+    overlay.manualZoomStep(1);
+    window.dispatchEvent(new Event("resize"));
+    expect(frame.style.transform).toBe("");
+  });
+
+  it("keeps native video controls hidden while inspect-zoomed", async () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    overlay.setPlaying(false);
+    overlay.renderCurrent(
+      imageSlide({
+        kind: "video",
+        durationMode: "media",
+        mediaUrl: "https://v.redd.it/z/DASH_720.mp4",
+      }),
+      {
+        index: 0,
+        total: 1,
+        exhausted: true,
+        effectiveSeconds: 5,
+        playing: false,
+      },
+    );
+    const video = /** @type {HTMLVideoElement} */ (
+      overlay.root.querySelector("video")
+    );
+    video.dispatchEvent(new Event("loadeddata"));
+    await Promise.resolve();
+    await Promise.resolve();
+    // Hovering reveals the native controls on an unzoomed video.
+    video.dispatchEvent(new Event("pointermove"));
+    expect(video.controls).toBe(true);
+    // Zooming hides them, and hovering can't bring them back while zoomed -
+    // a drag-to-pan must never fight the native scrub bar.
+    overlay.manualZoomStep(1);
+    expect(video.controls).toBe(false);
+    video.dispatchEvent(new Event("pointermove"));
+    expect(video.controls).toBe(false);
   });
 
   it("a new slide render starts unzoomed", async () => {

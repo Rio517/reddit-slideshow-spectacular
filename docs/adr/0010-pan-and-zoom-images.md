@@ -29,18 +29,20 @@ the stage (`.rs-stage`, `overflow: hidden`) clip the overflow at the viewport.
 Scale alone pins the top edge; translating by `(1 - z) × 100%` of the
 element's own height pins the bottom edge instead, and because scale and
 translate interpolate with the same easing per keyframe segment, the pinned
-edge holds exactly through each phase. Keeping everything in `transform`
-matters: `transform-origin` is not a compositable property, so animating it
-(the original design) dragged every frame through the main thread and showed
-up as jitter - the pure-transform form runs on the compositor. Clipping at
-the viewport rather than at the image's own fit box lets a zoomed portrait
-image spread into the side letterbox space instead of staying cropped to a
-narrow column (and a zoomed landscape image spread into the top/bottom bars).
-The pan needs **no DOM measurement**: percentages resolve against the
-element's own box at any aspect ratio. The
-keyframes are built in `lib/pan-zoom.js` and run via the **Web Animations API**
-(`element.animate`), which takes fractional `offset`s computed from the phase
-durations.
+edge holds exactly through each phase.
+
+Keeping everything in `transform` matters: `transform-origin` is not a
+compositable property, so animating it drags every frame through the main
+thread and shows up as jitter - the pure-transform form runs on the
+compositor.
+
+Clipping at the viewport rather than at the image's own fit box lets a zoomed
+portrait image spread into the side letterbox space instead of staying
+cropped to a narrow column (and a zoomed landscape image spread into the
+top/bottom bars). The pan needs **no DOM measurement**: percentages resolve
+against the element's own box at any aspect ratio. The keyframes are built in
+`lib/pan-zoom.js` and run via the **Web Animations API** (`element.animate`),
+which takes fractional `offset`s computed from the phase durations.
 
 The five phases and their durations are settings (`panZoomShowSeconds`,
 `panZoomZoomInSeconds`, `panZoomPanSeconds`, `panZoomZoomOutSeconds`,

@@ -344,16 +344,18 @@ async function main() {
     // Manual inspect-zoom: the show is paused (autoplay off), so scrolling
     // over the slide zooms the frame at the pointer; Escape then resets the
     // zoom instead of closing the show.
+    const slideTransform = () =>
+      page.evaluate(
+        () =>
+          /** @type {HTMLElement | null} */ (
+            document
+              .querySelector("#reddit-slideshow-host")
+              ?.shadowRoot?.querySelector(".rs-slide")
+          )?.style.transform ?? "",
+      );
     await page.mouse.move(640, 360);
     await page.mouse.wheel(0, -240);
-    const zoomedTransform = await page.evaluate(
-      () =>
-        /** @type {HTMLElement | null} */ (
-          document
-            .querySelector("#reddit-slideshow-host")
-            ?.shadowRoot?.querySelector(".rs-slide")
-        )?.style.transform ?? "",
-    );
+    const zoomedTransform = await slideTransform();
     check("scrolling over a paused slide zooms the frame", () =>
       assert.match(zoomedTransform, /scale\(/),
     );
@@ -364,14 +366,7 @@ async function main() {
     await page.mouse.down();
     await page.mouse.move(560, 300, { steps: 4 });
     await page.mouse.up();
-    const draggedTransform = await page.evaluate(
-      () =>
-        /** @type {HTMLElement | null} */ (
-          document
-            .querySelector("#reddit-slideshow-host")
-            ?.shadowRoot?.querySelector(".rs-slide")
-        )?.style.transform ?? "",
-    );
+    const draggedTransform = await slideTransform();
     check("dragging the zoomed slide pans it", () => {
       assert.match(draggedTransform, /scale\(/);
       assert.notEqual(draggedTransform, zoomedTransform);
