@@ -16,18 +16,15 @@ Reddit Slideshow Spectacular! trasforma i tuoi feed Reddit in una presentazione 
 
 La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave API, nessun accesso aggiuntivo, nessun account extra. Scorre i post multimediali nell'ordine in cui Reddit li restituisce e sfoglia automaticamente il feed, così la presentazione prosegue oltre la prima pagina.
 
+NOVITÀ - V1.4.0
+
+- NUOVO: ingrandisci una diapositiva in pausa - scorri o premi + / - per zoomare sul puntatore, poi trascina per spostarti
+- Varie ottimizzazioni delle prestazioni e correzioni di bug
+
 NOVITÀ - V1.3.1
 
 - NUOVO: cartella di download configurabile (una cartella dentro la cartella Download del tuo browser)
 - CORRETTO: lo zoom su un'immagine alta ora riempie tutto lo schermo invece di restare ritagliato in una colonna stretta
-
-NOVITÀ - V1.3.0
-
-- NUOVO: scorciatoia da tastiera di apertura configurabile
-- NUOVO: la freccia sul titolo ora mostra il tuo voto attuale
-- MIGLIORATO: una firma più ordinata, testo più leggibile sopra le immagini
-- MIGLIORATO: l'elenco non si chiude più da solo e arriva più indietro
-- CORRETTO: i clip video ora si ridimensionano, così i controlli del player non si estendono più su tutta la finestra
 
 Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
@@ -46,6 +43,7 @@ La coda contiene solo contenuti multimediali: post di testo, link esterni, annun
 CONTROLLI
 
 - Tastiera: Left/Right per spostarsi (Shift+Right salta al post successivo; Page Up/Page Down saltano avanti o indietro di 10 post), Up/Down per votare positivamente o negativamente, Space per riprodurre/mettere in pausa, M per silenziare, F per il fullscreen, D per scaricare, I per bloccare l'autore (e saltare il suo post), A per aggiungerlo agli amici o seguirlo, Esc per chiudere
+- In pausa: scorri o premi + / - per zoomare sul puntatore, e trascina la diapositiva ingrandita per spostarla
 - Una barra di controlli a schermo: precedente, riproduci/pausa, successivo, silenzia, schermo intero, apri in finestra e impostazioni
 - Sotto ogni diapositiva: la firma (chi ha pubblicato, in quale subreddit, la fonte e la risoluzione), con pulsanti per aprire il post originale o scaricare il media
 - Fai clic sul contatore di posizione per passare direttamente a qualsiasi post nella coda caricata

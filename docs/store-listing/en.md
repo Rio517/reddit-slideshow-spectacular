@@ -16,18 +16,15 @@ Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard
 
 The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
 
+WHAT'S NEW - V1.4.0
+
+- NEW: Zoom into a paused slide - scroll or press + / - to zoom at the pointer, then drag to pan
+- Various performance and bug fixes
+
 WHAT'S NEW - V1.3.1
 
 - NEW: Choose a download folder (a folder inside your browser's Downloads folder)
 - FIXED: Zooming a tall image now fills the screen instead of staying cropped to a narrow column
-
-WHAT'S NEW - V1.3.0
-
-- NEW: Configurable open keyboard shortcut
-- NEW: The vote arrow on the title now shows your current vote
-- IMPROVED: A tidier byline, easier-to-read text over images
-- IMPROVED: The list won't close on you and goes further back
-- FIXED: video clips now scale so the on-screen player controls no longer stretch across the whole window
 
 Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
@@ -46,6 +43,7 @@ The queue is media-only: text/self posts, outbound article links, stickied annou
 CONTROLS
 
 - Keyboard: Left/Right to move (Shift+Right skips to the next post; Page Up/Page Down jump back/ahead 10), Up/Down to upvote/downvote the post, Space to play/pause, M to mute, F for fullscreen, D to download, I to block the author (and skip their post), A to friend/follow the author, Esc to close
+- While paused: scroll or press + / - to zoom at the pointer, and drag to pan the zoomed slide
 - An on-screen control rail: previous, play/pause, next, mute, fullscreen, open in a window, and settings
 - Under each slide: a byline (who posted it, to which subreddit, the source and resolution), with buttons to open the original post or download the media
 - Click the position counter to jump straight to any post in the loaded queue

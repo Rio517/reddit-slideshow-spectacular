@@ -16,18 +16,15 @@ Reddit Slideshow Spectacular! convierte tus feeds de Reddit en un pase de diapos
 
 El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves de API, sin inicio de sesión adicional y sin cuentas extra. Recorre las publicaciones multimedia en el orden en que Reddit las devuelve y avanza por el feed de forma automática, de modo que el pase de diapositivas continúa más allá de la primera página.
 
+NOVEDADES - V1.4.0
+
+- NUEVO: haz zoom en una diapositiva en pausa - desplázate o pulsa + / - para acercar en el puntero, y arrastra para moverte
+- Varias mejoras de rendimiento y correcciones de errores
+
 NOVEDADES - V1.3.1
 
 - NUEVO: carpeta de descargas configurable (una carpeta dentro de la carpeta de Descargas de tu navegador)
 - CORREGIDO: al hacer zoom, una imagen alta ahora llena toda la pantalla en lugar de quedar recortada a una columna estrecha
-
-NOVEDADES - V1.3.0
-
-- NUEVO: atajo de teclado de apertura configurable
-- NUEVO: la flecha del título ahora muestra tu voto actual
-- MEJORADO: una línea de créditos más ordenada, texto más fácil de leer sobre las imágenes
-- MEJORADO: la lista ya no se cierra sola y llega más atrás
-- CORREGIDO: los clips de vídeo ahora se escalan para que los controles del reproductor no se extiendan por toda la ventana
 
 Notas completas de la versión: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
@@ -46,6 +43,7 @@ La cola es solo multimedia: las publicaciones de texto, los enlaces a artículos
 CONTROLES
 
 - Teclado: Left/Right para avanzar y retroceder (Shift+Right salta a la siguiente publicación; Page Up/Page Down saltan 10 hacia atrás/adelante), Up/Down para votar positivo/negativo, Space para reproducir/pausar, M para silenciar, F para pantalla completa, D para descargar, I para bloquear al autor (y omitir su publicación), A para agregarlo como amigo o seguirlo, Esc para cerrar
+- En pausa: desplázate o pulsa + / - para hacer zoom en el puntero, y arrastra la diapositiva ampliada para moverla
 - Una barra de controles en pantalla: anterior, reproducir/pausar, siguiente, silenciar, pantalla completa, abrir en ventana y ajustes
 - Bajo cada diapositiva: una línea de créditos (quién la publicó, en qué subreddit, la fuente y la resolución), con botones para abrir la publicación original o descargar el contenido
 - Haz clic en el contador de posición para ir directamente a cualquier publicación de la cola cargada

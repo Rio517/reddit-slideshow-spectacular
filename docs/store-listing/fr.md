@@ -16,18 +16,15 @@ Reddit Slideshow Spectacular! transforme vos fils Reddit en un diaporama multim�
 
 Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API, aucune connexion supplémentaire, aucun compte additionnel. Il parcourt les publications multimédia dans l'ordre où Reddit les renvoie et pagine automatiquement le fil, de sorte que le diaporama se poursuit au-delà de la première page.
 
+NOUVEAUTÉS — V1.4.0
+
+- NOUVEAU : zoomez dans une diapositive en pause - faites défiler ou appuyez sur + / - pour zoomer au pointeur, puis faites glisser pour vous déplacer
+- Diverses améliorations de performances et corrections de bugs
+
 NOUVEAUTÉS — V1.3.1
 
 - NOUVEAU : dossier de téléchargement configurable (un dossier dans le dossier Téléchargements de votre navigateur)
 - CORRIGÉ : le zoom sur une image haute remplit désormais tout l'écran au lieu de rester rogné sur une colonne étroite
-
-NOUVEAUTÉS — V1.3.0
-
-- NOUVEAU : raccourci clavier d'ouverture configurable
-- NOUVEAU : la flèche du titre affiche désormais votre vote actuel
-- AMÉLIORÉ : une ligne d'informations plus compacte, un texte plus lisible sur les images
-- AMÉLIORÉ : la liste ne se ferme plus toute seule et remonte plus loin en arrière
-- CORRIGÉ : les clips vidéo s'adaptent désormais, si bien que les commandes du lecteur ne s'étendent plus sur toute la fenêtre
 
 Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
@@ -46,6 +43,7 @@ La file d'attente est exclusivement multimédia : les publications textuelles, l
 COMMANDES
 
 - Clavier : Left/Right pour naviguer (Shift+Right passe à la publication suivante ; Page Up/Page Down sautent 10 positions en arrière/avant), Up/Down pour voter pour ou contre la publication, Space pour lire/mettre en pause, M pour couper le son, F pour le plein écran, D pour télécharger, I pour bloquer l'auteur (et passer sa publication), A pour l'ajouter en ami ou le suivre, Esc pour fermer
+- En pause : faites défiler ou appuyez sur + / - pour zoomer au pointeur, et faites glisser la diapositive zoomée pour la déplacer
 - Une barre de commandes à l'écran : précédent, lecture/pause, suivant, sourdine, plein écran, ouvrir dans une fenêtre et paramètres
 - Sous chaque diapositive : une ligne d'informations (auteur, subreddit, source et résolution), avec des boutons pour ouvrir la publication originale ou télécharger le média
 - Cliquez sur le compteur de position pour accéder directement à n'importe quelle publication de la file chargée
