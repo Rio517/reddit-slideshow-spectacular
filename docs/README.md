@@ -33,6 +33,7 @@ Product, research, and decision docs for the extension, plus the shipped assets:
 - [ADR 0017](adr/0017-download-current-media.md): download the current media via the background `downloads` API.
 - [ADR 0018](adr/0018-reddit-video-audio.md): play v.redd.it audio from a companion `<audio>` synced to the silent fallback video.
 - [ADR 0019](adr/0019-post-voting.md): upvote/downvote the current post with the ↑/↓ keys through the logged-in session.
+- [ADR 0020](adr/0020-download-folder-setting.md): download folder as a subfolder-of-Downloads setting — the platform offers no usable folder picker for extensions.
 - [Foundation plan](superpowers/plans/2026-05-29-foundation-wxt-mv3.md): task-by-task plan for the WXT/MV3 scaffold, shared core, and offline fixtures.
 
 ## Status
