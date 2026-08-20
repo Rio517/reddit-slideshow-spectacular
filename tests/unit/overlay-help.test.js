@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { createHelpPanel } from "../../lib/overlay-help.js";
 import { setMessageGetter } from "../../lib/i18n.js";
+import { version } from "../../package.json";
 
 afterEach(() => {
   document.body.innerHTML = "";
@@ -14,6 +15,13 @@ function make() {
 }
 
 describe("createHelpPanel", () => {
+  it("shows the extension version", () => {
+    const panel = make();
+    expect(
+      panel.root.querySelector(".rs-help-panel__version")?.textContent,
+    ).toBe(`v${version}`);
+  });
+
   it("returns a hidden labelled region", () => {
     const panel = make();
     expect(panel.root.className).toBe("rs-help-panel");
