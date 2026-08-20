@@ -33,15 +33,29 @@ describe("panZoomAnimation", () => {
       12 / 14,
       1,
     ]);
-    // Zoomed-in phases carry the scale factor...
-    expect(keyframes[2].transform).toBe("scale(2)");
-    expect(keyframes[3].transform).toBe("scale(2)");
-    // ...and the pan moves the origin top -> bottom.
-    expect(keyframes[2].transformOrigin).toBe("50% 0%");
-    expect(keyframes[3].transformOrigin).toBe("50% 100%");
+    // Zoomed-in at the top: top edge pinned, no translation yet.
+    expect(keyframes[2].transform).toBe("translateY(0%) scale(2)");
+    // Zoomed-in at the bottom: translate pins the bottom edge ((1-z)·100%).
+    expect(keyframes[3].transform).toBe("translateY(-100%) scale(2)");
     // Begins and ends on the whole image.
-    expect(keyframes[0].transform).toBe("scale(1)");
-    expect(keyframes[5].transform).toBe("scale(1)");
+    expect(keyframes[0].transform).toBe("translateY(0%) scale(1)");
+    expect(keyframes[5].transform).toBe("translateY(0%) scale(1)");
+  });
+
+  it("keeps the transform-origin fixed so the motion can composite", () => {
+    // Animating transform-origin forces every frame through the main thread
+    // (it is not a compositable property) - the visible symptom is jitter.
+    // The pan must be expressed entirely in `transform`, origin constant.
+    const { keyframes } = panZoomAnimation(CFG);
+    for (const k of keyframes) {
+      expect(k.transformOrigin).toBe("50% 0%");
+    }
+  });
+
+  it("pins the bottom edge exactly for a fractional scale", () => {
+    const { keyframes } = panZoomAnimation({ ...CFG, scale: 3.57 });
+    // (1 - 3.57) x 100% = -257%
+    expect(keyframes[3].transform).toBe("translateY(-257%) scale(3.57)");
   });
 
   it("guards against a zero total", () => {
