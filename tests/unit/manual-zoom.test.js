@@ -3,6 +3,7 @@ import {
   MANUAL_ZOOM_MAX,
   identityZoom,
   isZoomed,
+  panBy,
   wheelZoomFactor,
   zoomAtPoint,
   zoomTransform,
@@ -90,6 +91,67 @@ describe("wheelZoomFactor", () => {
   it("bounds a single event's effect", () => {
     expect(wheelZoomFactor(-100000, 0)).toBeLessThanOrEqual(1.7);
     expect(wheelZoomFactor(100000, 0)).toBeGreaterThanOrEqual(0.55);
+  });
+});
+
+describe("panBy", () => {
+  const view = { viewWidth: 1000, viewHeight: 700 };
+  /** A zoomed state; the tests care about the delta applied, not the start. */
+  const zoomed = { scale: 2, tx: -300, ty: -100 };
+
+  it("pans freely inside the bounds", () => {
+    const s = panBy(zoomed, 40, -30, {
+      rectLeft: -300,
+      rectTop: -100,
+      rectWidth: 2000,
+      rectHeight: 1400,
+      ...view,
+    });
+    expect(s.tx).toBe(zoomed.tx + 40);
+    expect(s.ty).toBe(zoomed.ty - 30);
+    expect(s.scale).toBe(2);
+  });
+
+  it("clamps an oversized axis so no gap opens at either edge", () => {
+    const bounds = {
+      rectLeft: -300,
+      rectTop: -100,
+      rectWidth: 2000,
+      rectHeight: 1400,
+      ...view,
+    };
+    // Dragging right: the left edge stops at 0 (delta capped at +300).
+    expect(panBy(zoomed, 500, 0, bounds).tx).toBe(zoomed.tx + 300);
+    // Dragging left: the right edge stops at the viewport edge.
+    // newLeft floor = viewWidth - rectWidth = -1000 -> delta capped at -700.
+    expect(panBy(zoomed, -5000, 0, bounds).tx).toBe(zoomed.tx - 700);
+    // Same for Y: top edge stops at 0 (delta capped at +100).
+    expect(panBy(zoomed, 0, 500, bounds).ty).toBe(zoomed.ty + 100);
+  });
+
+  it("keeps a smaller-than-viewport axis fully on screen", () => {
+    const bounds = {
+      rectLeft: 100,
+      rectTop: -100,
+      rectWidth: 400,
+      rectHeight: 1400,
+      ...view,
+    };
+    // Left edge can't cross 0: delta capped at -100.
+    expect(panBy(zoomed, -500, 0, bounds).tx).toBe(zoomed.tx - 100);
+    // Right edge can't cross the viewport edge: newLeft cap 600, delta +500.
+    expect(panBy(zoomed, 5000, 0, bounds).tx).toBe(zoomed.tx + 500);
+  });
+
+  it("does nothing at identity (no zoom, no pan)", () => {
+    const s = panBy(identityZoom(), 40, 40, {
+      rectLeft: 0,
+      rectTop: 0,
+      rectWidth: 500,
+      rectHeight: 500,
+      ...view,
+    });
+    expect(s).toEqual(identityZoom());
   });
 });
 

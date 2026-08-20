@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "أثناء الإيقاف المؤقت، تكبير أو تصغير عند المؤشر (أو بالتمرير)",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too."
+    "message": "أثناء الإيقاف المؤقت، تكبير أو تصغير عند المؤشر (أو بالتمرير)؛ اسحب للتحريك",
+    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "إظهار هذه الاختصارات أو إخفاؤها",

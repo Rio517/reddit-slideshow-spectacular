@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "In pausa, ingrandisci o riduci sul puntatore (oppure scorri)",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too."
+    "message": "In pausa, ingrandisci o riduci sul puntatore (oppure scorri); trascina per spostare",
+    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "Mostra o nascondi queste scorciatoie",

@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "En pausa, acercar o alejar en el puntero (o desplazarse)",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too."
+    "message": "En pausa, acercar o alejar en el puntero (o desplazarse); arrastra para mover",
+    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "Mostrar u ocultar estos atajos",

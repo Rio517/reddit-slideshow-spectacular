@@ -2132,6 +2132,81 @@ describe("manual zoom while paused", () => {
     expect(frame.style.transform).toBe("");
   });
 
+  /**
+   * @param {Element} target
+   * @param {string} type
+   * @param {number} x
+   * @param {number} y
+   */
+  function pointer(target, type, x, y) {
+    target.dispatchEvent(
+      new MouseEvent(type, {
+        clientX: x,
+        clientY: y,
+        button: 0,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  it("dragging a zoomed slide pans it (clamped by the frame box)", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    overlay.manualZoomStep(1);
+    const before = frame.style.transform;
+    // happy-dom rects are all zeros; give the frame a real oversized box so
+    // the clamp allows movement.
+    frame.getBoundingClientRect = () =>
+      /** @type {DOMRect} */ ({
+        left: -200,
+        top: -150,
+        width: 1600,
+        height: 1200,
+      });
+    pointer(frame, "pointerdown", 300, 300);
+    expect(frame.classList.contains("rs-slide--panning")).toBe(true);
+    pointer(frame, "pointermove", 260, 320);
+    pointer(frame, "pointerup", 260, 320);
+    expect(frame.style.transform).not.toBe(before);
+    expect(frame.style.transform).toMatch(/scale\(1\.3/); // scale untouched
+    expect(frame.classList.contains("rs-slide--panning")).toBe(false);
+  });
+
+  it("suppresses the click that follows a drag, so the show stays open", async () => {
+    const onClose = vi.fn();
+    const overlay = createOverlay({ ...noopHandlers(), onClose });
+    const frame = await renderPausedImage(overlay);
+    overlay.manualZoomStep(1);
+    frame.getBoundingClientRect = () =>
+      /** @type {DOMRect} */ ({
+        left: -200,
+        top: -150,
+        width: 1600,
+        height: 1200,
+      });
+    pointer(frame, "pointerdown", 300, 300);
+    pointer(frame, "pointermove", 250, 250);
+    pointer(frame, "pointerup", 250, 250);
+    // The browser fires a click after the drag; its target after retargeting
+    // is an ancestor (the root), which the backdrop-close handler would act on.
+    pointer(overlay.root, "click", 250, 250);
+    expect(onClose).not.toHaveBeenCalled();
+    // A later plain backdrop click still closes.
+    pointer(overlay.root, "click", 10, 10);
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not pan when not zoomed", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    pointer(frame, "pointerdown", 300, 300);
+    pointer(frame, "pointermove", 250, 250);
+    pointer(frame, "pointerup", 250, 250);
+    expect(frame.style.transform).toBe("");
+    expect(frame.classList.contains("rs-slide--panning")).toBe(false);
+  });
+
   it("a new slide render starts unzoomed", async () => {
     const overlay = createOverlay(noopHandlers());
     await renderPausedImage(overlay);

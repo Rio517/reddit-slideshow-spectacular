@@ -76,6 +76,7 @@ export default [
         process: "readonly",
         DOMParser: "readonly",
         KeyboardEvent: "readonly",
+        MouseEvent: "readonly",
         WheelEvent: "readonly",
         chrome: "readonly",
       },

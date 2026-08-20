@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "Zoom in or out at the pointer while paused (or scroll)",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too."
+    "message": "Zoom in or out at the pointer while paused (or scroll); drag to pan",
+    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "Show or hide these shortcuts",

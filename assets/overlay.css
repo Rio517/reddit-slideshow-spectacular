@@ -128,6 +128,13 @@
 .rs-slide--zoomed {
   transition: transform 0.08s ease-out;
   will-change: transform;
+  cursor: grab;
+}
+
+/* Mid drag-to-pan: the transform must track the pointer, not ease after it. */
+.rs-slide--panning {
+  transition: none;
+  cursor: grabbing;
 }
 
 /* Held invisible until its media is decoded, so the entrance never animates a

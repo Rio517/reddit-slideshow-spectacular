@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "Bei Pause am Zeiger hinein- oder herauszoomen (oder scrollen)",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too."
+    "message": "Bei Pause am Zeiger hinein- oder herauszoomen (oder scrollen); ziehen zum Verschieben",
+    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "Diese Tastenkürzel ein- oder ausblenden",

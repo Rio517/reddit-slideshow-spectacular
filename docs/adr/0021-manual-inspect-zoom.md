@@ -16,7 +16,9 @@ While the show is **paused**, the current slide can be zoomed manually:
 
 - **Mouse wheel** (and trackpad pinch, which arrives as a wheel event) zooms
   about the pointer; **`+` / `-`** (and their unshifted `=` / `_`) step the
-  zoom about the last pointer position. **Escape** peels the zoom off first
+  zoom about the last pointer position; **dragging** pans the zoomed slide
+  (clamped so no gap opens on an axis the content overfills, and the content
+  stays on screen on an axis it doesn't). **Escape** peels the zoom off first
   and only closes the show when nothing is zoomed or open on top (it joins
   `dismissTopLayer` as the bottom layer).
 - The math lives in `lib/manual-zoom.js` as pure functions: state
@@ -34,14 +36,18 @@ While the show is **paused**, the current slide can be zoomed manually:
 - The zoom is a paused-only mode: resuming play, changing slides, or closing
   resets it. Playing state gates both the wheel (overlay) and the keys
   (session), and iframe embeds are excluded.
+- A drag's release also fires a `click`, retargeted to an ancestor the
+  backdrop-close handler acts on - the drag suppresses that one click. Below
+  a small movement threshold a press stays an ordinary click. Native image
+  drag is prevented while zoomed (Firefox would otherwise start one mid-pan),
+  and the drag transition is disabled so the frame tracks the pointer.
 
 ## Consequences
 
 - Paused inspection of any image or video frame, symmetric across Firefox and
-  Chrome, verified in both real browsers (wheel anchor, key steps, Escape).
+  Chrome, verified in both real browsers (wheel anchor, key steps, drag-pan,
+  Escape).
 - Open panels keep native wheel scrolling: the handler yields to them.
-- Panning while zoomed means zooming out and back in at a new anchor; a
-  drag-to-pan could be added later if inspection turns out to need it.
 
 ## Alternatives Considered
 

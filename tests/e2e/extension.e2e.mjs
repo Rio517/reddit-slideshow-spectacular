@@ -357,6 +357,26 @@ async function main() {
     check("scrolling over a paused slide zooms the frame", () =>
       assert.match(zoomedTransform, /scale\(/),
     );
+
+    // Dragging the zoomed slide pans it (and its release-click must not
+    // close the show - the Escape check below still finds it open).
+    await page.mouse.move(640, 360);
+    await page.mouse.down();
+    await page.mouse.move(560, 300, { steps: 4 });
+    await page.mouse.up();
+    const draggedTransform = await page.evaluate(
+      () =>
+        /** @type {HTMLElement | null} */ (
+          document
+            .querySelector("#reddit-slideshow-host")
+            ?.shadowRoot?.querySelector(".rs-slide")
+        )?.style.transform ?? "",
+    );
+    check("dragging the zoomed slide pans it", () => {
+      assert.match(draggedTransform, /scale\(/);
+      assert.notEqual(draggedTransform, zoomedTransform);
+    });
+
     await page.keyboard.press("Escape");
     const afterEscape = await page.evaluate(() => {
       const sr = document.querySelector("#reddit-slideshow-host")?.shadowRoot;

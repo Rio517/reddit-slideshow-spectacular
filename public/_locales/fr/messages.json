@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "En pause, zoomer ou dézoomer au pointeur (ou faire défiler)",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too."
+    "message": "En pause, zoomer ou dézoomer au pointeur (ou faire défiler) ; glisser pour déplacer",
+    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "Afficher ou masquer ces raccourcis",
