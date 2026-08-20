@@ -68,6 +68,7 @@ function noopHandlers() {
     onMediaReady() {},
     onToggleMute() {},
     onOpenPreferences() {},
+    isPaused: () => true,
   };
 }
 
@@ -2099,6 +2100,16 @@ describe("manual zoom while paused", () => {
     const overlay = createOverlay({ ...noopHandlers(), isPaused: () => false });
     const frame = await renderPausedImage(overlay);
     spinWheel(frame, -100);
+    expect(frame.style.transform).toBe("");
+  });
+
+  it("denies zoom when no isPaused handler is wired", async () => {
+    // Zoom is a paused-only feature: a host that doesn't report pause state
+    // gets no zoom, rather than an always-on one.
+    const overlay = createOverlay({ ...noopHandlers(), isPaused: undefined });
+    const frame = await renderPausedImage(overlay);
+    spinWheel(frame, -100);
+    overlay.manualZoomStep(1);
     expect(frame.style.transform).toBe("");
   });
 
