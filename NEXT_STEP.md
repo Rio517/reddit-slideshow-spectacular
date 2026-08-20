@@ -43,8 +43,8 @@ giant commit.
 
 - **v1.3.1 store rollout.** From the GitHub release, upload `*-chrome.zip` to
   the Chrome Web Store and `*-firefox.zip` plus `*-sources.zip` (the build
-  minifies) to Firefox Add-ons. The per-locale listing copy in
-  `docs/store-listing/<lang>.md` stays at its 1.3.0 what's-new (owner's call).
+  minifies) to Firefox Add-ons, and paste the per-locale listing copy from
+  `docs/store-listing/<lang>.md` (its what's-new shows the last two versions).
   The store heroes and promo tiles are committed under `docs/`; `npm run ship`
   regenerates them.
 - Optional: a native-speaker pass on the machine-drafted translations,
