@@ -103,6 +103,10 @@
     "message": "إضافة صاحب المنشور كصديق أو متابعته",
     "description": "Help-panel shortcut description: friend/follow author."
   },
+  "helpShortcutZoom": {
+    "message": "أثناء الإيقاف المؤقت، تكبير أو تصغير عند المؤشر (أو بالتمرير)",
+    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too."
+  },
   "helpShortcutHelp": {
     "message": "إظهار هذه الاختصارات أو إخفاؤها",
     "description": "Help-panel shortcut description: toggle the shortcuts panel."

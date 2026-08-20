@@ -103,6 +103,10 @@
     "message": "Aggiungi l'autore agli amici o seguilo",
     "description": "Help-panel shortcut description: friend/follow author."
   },
+  "helpShortcutZoom": {
+    "message": "In pausa, ingrandisci o riduci sul puntatore (oppure scorri)",
+    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too."
+  },
   "helpShortcutHelp": {
     "message": "Mostra o nascondi queste scorciatoie",
     "description": "Help-panel shortcut description: toggle the shortcuts panel."

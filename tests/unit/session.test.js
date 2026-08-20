@@ -1685,3 +1685,42 @@ describe("Shift+ArrowRight skips the current gallery", () => {
     expect(mediaSrc()).toContain("/p1:1.jpg"); // next gallery item, not next post
   });
 });
+
+describe("manual zoom keys (paused)", () => {
+  it("zooms the paused slide with + and resets with Escape instead of closing", async () => {
+    const { session } = makeSession({});
+    await session.start();
+    q("img")?.dispatchEvent(new Event("load"));
+    await flush();
+    session.handleKeydown(key("+"));
+    const frame = /** @type {HTMLElement | null} */ (q(".rs-slide"));
+    expect(frame?.style.transform).toMatch(/scale\(1\.3/);
+    // Escape peels the zoom off first; the show stays open.
+    session.handleKeydown(key("Escape"));
+    expect(frame?.style.transform).toBe("");
+    expect(q(".rs-slide")).toBeTruthy();
+  });
+
+  it("zooms out with - and never below 1", async () => {
+    const { session } = makeSession({});
+    await session.start();
+    q("img")?.dispatchEvent(new Event("load"));
+    await flush();
+    session.handleKeydown(key("+"));
+    session.handleKeydown(key("-"));
+    const frame = /** @type {HTMLElement | null} */ (q(".rs-slide"));
+    expect(frame?.style.transform).toBe("");
+  });
+
+  it("ignores the zoom keys while playing", async () => {
+    const { session } = makeSession({
+      settingsOverrides: { autoplay: true },
+    });
+    await session.start();
+    q("img")?.dispatchEvent(new Event("load"));
+    await flush();
+    session.handleKeydown(key("+"));
+    const frame = /** @type {HTMLElement | null} */ (q(".rs-slide"));
+    expect(frame?.style.transform ?? "").toBe("");
+  });
+});

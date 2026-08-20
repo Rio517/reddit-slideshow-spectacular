@@ -103,6 +103,10 @@
     "message": "Autor als Freund hinzufügen oder folgen",
     "description": "Help-panel shortcut description: friend/follow author."
   },
+  "helpShortcutZoom": {
+    "message": "Bei Pause am Zeiger hinein- oder herauszoomen (oder scrollen)",
+    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too."
+  },
   "helpShortcutHelp": {
     "message": "Diese Tastenkürzel ein- oder ausblenden",
     "description": "Help-panel shortcut description: toggle the shortcuts panel."

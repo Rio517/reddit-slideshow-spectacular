@@ -340,6 +340,38 @@ async function main() {
       assert.equal(panZoom.sideHitAtRest, false);
       assert.equal(panZoom.sideHitMidPan, true);
     });
+
+    // Manual inspect-zoom: the show is paused (autoplay off), so scrolling
+    // over the slide zooms the frame at the pointer; Escape then resets the
+    // zoom instead of closing the show.
+    await page.mouse.move(640, 360);
+    await page.mouse.wheel(0, -240);
+    const zoomedTransform = await page.evaluate(
+      () =>
+        /** @type {HTMLElement | null} */ (
+          document
+            .querySelector("#reddit-slideshow-host")
+            ?.shadowRoot?.querySelector(".rs-slide")
+        )?.style.transform ?? "",
+    );
+    check("scrolling over a paused slide zooms the frame", () =>
+      assert.match(zoomedTransform, /scale\(/),
+    );
+    await page.keyboard.press("Escape");
+    const afterEscape = await page.evaluate(() => {
+      const sr = document.querySelector("#reddit-slideshow-host")?.shadowRoot;
+      const frame = /** @type {HTMLElement | null} */ (
+        sr?.querySelector(".rs-slide")
+      );
+      return {
+        transform: frame?.style.transform ?? "",
+        open: Boolean(sr?.querySelector(".rs-meta__counter")),
+      };
+    });
+    check("Escape resets the zoom and keeps the show open", () => {
+      assert.equal(afterEscape.transform, "");
+      assert.equal(afterEscape.open, true);
+    });
   } finally {
     await context.close();
     await rm(userDataDir, { recursive: true, force: true });

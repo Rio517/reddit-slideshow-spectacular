@@ -43,7 +43,7 @@ describe("createHelpPanel", () => {
   it("lists one row per shortcut, each with a key badge and a description", () => {
     const panel = make();
     const rows = panel.root.querySelectorAll(".rs-help-panel__row");
-    expect(rows.length).toBe(13);
+    expect(rows.length).toBe(14);
     for (const row of rows) {
       expect(row.querySelector(".rs-help-panel__key")).not.toBeNull();
       expect(
@@ -58,6 +58,15 @@ describe("createHelpPanel", () => {
       (k) => k.textContent,
     );
     expect(keys).toContain("?");
+  });
+
+  it("lists the paused inspect-zoom keys", () => {
+    const panel = make();
+    const keys = [...panel.root.querySelectorAll(".rs-help-panel__key")].map(
+      (k) => k.textContent,
+    );
+    expect(keys).toContain("+");
+    expect(keys).toContain("−");
   });
 
   it("documents launch, navigation, and escape shortcuts", () => {

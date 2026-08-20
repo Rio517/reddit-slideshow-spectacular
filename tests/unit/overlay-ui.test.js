@@ -2048,3 +2048,113 @@ describe("mute state (single source of truth)", () => {
     expect(renderRedditVideo(overlay).muted).toBe(true);
   });
 });
+
+describe("manual zoom while paused", () => {
+  afterEach(() => {
+    document.body.inert = false;
+  });
+
+  /** @param {Overlay} overlay */
+  async function renderPausedImage(overlay) {
+    overlay.show();
+    overlay.setPlaying(false);
+    overlay.renderCurrent(imageSlide({ mediaUrl: "https://i.redd.it/a.jpg" }), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: false,
+    });
+    overlay.root
+      .querySelector('img[src="https://i.redd.it/a.jpg"]')
+      ?.dispatchEvent(new Event("load"));
+    await Promise.resolve();
+    await Promise.resolve();
+    return /** @type {HTMLElement} */ (overlay.root.querySelector(".rs-slide"));
+  }
+
+  /** @param {Element} target @param {number} deltaY */
+  function spinWheel(target, deltaY) {
+    target.dispatchEvent(
+      new WheelEvent("wheel", {
+        deltaY,
+        clientX: 120,
+        clientY: 90,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  it("wheel over a paused slide zooms the frame about the pointer", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    spinWheel(frame, -100);
+    expect(frame.style.transform).toMatch(/scale\(1\.\d/);
+    expect(frame.style.transformOrigin).toBe("0 0");
+    expect(frame.classList.contains("rs-slide--zoomed")).toBe(true);
+  });
+
+  it("ignores the wheel while playing", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    overlay.setPlaying(true);
+    spinWheel(frame, -100);
+    expect(frame.style.transform).toBe("");
+  });
+
+  it("steps in and out via manualZoomStep, and Esc-dismiss resets", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    overlay.manualZoomStep(1);
+    expect(frame.style.transform).toMatch(/scale\(1\.3/);
+    // Zoomed counts as the top layer: dismiss resets it instead of closing.
+    expect(overlay.dismissTopLayer()).toBe(true);
+    expect(frame.style.transform).toBe("");
+    // Nothing zoomed and no panel open: nothing to dismiss.
+    expect(overlay.dismissTopLayer()).toBe(false);
+  });
+
+  it("stepping out never goes below 1 and clears the zoom marker", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    overlay.manualZoomStep(1);
+    overlay.manualZoomStep(-1);
+    expect(frame.style.transform).toBe("");
+    expect(frame.classList.contains("rs-slide--zoomed")).toBe(false);
+  });
+
+  it("resuming play resets the zoom", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    overlay.manualZoomStep(1);
+    overlay.setPlaying(true);
+    expect(frame.style.transform).toBe("");
+  });
+
+  it("a new slide render starts unzoomed", async () => {
+    const overlay = createOverlay(noopHandlers());
+    await renderPausedImage(overlay);
+    overlay.manualZoomStep(1);
+    overlay.renderCurrent(
+      imageSlide({ id: "next", mediaUrl: "https://i.redd.it/b.jpg" }),
+      {
+        index: 1,
+        total: 2,
+        exhausted: true,
+        effectiveSeconds: 5,
+        playing: false,
+      },
+    );
+    overlay.root
+      .querySelector('img[src="https://i.redd.it/b.jpg"]')
+      ?.dispatchEvent(new Event("load"));
+    await Promise.resolve();
+    await Promise.resolve();
+    const frames = overlay.root.querySelectorAll(".rs-slide");
+    const next = /** @type {HTMLElement} */ (frames[frames.length - 1]);
+    expect(next.style.transform).toBe("");
+    overlay.manualZoomStep(1);
+    expect(next.style.transform).toMatch(/scale\(1\.3/);
+  });
+});

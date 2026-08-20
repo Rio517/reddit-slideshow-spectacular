@@ -123,6 +123,13 @@
   place-items: center;
 }
 
+/* Manual inspect-zoom on a paused slide: ease each wheel/key step so the zoom
+   glides instead of stepping, and keep the frame on its own compositor layer. */
+.rs-slide--zoomed {
+  transition: transform 0.08s ease-out;
+  will-change: transform;
+}
+
 /* Held invisible until its media is decoded, so the entrance never animates a
    blank/undecoded frame in. */
 .rs-slide--pending {
