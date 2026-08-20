@@ -16,6 +16,11 @@ Reddit Slideshow Spectacular! trasforma i tuoi feed Reddit in una presentazione 
 
 La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave API, nessun accesso aggiuntivo, nessun account extra. Scorre i post multimediali nell'ordine in cui Reddit li restituisce e sfoglia automaticamente il feed, così la presentazione prosegue oltre la prima pagina.
 
+NOVITÀ - V1.3.1
+
+- NUOVO: cartella di download configurabile (una cartella dentro la cartella Download del tuo browser)
+- CORRETTO: lo zoom su un'immagine alta ora riempie tutto lo schermo invece di restare ritagliato in una colonna stretta
+
 NOVITÀ - V1.3.0
 
 - NUOVO: scorciatoia da tastiera di apertura configurabile
@@ -24,7 +29,7 @@ NOVITÀ - V1.3.0
 - MIGLIORATO: l'elenco non si chiude più da solo e arriva più indietro
 - CORRETTO: i clip video ora si ridimensionano, così i controlli del player non si estendono più su tutta la finestra
 
-Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
+Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
 COSA RIPRODUCE
 
@@ -66,6 +71,7 @@ IMPOSTAZIONI (si applicano in tempo reale, senza ricaricamento)
 - Riproduzione automatica dei video sì/no, avvio in silenzio sì/no
 - Includi contenuti NSFW — di default segue la tua sessione Reddit, mostrando contenuti per adulti solo nella misura in cui lo fa già il tuo account
 - Salta i media duplicati, incluse le immagini ricaricate (attivo di default)
+- Cartella di download (dentro la cartella Download del tuo browser)
 - Panoramica e zoom sulle immagini grandi (o su tutte le immagini), con pieno controllo sulla sequenza
 
 PRIVACY

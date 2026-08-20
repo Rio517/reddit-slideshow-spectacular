@@ -16,6 +16,11 @@ Reddit Slideshow Spectacular! transforme vos fils Reddit en un diaporama multim�
 
 Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API, aucune connexion supplémentaire, aucun compte additionnel. Il parcourt les publications multimédia dans l'ordre où Reddit les renvoie et pagine automatiquement le fil, de sorte que le diaporama se poursuit au-delà de la première page.
 
+NOUVEAUTÉS — V1.3.1
+
+- NOUVEAU : dossier de téléchargement configurable (un dossier dans le dossier Téléchargements de votre navigateur)
+- CORRIGÉ : le zoom sur une image haute remplit désormais tout l'écran au lieu de rester rogné sur une colonne étroite
+
 NOUVEAUTÉS — V1.3.0
 
 - NOUVEAU : raccourci clavier d'ouverture configurable
@@ -24,7 +29,7 @@ NOUVEAUTÉS — V1.3.0
 - AMÉLIORÉ : la liste ne se ferme plus toute seule et remonte plus loin en arrière
 - CORRIGÉ : les clips vidéo s'adaptent désormais, si bien que les commandes du lecteur ne s'étendent plus sur toute la fenêtre
 
-Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
+Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
 CE QU'IL DIFFUSE
 
@@ -66,6 +71,7 @@ PARAMÈTRES (appliqués en direct, sans rechargement)
 - Lecture automatique des vidéos activée/désactivée, démarrage en sourdine activé/désactivé
 - Inclure le contenu NSFW — suit par défaut votre session Reddit, n'affichant le contenu pour adultes que dans la mesure où votre compte le fait déjà
 - Ignorer les médias en double, y compris les images remises en ligne (activé par défaut)
+- Dossier de téléchargement (dans le dossier Téléchargements de votre navigateur)
 - Panoramique et zoom sur les grandes images (ou toutes les images), avec contrôle complet de la séquence
 
 CONFIDENTIALITÉ

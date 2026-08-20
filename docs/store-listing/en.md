@@ -16,6 +16,11 @@ Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard
 
 The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
 
+WHAT'S NEW - V1.3.1
+
+- NEW: Choose a download folder (a folder inside your browser's Downloads folder)
+- FIXED: Zooming a tall image now fills the screen instead of staying cropped to a narrow column
+
 WHAT'S NEW - V1.3.0
 
 - NEW: Configurable open keyboard shortcut
@@ -24,7 +29,7 @@ WHAT'S NEW - V1.3.0
 - IMPROVED: The list won't close on you and goes further back
 - FIXED: video clips now scale so the on-screen player controls no longer stretch across the whole window
 
-Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
+Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
 WHAT IT PLAYS
 
@@ -66,6 +71,7 @@ SETTINGS (apply live, no reload)
 - Autoplay videos on/off, start muted on/off
 - Include NSFW - by default follows your Reddit session, showing over-18 content only insofar as your account already does
 - Skip duplicate media, including re-uploaded images (on by default)
+- Download folder (inside your browser's Downloads folder)
 - Pan & zoom large images (or all images), with full control over the sequence
 
 PRIVACY

@@ -16,6 +16,11 @@ Reddit Slideshow Spectacular! convierte tus feeds de Reddit en un pase de diapos
 
 El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves de API, sin inicio de sesión adicional y sin cuentas extra. Recorre las publicaciones multimedia en el orden en que Reddit las devuelve y avanza por el feed de forma automática, de modo que el pase de diapositivas continúa más allá de la primera página.
 
+NOVEDADES - V1.3.1
+
+- NUEVO: carpeta de descargas configurable (una carpeta dentro de la carpeta de Descargas de tu navegador)
+- CORREGIDO: al hacer zoom, una imagen alta ahora llena toda la pantalla en lugar de quedar recortada a una columna estrecha
+
 NOVEDADES - V1.3.0
 
 - NUEVO: atajo de teclado de apertura configurable
@@ -24,7 +29,7 @@ NOVEDADES - V1.3.0
 - MEJORADO: la lista ya no se cierra sola y llega más atrás
 - CORREGIDO: los clips de vídeo ahora se escalan para que los controles del reproductor no se extiendan por toda la ventana
 
-Notas completas de la versión: https://github.com/Rio517/reddit-slideshow-spectacular/releases/tag/v1.3.0
+Notas completas de la versión: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
 QUÉ REPRODUCE
 
@@ -66,6 +71,7 @@ AJUSTES (se aplican en tiempo real, sin recarga)
 - Reproducción automática de vídeos activada/desactivada, inicio silenciado activado/desactivado
 - Incluir contenido NSFW — por defecto sigue tu sesión de Reddit, mostrando contenido para mayores de 18 solo en la medida en que tu cuenta ya lo haga
 - Omitir contenido multimedia duplicado, incluidas imágenes subidas de nuevo (activado por defecto)
+- Carpeta de descargas (dentro de la carpeta de Descargas de tu navegador)
 - Paneo y zoom en imágenes grandes (o en todas las imágenes), con control total sobre la secuencia
 
 PRIVACIDAD
