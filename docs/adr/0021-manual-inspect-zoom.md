@@ -26,10 +26,27 @@ While the show is **paused**, the current slide can be zoomed manually:
   working.
 - The math lives in `lib/manual-zoom.js` as pure functions: state
   `{ scale, tx, ty }` applied as `translate() scale()` with origin `0 0`, the
-  anchor-invariance solved in closed form, scale clamped to 1-8, and a snap to
-  identity at scale 1 so zooming out at an off-center anchor cannot leave the
-  image displaced. Wheel deltas are normalized across delta modes (Firefox
-  mouse wheels report lines) and bounded per event.
+  anchor-invariance solved in closed form, the scale capped per media (below),
+  and a snap to identity at scale 1 so zooming out at an off-center anchor
+  cannot leave the image displaced. Wheel deltas are normalized across delta
+  modes (Firefox mouse wheels report lines) and bounded per event.
+- The scale cap is **per media**, not a constant: the browser rasterizes the
+  zoomed frame at its effective scale - the whole scaled element, not just
+  the visible part - so an unbounded zoom on a large source allocates
+  gigabytes of texture tiles and stalls the GPU machine-wide. `manualZoomMax`
+  takes the tighter of two bounds, under a hard ceiling of 8: twice the
+  source's native 1:1 detail (pixel-peeping headroom; floored at 2x) and a
+  rasterized-surface budget of sixteen viewport areas, all in device pixels.
+  The first zoom of a very large source still pays a one-time rasterization;
+  the budget keeps that a brief hitch rather than a stall.
+- Engaging the zoom on a slide with a paused pan & zoom hold first **rewinds
+  the hold** to its whole-image frame (`currentTime = 0`; the animation
+  object survives, so advance-on-finish still works after resume, replaying
+  the motion from the top). Without the rewind the two scales compound - the
+  browser rasterizes at the product - and a hold near native 1:1 would leave
+  the manual zoom no headroom under the surface budget. Starting from the
+  whole image gives it the full range; the cap stays as the backstop for any
+  oversized media box that slips through.
 - The transform goes on the **slide frame** (`.rs-slide`), not the media, so
   it composes with (and never fights) the media's own pan & zoom animation -
   a paused Ken Burns frame zooms like anything else. The frame's finished

@@ -3,6 +3,7 @@ import {
   MANUAL_ZOOM_MAX,
   identityZoom,
   isZoomed,
+  manualZoomMax,
   panBy,
   wheelZoomFactor,
   zoomAtPoint,
@@ -151,6 +152,131 @@ describe("panBy", () => {
       rectHeight: 500,
       ...view,
     });
+    expect(s).toEqual(identityZoom());
+  });
+});
+
+describe("manualZoomMax", () => {
+  // All sizes in device pixels; media* is the on-screen media box at manual
+  // scale 1 (it already includes any paused pan & zoom scale and the DPR).
+
+  it("caps at twice the source's native detail (pixel-peeping headroom)", () => {
+    // 3000x2400 source shown at 1000x800: native 1:1 at 3x, headroom to 6x.
+    // The huge viewport keeps the surface budget out of the way.
+    const max = manualZoomMax({
+      sourceWidth: 3000,
+      sourceHeight: 2400,
+      mediaWidth: 1000,
+      mediaHeight: 800,
+      viewWidth: 8000,
+      viewHeight: 8000,
+    });
+    expect(max).toBeCloseTo(6);
+  });
+
+  it("keeps a 2x inspection floor even for an upscaled source", () => {
+    const max = manualZoomMax({
+      sourceWidth: 500,
+      sourceHeight: 400,
+      mediaWidth: 1000,
+      mediaHeight: 800,
+      viewWidth: 8000,
+      viewHeight: 8000,
+    });
+    expect(max).toBeCloseTo(2);
+  });
+
+  it("bounds the rasterized surface for a huge source", () => {
+    // 10652x14204 source: detail alone would allow the hard max, but the
+    // zoomed frame is rasterized at the effective scale, so the surface
+    // budget (16 viewport areas) caps it first.
+    const max = manualZoomMax({
+      sourceWidth: 10652,
+      sourceHeight: 14204,
+      mediaWidth: 1472,
+      mediaHeight: 1964,
+      viewWidth: 3024,
+      viewHeight: 1964,
+    });
+    expect(max).toBeCloseTo(Math.sqrt((16 * 3024) / 1472), 3);
+    expect(max).toBeLessThan(6);
+  });
+
+  it("still caps media already shown at native size (backstop)", () => {
+    // If a pan & zoom hold at 1:1 slips past the rewind, the cap closes to
+    // the small detail headroom rather than compounding freely.
+    const max = manualZoomMax({
+      sourceWidth: 3498,
+      sourceHeight: 6246,
+      mediaWidth: 3498,
+      mediaHeight: 6246,
+      viewWidth: 3024,
+      viewHeight: 1964,
+    });
+    expect(max).toBeCloseTo(2);
+  });
+
+  it("uses only the surface budget when source dimensions are unknown", () => {
+    const max = manualZoomMax({
+      sourceWidth: 0,
+      sourceHeight: 0,
+      mediaWidth: 1000,
+      mediaHeight: 1000,
+      viewWidth: 1000,
+      viewHeight: 1000,
+    });
+    expect(max).toBeCloseTo(4);
+  });
+
+  it("never drops below 1 and never exceeds the hard max", () => {
+    expect(
+      manualZoomMax({
+        sourceWidth: 100,
+        sourceHeight: 100,
+        mediaWidth: 10000,
+        mediaHeight: 10000,
+        viewWidth: 100,
+        viewHeight: 100,
+      }),
+    ).toBe(1);
+    expect(
+      manualZoomMax({
+        sourceWidth: 0,
+        sourceHeight: 0,
+        mediaWidth: 10,
+        mediaHeight: 10,
+        viewWidth: 8000,
+        viewHeight: 8000,
+      }),
+    ).toBe(MANUAL_ZOOM_MAX);
+  });
+
+  it("falls back to the hard max when the geometry is degenerate", () => {
+    expect(
+      manualZoomMax({
+        sourceWidth: 3000,
+        sourceHeight: 2400,
+        mediaWidth: 0,
+        mediaHeight: 0,
+        viewWidth: 1000,
+        viewHeight: 1000,
+      }),
+    ).toBe(MANUAL_ZOOM_MAX);
+  });
+});
+
+describe("zoomAtPoint with a max scale", () => {
+  it("clamps to the given max instead of the hard max", () => {
+    const s = zoomAtPoint(identityZoom(), 10, 300, 250, RECT.left, RECT.top, 2);
+    expect(s.scale).toBe(2);
+    // The anchor stays put at the clamped scale too.
+    const local = { x: 200, y: 200 };
+    expect(worldOf(s, local).x).toBeCloseTo(300);
+    expect(worldOf(s, local).y).toBeCloseTo(250);
+  });
+
+  it("a max at 1 keeps the state at identity", () => {
+    const s = zoomAtPoint(identityZoom(), 2, 300, 250, RECT.left, RECT.top, 1);
     expect(s).toEqual(identityZoom());
   });
 });

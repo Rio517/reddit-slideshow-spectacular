@@ -2131,6 +2131,71 @@ describe("manual zoom while paused", () => {
     expect(frame.style.transform).toBe("");
   });
 
+  it("engaging the zoom rewinds a paused pan & zoom hold", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    const media = /** @type {HTMLElement} */ (
+      frame.querySelector(".reddit-slideshow-media")
+    );
+    // A paused Ken Burns hold mid-sequence; its scale would compound with the
+    // manual one, so engaging must rewind it to the whole-image frame.
+    const anim = { currentTime: 5000 };
+    media.getAnimations = () => [/** @type {Animation} */ (anim)];
+    overlay.manualZoomStep(1);
+    expect(anim.currentTime).toBe(0);
+  });
+
+  /**
+   * Give the slide's media real geometry: a source size and an on-screen box
+   * that grows with the frame's manual scale, as a real rect would (happy-dom
+   * rects are all zeros). The happy-dom viewport is 1024x768 at DPR 1.
+   * @param {HTMLElement} frame
+   * @param {{ w: number, h: number, naturalW: number, naturalH: number }} geo
+   */
+  function stubMediaGeometry(frame, geo) {
+    const media = /** @type {HTMLImageElement} */ (
+      frame.querySelector(".reddit-slideshow-media")
+    );
+    Object.defineProperty(media, "naturalWidth", { value: geo.naturalW });
+    Object.defineProperty(media, "naturalHeight", { value: geo.naturalH });
+    media.getBoundingClientRect = () => {
+      const m = /scale\(([\d.]+)\)/.exec(frame.style.transform);
+      const s = m ? Number(m[1]) : 1;
+      return /** @type {DOMRect} */ ({
+        left: 0,
+        top: 0,
+        width: geo.w * s,
+        height: geo.h * s,
+      });
+    };
+  }
+
+  it("wheel zoom stops at twice the source's native detail", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    // 1200x900 source shown at 400x300: native 1:1 at 3x, headroom to 6x.
+    stubMediaGeometry(frame, { w: 400, h: 300, naturalW: 1200, naturalH: 900 });
+    for (let i = 0; i < 12; i += 1) spinWheel(frame, -100);
+    const scale = Number(/scale\(([\d.]+)\)/.exec(frame.style.transform)?.[1]);
+    expect(scale).toBeCloseTo(6);
+  });
+
+  it("the surface budget still caps an oversized media box", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    // If a huge media box slips past the pan & zoom rewind, the
+    // rasterized-surface budget keeps the cap small.
+    stubMediaGeometry(frame, {
+      w: 2048,
+      h: 1536,
+      naturalW: 2048,
+      naturalH: 1536,
+    });
+    for (let i = 0; i < 10; i += 1) spinWheel(frame, -100);
+    const scale = Number(/scale\(([\d.]+)\)/.exec(frame.style.transform)?.[1]);
+    expect(scale).toBeCloseTo(2);
+  });
+
   /**
    * @param {Element} target
    * @param {string} type
