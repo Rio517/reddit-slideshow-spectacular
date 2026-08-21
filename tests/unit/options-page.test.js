@@ -39,7 +39,7 @@ describe("options page sections", () => {
     const summaryKeys = [
       ...(details?.querySelectorAll("summary [data-i18n]") ?? []),
     ].map((el) => el.getAttribute("data-i18n"));
-    expect(summaryKeys).toEqual(["optPanZoomMore", "optPanZoomLess"]);
+    expect(summaryKeys).toEqual(["optPanZoomTuning"]);
   });
 
   it("keeps every control inside a section panel", () => {

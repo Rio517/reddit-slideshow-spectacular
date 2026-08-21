@@ -385,11 +385,6 @@
       .panzoom__details[open] .panzoom__summary::after {
         transform: rotate(180deg);
       }
-      /* One summary label at a time: "show" closed, "hide" open. */
-      .panzoom__details:not([open]) .panzoom__summary span:last-of-type,
-      .panzoom__details[open] .panzoom__summary span:first-of-type {
-        display: none;
-      }
       .panzoom__summary:focus-visible {
         outline: 2px solid var(--accent);
         outline-offset: -2px;
@@ -697,8 +692,9 @@
 
             <details class="panzoom__details" id="panZoomDetails">
               <summary class="panzoom__summary">
-                <span data-i18n="optPanZoomMore">Show fine-tuning options</span>
-                <span data-i18n="optPanZoomLess">Hide fine-tuning options</span>
+                <span data-i18n="optPanZoomTuning"
+                  >Pan and Zoom Tuning Options</span
+                >
               </summary>
               <div class="panzoom__body">
                 <div class="pz-row">

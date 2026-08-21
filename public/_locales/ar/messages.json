@@ -600,13 +600,9 @@
     "message": "مجلد داخل مجلد التنزيلات في متصفحك. اتركه فارغًا للحفظ مباشرة في التنزيلات.",
     "description": "Options hint under the download folder field. Browsers only let extensions save inside the Downloads folder."
   },
-  "optPanZoomMore": {
-    "message": "إظهار الإعدادات الدقيقة",
-    "description": "Options link that expands the collapsed pan-and-zoom fine-tuning."
-  },
-  "optPanZoomLess": {
-    "message": "إخفاء الإعدادات الدقيقة",
-    "description": "Options link that collapses the pan-and-zoom fine-tuning."
+  "optPanZoomTuning": {
+    "message": "خيارات ضبط التحريك والتكبير",
+    "description": "Summary link of the collapsed pan-and-zoom fine-tuning options."
   },
   "optPanZoom": {
     "message": "التحريك والتكبير للصور الكبيرة",

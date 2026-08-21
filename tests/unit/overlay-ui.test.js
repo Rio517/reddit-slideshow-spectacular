@@ -2371,6 +2371,45 @@ describe("manual zoom while paused", () => {
       expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeTruthy();
     });
 
+    it("a huge slide pre-builds its levels even while playing", async () => {
+      // Auto-pause means a zoom can start from playback at any moment: the
+      // levels must already exist by then.
+      let paused = false;
+      const overlay = createOverlay({
+        ...noopHandlers(),
+        isPaused: () => paused,
+        onTogglePlay() {
+          paused = !paused;
+        },
+      });
+      overlay.show();
+      overlay.renderCurrent(
+        imageSlide({ mediaUrl: "https://i.redd.it/c.jpg" }),
+        {
+          index: 0,
+          total: 1,
+          exhausted: true,
+          effectiveSeconds: 5,
+          playing: true,
+        },
+      );
+      const img = overlay.root.querySelector(
+        'img[src="https://i.redd.it/c.jpg"]',
+      );
+      const frame = /** @type {HTMLElement} */ (img?.closest(".rs-slide"));
+      stubMediaGeometry(frame, {
+        w: 700,
+        h: 933,
+        naturalW: 9000,
+        naturalH: 12000,
+      });
+      img?.dispatchEvent(new Event("load"));
+      for (let i = 0; i < 8; i += 1) await Promise.resolve();
+      spinWheel(frame, -100);
+      expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeTruthy();
+      expect(paused).toBe(true);
+    });
+
     it("stays on the transform path until the levels are built", async () => {
       const overlay = createOverlay(noopHandlers());
       const frame = await renderPausedImage(overlay);
