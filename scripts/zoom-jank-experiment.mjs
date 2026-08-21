@@ -84,6 +84,11 @@ async function measure(browserType, name, variant) {
   await page.waitForTimeout(2500);
   await page.keyboard.press("Space"); // pause
   await page.waitForTimeout(500);
+  // SKIP_FLOW: skip to the next slide while paused, then zoom.
+  if (process.env.SKIP_FLOW) {
+    await page.keyboard.press("ArrowRight");
+    await page.waitForTimeout(900);
+  }
 
   await page.evaluate(() => {
     window.__gaps = [];
@@ -109,8 +114,16 @@ async function measure(browserType, name, variant) {
   }
   const scale = await page.evaluate(() => {
     const host = document.getElementById("reddit-slideshow-host");
-    const slideEl = host?.shadowRoot?.querySelector(".rs-slide");
-    return slideEl?.style.transform ?? "";
+    const shadow = host?.shadowRoot;
+    const frames = [...(shadow?.querySelectorAll(".rs-slide") ?? [])];
+    const transforms = frames
+      .map((f) => /** @type {HTMLElement} */ (f).style.transform)
+      .filter(Boolean);
+    const canvas = shadow?.querySelector(".rs-zoom-canvas") ? "canvas" : "";
+    const paused = shadow?.querySelector(".rs-btn--paused")
+      ? "paused"
+      : "playing";
+    return `${transforms.join(" | ") || "(none)"} ${canvas} [${frames.length} frames, ${paused}]`;
   });
   // SHOT=dir saves a per-run screenshot for eyeballing the zoomed pixels.
   if (process.env.SHOT) {

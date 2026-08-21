@@ -41,7 +41,13 @@ const settings = normalizeSettings({
   imageTimerSeconds: 60,
   transition: "none",
   panZoom: false,
+  // The two probe slides are the same bytes on purpose.
+  dedupe: false,
 });
+
+// Two identical huge slides, so the runner can also measure the
+// pause-then-skip flow (the second slide renders while already paused).
+const slides = [slide, { ...slide, id: "t3_huge2:0", postId: "t3_huge2" }];
 
 const session = createSlideshowSession({
   doc: document,
@@ -52,7 +58,7 @@ const session = createSlideshowSession({
     ok: true,
     page: after
       ? { slides: [], after: null, exhausted: true, postsScanned: 0 }
-      : { slides: [slide], after: null, exhausted: true, postsScanned: 1 },
+      : { slides, after: null, exhausted: true, postsScanned: slides.length },
   }),
   getStartCursor: () => undefined,
   openUrl: () => {},
