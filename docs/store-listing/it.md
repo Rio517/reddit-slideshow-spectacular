@@ -19,6 +19,8 @@ La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave
 NOVITÀ - V1.4.0
 
 - NUOVO: ingrandisci qualsiasi diapositiva - scorri o premi + / - per zoomare sul puntatore (la presentazione si mette in pausa da sola), poi trascina per spostarti
+- NUOVO: i file scaricati ricevono nomi puliti e ordinabili
+- MIGLIORATO: la pagina delle impostazioni è organizzata in sezioni
 - Varie ottimizzazioni delle prestazioni e correzioni di bug
 
 NOVITÀ - V1.3.1

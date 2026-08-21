@@ -19,6 +19,8 @@ El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves d
 NOVEDADES - V1.4.0
 
 - NUEVO: haz zoom en cualquier diapositiva - desplázate o pulsa + / - para acercar en el puntero (el pase se pausa solo), y arrastra para moverte
+- NUEVO: los archivos descargados reciben nombres limpios y ordenables
+- MEJORADO: la página de ajustes está organizada en secciones
 - Varias mejoras de rendimiento y correcciones de errores
 
 NOVEDADES - V1.3.1

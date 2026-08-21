@@ -19,6 +19,8 @@ Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API
 NOUVEAUTÉS — V1.4.0
 
 - NOUVEAU : zoomez dans n'importe quelle diapositive - faites défiler ou appuyez sur + / - pour zoomer au pointeur (le diaporama se met en pause tout seul), puis faites glisser pour vous déplacer
+- NOUVEAU : les fichiers téléchargés reçoivent des noms propres et triables
+- AMÉLIORÉ : la page de réglages est organisée en sections
 - Diverses améliorations de performances et corrections de bugs
 
 NOUVEAUTÉS — V1.3.1

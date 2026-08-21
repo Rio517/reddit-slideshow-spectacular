@@ -19,6 +19,8 @@ The Slideshow reuses your existing logged-in Reddit session - no API keys, no si
 WHAT'S NEW - V1.4.0
 
 - NEW: Zoom into any slide - scroll or press + / - to zoom at the pointer (the show pauses itself), then drag to pan
+- NEW: Downloaded files get clean, sortable names
+- IMPROVED: The settings page is organized into sections
 - Various performance and bug fixes
 
 WHAT'S NEW - V1.3.1

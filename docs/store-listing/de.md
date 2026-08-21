@@ -19,6 +19,8 @@ Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüs
 NEU IN V1.4.0
 
 - NEU: Zoome in jede Folie - scrolle oder drücke + / -, um am Zeiger zu zoomen (die Show pausiert von selbst), und ziehe zum Verschieben
+- NEU: Heruntergeladene Dateien bekommen saubere, sortierbare Namen
+- VERBESSERT: Die Einstellungsseite ist in Abschnitte gegliedert
 - Diverse Performance-Verbesserungen und Fehlerbehebungen
 
 NEU IN V1.3.1
