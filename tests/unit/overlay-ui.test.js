@@ -2298,8 +2298,16 @@ describe("manual zoom while paused", () => {
       );
       /** @param {ImageBitmapSource} _src @param {ImageBitmapOptions} [opts] */
       const fakeCreateImageBitmap = async (_src, opts) => ({
-        width: opts?.resizeWidth ?? 0,
-        height: opts?.resizeHeight ?? 0,
+        // A resize-less call (the retained full-resolution level) reports
+        // the source's natural size, like the real API.
+        width:
+          opts?.resizeWidth ??
+          /** @type {HTMLImageElement} */ (_src)?.naturalWidth ??
+          0,
+        height:
+          opts?.resizeHeight ??
+          /** @type {HTMLImageElement} */ (_src)?.naturalHeight ??
+          0,
         close: () => {
           closed += 1;
         },
@@ -2431,6 +2439,22 @@ describe("manual zoom while paused", () => {
       spinWheel(frame, -100);
       expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeTruthy();
       expect(paused).toBe(true);
+    });
+
+    it("deep zoom retains one full-resolution bitmap instead of re-reading", async () => {
+      const overlay = createOverlay(noopHandlers());
+      const frame = await zoomHuge(overlay);
+      // Zoom until the needed detail exceeds the top mip (naturalW / 2).
+      for (let i = 0; i < 10; i += 1) spinWheel(frame, -100);
+      for (let i = 0; i < 8; i += 1) await Promise.resolve();
+      spinWheel(frame, -100);
+      const draws = ctxCalls.filter(([op]) => op === "draw");
+      const lastSrc = /** @type {{ width: number }} */ (
+        draws[draws.length - 1][1][0]
+      );
+      // The draw sources the retained full-size bitmap (fake reports the
+      // source's natural size for a resize-less createImageBitmap call).
+      expect(lastSrc.width).toBe(9000);
     });
 
     it("keeps the LOD canvas up while the next slide loads", async () => {
