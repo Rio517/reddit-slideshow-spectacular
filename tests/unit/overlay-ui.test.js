@@ -2530,6 +2530,31 @@ describe("manual zoom while paused", () => {
       expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeNull();
     });
 
+    it("survives a brand-checking requestIdleCallback (Firefox)", async () => {
+      // Firefox throws when requestIdleCallback is called unbound; a throw
+      // inside commit() severed the slide handoff and left the old frame up.
+      let idleCalls = 0;
+      /** @this {unknown} @param {() => void} cb */
+      const ric = function (cb) {
+        if (this !== window) {
+          throw new TypeError(
+            "'requestIdleCallback' called on an object that does not implement interface Window.",
+          );
+        }
+        idleCalls += 1;
+        cb();
+        return 1;
+      };
+      window.requestIdleCallback = /** @type {never} */ (ric);
+      try {
+        const overlay = createOverlay(noopHandlers());
+        await renderPausedImage(overlay);
+        expect(idleCalls).toBeGreaterThan(0);
+      } finally {
+        Reflect.deleteProperty(window, "requestIdleCallback");
+      }
+    });
+
     it("stays on the transform path until the levels are built", async () => {
       const overlay = createOverlay(noopHandlers());
       const frame = await renderPausedImage(overlay);
