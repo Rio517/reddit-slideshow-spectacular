@@ -838,6 +838,33 @@ describe("createSlideshowSession", () => {
     expect(created.every((img) => img.src === "")).toBe(true);
   });
 
+  it("pre-decodes preloaded images, not just their bytes", async () => {
+    // The renderer's decode() gate is the long pole on huge images; the
+    // preload must warm the decoded-surface cache, not only the network.
+    let decodes = 0;
+    const { session } = makeSession({
+      pages: [
+        {
+          slides: ["a", "b", "c"].map((id) => imageSlide(id)),
+          after: null,
+          exhausted: true,
+          postsScanned: 3,
+        },
+      ],
+      createImage: () => ({
+        src: "",
+        decoding: "",
+        decode: () => {
+          decodes += 1;
+          return Promise.resolve();
+        },
+      }),
+    });
+    await session.start();
+    await flush();
+    expect(decodes).toBeGreaterThan(0);
+  });
+
   it("does not preload an upcoming image whose URL is unsafe", async () => {
     /** @type {Array<{ src: string }>} */
     const created = [];
