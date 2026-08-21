@@ -432,6 +432,26 @@
     "message": "Le impostazioni si applicano alla prossima presentazione che avvii.",
     "description": "Options page subtitle under the heading."
   },
+  "optSectionGeneral": {
+    "message": "Generale",
+    "description": "Options section heading: general."
+  },
+  "optSectionPlayback": {
+    "message": "Riproduzione",
+    "description": "Options section heading: playback."
+  },
+  "optSectionContent": {
+    "message": "Contenuti",
+    "description": "Options section heading: content filters."
+  },
+  "optSectionDisplay": {
+    "message": "Info sullo schermo",
+    "description": "Options section heading: on-screen info."
+  },
+  "optSectionDownloads": {
+    "message": "Download",
+    "description": "Options section heading: downloads."
+  },
   "optLanguage": {
     "message": "Lingua",
     "description": "Language picker label on the options page."

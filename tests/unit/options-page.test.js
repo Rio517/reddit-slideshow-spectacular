@@ -9,6 +9,44 @@ const html = readFileSync(
 
 const doc = new DOMParser().parseFromString(html, "text/html");
 
+describe("options page sections", () => {
+  it("groups the controls under five localized headings", () => {
+    const keys = [...doc.querySelectorAll(".group__title")].map((h) =>
+      h.getAttribute("data-i18n"),
+    );
+    expect(keys).toEqual([
+      "optSectionGeneral",
+      "optSectionPlayback",
+      "optSectionContent",
+      "optSectionDisplay",
+      "optSectionDownloads",
+    ]);
+  });
+
+  it("keeps every control inside a section panel", () => {
+    for (const id of [
+      "locale",
+      "shortcutInput",
+      "imageTimerSeconds",
+      "transition",
+      "maxLoadWaitSeconds",
+      "autoplay",
+      "startMuted",
+      "includeNsfw",
+      "dedupe",
+      "contentDedup",
+      "alwaysShowCount",
+      "alwaysShowMeta",
+      "downloadSubfolder",
+    ]) {
+      expect(
+        doc.querySelector(`#${id}`)?.closest(".group__panel"),
+        id,
+      ).not.toBeNull();
+    }
+  });
+});
+
 describe("options page footer", () => {
   it("links to the GitHub Sponsors page", () => {
     const link = doc.querySelector(

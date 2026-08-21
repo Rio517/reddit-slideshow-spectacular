@@ -432,6 +432,26 @@
     "message": "Settings apply the next time you start a slideshow.",
     "description": "Options page subtitle under the heading."
   },
+  "optSectionGeneral": {
+    "message": "General",
+    "description": "Options section heading: general."
+  },
+  "optSectionPlayback": {
+    "message": "Playback",
+    "description": "Options section heading: playback."
+  },
+  "optSectionContent": {
+    "message": "Content",
+    "description": "Options section heading: content filters."
+  },
+  "optSectionDisplay": {
+    "message": "On-screen info",
+    "description": "Options section heading: on-screen info."
+  },
+  "optSectionDownloads": {
+    "message": "Downloads",
+    "description": "Options section heading: downloads."
+  },
   "optLanguage": {
     "message": "Language",
     "description": "Language picker label on the options page."

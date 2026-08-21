@@ -5,24 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Reddit Slideshow Spectacular! - Options</title>
     <style>
-      /* Neon "Spectacular!" wordmark, matching the site hero and the overlay
-         splash. Self-hosted from the extension package (public/fonts). */
+      /* Brand fonts, self-hosted from the extension package (public/fonts),
+         matching the site: Monoton neon wordmark, Oswald display headings,
+         Hanken body, DM Mono values. */
       @font-face {
         font-family: "RS Neon";
         src: url("/fonts/monoton-400.woff2") format("woff2");
         font-display: swap;
       }
+      @font-face {
+        font-family: "RS Display";
+        src: url("/fonts/oswald-latin.woff2") format("woff2");
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "RS Body";
+        src: url("/fonts/hanken-400.woff2") format("woff2");
+        font-weight: 400;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "RS Body";
+        src: url("/fonts/hanken-500.woff2") format("woff2");
+        font-weight: 500;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "RS Body";
+        src: url("/fonts/hanken-700.woff2") format("woff2");
+        font-weight: 700;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "RS Mono";
+        src: url("/fonts/dmmono-400.woff2") format("woff2");
+        font-display: swap;
+      }
       :root {
-        --fg: #f5f7fa;
-        --muted: #9aa4b2;
-        --accent: #ff7a18;
-        --bg: #0b0d12;
-        --bg-top: #161a23;
-        --card: #141821;
-        --line: rgba(148, 163, 184, 0.22);
-        --input-bg: #0c0f15;
-        --toggle-off: rgba(255, 255, 255, 0.1);
-        --toggle-knob: rgba(255, 255, 255, 0.6);
+        /* The site's marquee palette: ink night, cream text, amber neon. */
+        --fg: #f4ead6;
+        --fg-dim: #d8cbb0;
+        --muted: #9aa0b2;
+        --accent: #ff6a00;
+        --accent-2: #ffa23d;
+        --glow: rgba(255, 140, 40, 0.5);
+        --glow-soft: rgba(255, 140, 40, 0.22);
+        --bg: #08090d;
+        --bg-top: #12141c;
+        --card: #13151d;
+        --line: #272c39;
+        --input-bg: #0c0e14;
+        --toggle-off: rgba(244, 234, 214, 0.12);
+        --toggle-knob: rgba(244, 234, 214, 0.65);
+        --body-font: "RS Body", system-ui, -apple-system, sans-serif;
+        --display-font: "RS Display", "Arial Narrow", sans-serif;
+        --mono-font: "RS Mono", ui-monospace, "SF Mono", Menlo, monospace;
         /* Sign for directional horizontal transforms: +1 LTR, -1 RTL. The
            toggle knob travels by this so it mirrors under RTL. localizeDocument
            sets <html dir> from the active locale. */
@@ -32,22 +69,24 @@
         --rs-dir: -1;
       }
       /* The slideshow overlay keeps its own fixed dark theme; only this
-         preferences page follows the OS light/dark setting. */
+         preferences page follows the OS light/dark setting - a warm paper
+         daytime take on the same marquee brand. */
       @media (prefers-color-scheme: light) {
         :root {
-          --fg: #1b1f27;
-          --muted: #5b6573;
-          /* Vivid orange for the brand look. Lighter than full neon so the
-             small <output> value text on white stays reasonably legible (~3.9:1,
-             just under AA); that's the only place the accent is small text. */
-          --accent: #e8590c;
-          --bg: #eef1f6;
-          --bg-top: #ffffff;
-          --card: #ffffff;
-          --line: rgba(15, 23, 42, 0.16);
-          --input-bg: #f1f4f9;
-          --toggle-off: rgba(15, 23, 42, 0.18);
-          --toggle-knob: #ffffff;
+          --fg: #1c1a15;
+          --fg-dim: #4c463a;
+          --muted: #6b6455;
+          --accent: #cf4c00;
+          --accent-2: #b34300;
+          --glow: rgba(207, 76, 0, 0.35);
+          --glow-soft: rgba(207, 76, 0, 0.14);
+          --bg: #efe8d9;
+          --bg-top: #f8f3e8;
+          --card: #fbf7ee;
+          --line: #d8cfbc;
+          --input-bg: #f1ebdd;
+          --toggle-off: rgba(28, 26, 21, 0.16);
+          --toggle-knob: #fffdf8;
         }
       }
       body {
@@ -59,53 +98,102 @@
           var(--bg)
         );
         color: var(--fg);
-        font:
-          15px/1.5 ui-sans-serif,
-          -apple-system,
-          "Segoe UI",
-          sans-serif;
+        font: 15px/1.5 var(--body-font);
       }
       main {
-        max-width: 460px;
+        max-width: 520px;
         margin: 0 auto;
-        padding: 40px 24px;
+        padding: 44px 24px 56px;
+      }
+
+      /* ---- Masthead: neon title over a marquee bulb strip. ---- */
+      .masthead {
+        margin-bottom: 30px;
       }
       h1 {
         margin: 0 0 4px;
-        font-size: 22px;
+        font-size: 23px;
+        font-weight: 700;
         letter-spacing: -0.01em;
       }
       .brand-neon {
-        font-family:
-          "RS Neon", "Monoton", Impact, fantasy, "Segoe UI", sans-serif;
+        font-family: "RS Neon", "Monoton", Impact, fantasy, sans-serif;
+        font-weight: 400;
         color: var(--accent);
         letter-spacing: 0.03em;
         text-shadow:
-          0 0 6px rgba(255, 122, 24, 0.4),
-          0 0 16px rgba(255, 122, 24, 0.25);
+          0 0 6px var(--glow),
+          0 0 18px var(--glow-soft);
       }
       .sub {
-        margin: 0 0 28px;
+        margin: 0 0 16px;
         color: var(--muted);
         font-size: 13px;
       }
-      .field {
-        display: block;
-        padding: 18px;
-        margin-bottom: 14px;
+      .bulbs {
+        height: 6px;
+        background-image: radial-gradient(
+          circle at 3px 3px,
+          var(--accent-2) 1.6px,
+          transparent 2.2px
+        );
+        background-size: 14px 6px;
+        background-repeat: repeat-x;
+        opacity: 0.75;
+      }
+
+      /* ---- Section groups: Oswald ticket-titles over one shared panel. ---- */
+      .group {
+        margin-top: 30px;
+      }
+      .group__title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 10px;
+        font-family: var(--display-font);
+        font-size: 13.5px;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+      .group__title::before {
+        content: "";
+        width: 18px;
+        height: 2px;
+        background: var(--accent);
+        box-shadow: 0 0 8px var(--glow);
+      }
+      .group__panel {
         background: var(--card);
         border: 1px solid var(--line);
-        border-radius: 12px;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      /* Rows inside a panel: no own card chrome, hairline between rows. */
+      .field,
+      .check {
+        display: block;
+        padding: 16px 18px;
+        background: none;
+        border: 0;
+        margin: 0;
+      }
+      .group__panel > * + * {
+        border-top: 1px solid var(--line);
       }
       .field__label {
         display: flex;
         justify-content: space-between;
         align-items: baseline;
         margin-bottom: 12px;
-        font-weight: 550;
+        font-weight: 500;
       }
-      .field__label output {
-        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      .field__label output,
+      .pz-row__label output {
+        font-family: var(--mono-font);
         color: var(--accent);
         font-variant-numeric: tabular-nums;
       }
@@ -124,6 +212,7 @@
         border-radius: 8px;
         font: inherit;
       }
+      select:focus-visible,
       .field input[type="text"]:focus-visible {
         outline: 2px solid var(--accent);
         outline-offset: 2px;
@@ -147,7 +236,7 @@
         border: 1px solid var(--line);
         border-radius: 8px;
         font: inherit;
-        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        font-family: var(--mono-font);
         text-align: center;
         cursor: pointer;
       }
@@ -203,11 +292,6 @@
         display: flex;
         align-items: center;
         gap: 14px;
-        padding: 14px 18px;
-        margin-bottom: 10px;
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: 12px;
         cursor: pointer;
       }
       /* Compact toggle switch (the native checkbox, restyled). */
@@ -226,7 +310,8 @@
         cursor: pointer;
         transition:
           background 0.2s ease,
-          border-color 0.2s ease;
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
       }
       .check input::before,
       .panzoom__head input::before {
@@ -246,11 +331,12 @@
       .panzoom__head input:checked {
         background: var(--accent);
         border-color: transparent;
+        box-shadow: 0 0 10px var(--glow-soft);
       }
       .check input:checked::before,
       .panzoom__head input:checked::before {
         transform: translateX(calc(17px * var(--rs-dir)));
-        background: #0b0d12;
+        background: #08090d;
       }
       .check input:focus-visible,
       .panzoom__head input:focus-visible {
@@ -264,12 +350,12 @@
         margin-top: 2px;
       }
 
-      /* Pan & zoom: one box, with the five phases as a connected sequence. */
+      /* Pan & zoom: one marquee card, the five phases as a lit sequence. */
       .panzoom {
-        margin-bottom: 14px;
+        margin-top: 30px;
         background: var(--card);
         border: 1px solid var(--line);
-        border-radius: 12px;
+        border-radius: 14px;
         overflow: hidden;
       }
       .panzoom__head {
@@ -293,9 +379,11 @@
         gap: 4px;
       }
       .panzoom__title {
-        font-weight: 600;
+        font-family: var(--display-font);
+        font-weight: 500;
         font-size: 15px;
-        letter-spacing: -0.01em;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
       }
       .panzoom__head .hint {
         color: var(--muted);
@@ -330,9 +418,6 @@
       }
       .pz-row__label output {
         flex: none;
-        color: var(--accent);
-        font-family: ui-monospace, "SF Mono", Menlo, monospace;
-        font-variant-numeric: tabular-nums;
       }
       .pz-row__note {
         font-size: 11.5px;
@@ -345,8 +430,9 @@
         gap: 14px;
       }
       .pz-seq__title {
-        font-size: 11px;
-        letter-spacing: 0.16em;
+        font-family: var(--display-font);
+        font-size: 11.5px;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
         color: var(--muted);
       }
@@ -382,10 +468,12 @@
         display: grid;
         place-items: center;
         font-size: 12px;
+        font-family: var(--mono-font);
         font-variant-numeric: tabular-nums;
         color: var(--accent);
         background: var(--input-bg);
-        border: 1px solid rgba(255, 122, 24, 0.4);
+        border: 1px solid var(--accent);
+        box-shadow: 0 0 8px var(--glow-soft);
         position: relative;
         z-index: 1;
       }
@@ -396,7 +484,7 @@
       }
 
       .footer {
-        margin-top: 22px;
+        margin-top: 34px;
         text-align: center;
         color: var(--muted);
         font-size: 12.5px;
@@ -413,215 +501,253 @@
   </head>
   <body>
     <main>
-      <h1>Reddit Slideshow <span class="brand-neon">Spectacular!</span></h1>
-      <p class="sub" data-i18n="optSubtitle">
-        Settings apply the next time you start a slideshow.
-      </p>
+      <header class="masthead">
+        <h1>Reddit Slideshow <span class="brand-neon">Spectacular!</span></h1>
+        <p class="sub" data-i18n="optSubtitle">
+          Settings apply the next time you start a slideshow.
+        </p>
+        <div class="bulbs" aria-hidden="true"></div>
+      </header>
 
-      <label class="field">
-        <span class="field__label">
-          <span data-i18n="optLanguage">Language</span>
-        </span>
-        <select id="locale">
-          <option value="auto" data-i18n="optLanguageAuto">
-            Automatic (your browser's language)
-          </option>
-          <option value="en">English</option>
-          <option value="es">Español</option>
-          <option value="fr">Français</option>
-          <option value="de">Deutsch</option>
-          <option value="it">Italiano</option>
-          <option value="ar">العربية</option>
-        </select>
-      </label>
+      <section class="group">
+        <h2 class="group__title" data-i18n="optSectionGeneral">General</h2>
+        <div class="group__panel">
+          <label class="field">
+            <span class="field__label">
+              <span data-i18n="optLanguage">Language</span>
+            </span>
+            <select id="locale">
+              <option value="auto" data-i18n="optLanguageAuto">
+                Automatic (your browser's language)
+              </option>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+              <option value="it">Italiano</option>
+              <option value="ar">العربية</option>
+            </select>
+          </label>
 
-      <div class="field" id="shortcutField">
-        <span class="field__label">
-          <span id="shortcutLabel" data-i18n="optShortcut"
-            >Slideshow shortcut</span
-          >
-          <span><output id="shortcutValue">Alt+Shift+S</output></span>
-        </span>
-        <div class="shortcut__row">
-          <input
-            id="shortcutInput"
-            type="text"
-            readonly
-            aria-labelledby="shortcutLabel"
-          />
-          <button id="shortcutReset" type="button" data-i18n="optShortcutReset">
-            Reset to default
-          </button>
-          <button
-            id="shortcutOpen"
-            type="button"
-            hidden
-            data-i18n="optShortcutOpenBrowser"
-          >
-            Change in browser settings ↗
-          </button>
+          <div class="field" id="shortcutField">
+            <span class="field__label">
+              <span id="shortcutLabel" data-i18n="optShortcut"
+                >Slideshow shortcut</span
+              >
+              <span><output id="shortcutValue">Alt+Shift+S</output></span>
+            </span>
+            <div class="shortcut__row">
+              <input
+                id="shortcutInput"
+                type="text"
+                readonly
+                aria-labelledby="shortcutLabel"
+              />
+              <button
+                id="shortcutReset"
+                type="button"
+                data-i18n="optShortcutReset"
+              >
+                Reset to default
+              </button>
+              <button
+                id="shortcutOpen"
+                type="button"
+                hidden
+                data-i18n="optShortcutOpenBrowser"
+              >
+                Change in browser settings ↗
+              </button>
+            </div>
+            <span class="hint" id="shortcutHint" data-i18n="optShortcutHint"
+              >Click the box, then press a new key combination.</span
+            >
+            <span class="hint hint--error" id="shortcutError"></span>
+          </div>
         </div>
-        <span class="hint" id="shortcutHint" data-i18n="optShortcutHint"
-          >Click the box, then press a new key combination.</span
-        >
-        <span class="hint hint--error" id="shortcutError"></span>
-      </div>
+      </section>
 
-      <label class="field">
-        <span class="field__label">
-          <span data-i18n="optTimePerImage">Time per image</span>
-          <span><output id="timerValue">5s</output></span>
-        </span>
-        <!-- Non-linear: value is an index into IMAGE_TIMER_STOPS (set live by
-             main.js); 24 = stops.length - 1, value 4 = the 5s default. -->
-        <input
-          id="imageTimerSeconds"
-          type="range"
-          min="0"
-          max="24"
-          step="1"
-          value="4"
-        />
-      </label>
-
-      <label class="field">
-        <span class="field__label">
-          <span data-i18n="optTransition">Transition between slides</span>
-        </span>
-        <select id="transition">
-          <option value="none" data-i18n="optTransitionNone">None</option>
-          <option value="fade" data-i18n="optTransitionFade">Fade</option>
-          <option value="slide" data-i18n="optTransitionSlide">Slide</option>
-          <option value="push" data-i18n="optTransitionPush">Push</option>
-          <option value="zoom" data-i18n="optTransitionZoom">Zoom</option>
-          <option value="flip" data-i18n="optTransitionFlip">Flip</option>
-        </select>
-      </label>
-
-      <div class="field">
-        <span class="field__label"
-          ><span data-i18n="optTimerBar">Top Timer Bar</span></span
-        >
-        <div class="radio">
-          <label class="radio__opt">
-            <input type="radio" name="timerBar" value="none" />
-            <span data-i18n="optTimerBarNone">None</span>
+      <section class="group">
+        <h2 class="group__title" data-i18n="optSectionPlayback">Playback</h2>
+        <div class="group__panel">
+          <label class="field">
+            <span class="field__label">
+              <span data-i18n="optTimePerImage">Time per image</span>
+              <span><output id="timerValue">5s</output></span>
+            </span>
+            <!-- Non-linear: value is an index into IMAGE_TIMER_STOPS (set live
+                 by main.js); 24 = stops.length - 1, value 4 = the 5s default. -->
+            <input
+              id="imageTimerSeconds"
+              type="range"
+              min="0"
+              max="24"
+              step="1"
+              value="4"
+            />
           </label>
-          <label class="radio__opt">
-            <input type="radio" name="timerBar" value="video" />
-            <span data-i18n="optTimerBarVideo">Videos Only</span>
+
+          <label class="field">
+            <span class="field__label">
+              <span data-i18n="optTransition">Transition between slides</span>
+            </span>
+            <select id="transition">
+              <option value="none" data-i18n="optTransitionNone">None</option>
+              <option value="fade" data-i18n="optTransitionFade">Fade</option>
+              <option value="slide" data-i18n="optTransitionSlide">
+                Slide
+              </option>
+              <option value="push" data-i18n="optTransitionPush">Push</option>
+              <option value="zoom" data-i18n="optTransitionZoom">Zoom</option>
+              <option value="flip" data-i18n="optTransitionFlip">Flip</option>
+            </select>
           </label>
-          <label class="radio__opt">
-            <input type="radio" name="timerBar" value="all" />
-            <span data-i18n="optTimerBarAll">All</span>
+
+          <div class="field">
+            <span class="field__label"
+              ><span data-i18n="optTimerBar">Top Timer Bar</span></span
+            >
+            <div class="radio">
+              <label class="radio__opt">
+                <input type="radio" name="timerBar" value="none" />
+                <span data-i18n="optTimerBarNone">None</span>
+              </label>
+              <label class="radio__opt">
+                <input type="radio" name="timerBar" value="video" />
+                <span data-i18n="optTimerBarVideo">Videos Only</span>
+              </label>
+              <label class="radio__opt">
+                <input type="radio" name="timerBar" value="all" />
+                <span data-i18n="optTimerBarAll">All</span>
+              </label>
+            </div>
+          </div>
+
+          <label class="field">
+            <span class="field__label">
+              <span data-i18n="optMaxLoadWait"
+                >Skip media that won't load after</span
+              >
+              <span
+                ><output id="maxLoadWaitValue">5</output>
+                <span data-i18n="optSeconds">seconds</span></span
+              >
+            </span>
+            <input
+              id="maxLoadWaitSeconds"
+              type="range"
+              min="1"
+              max="30"
+              step="1"
+              value="5"
+            />
+          </label>
+
+          <label class="check">
+            <input id="autoplay" type="checkbox" />
+            <span data-i18n="optAutoplay">Autoplay videos</span>
+          </label>
+
+          <label class="check">
+            <input id="startMuted" type="checkbox" />
+            <span data-i18n="optStartMuted">Start videos muted</span>
           </label>
         </div>
-      </div>
+      </section>
 
-      <label class="field">
-        <span class="field__label">
-          <span data-i18n="optMaxLoadWait"
-            >Skip media that won't load after</span
-          >
-          <span
-            ><output id="maxLoadWaitValue">5</output>
-            <span data-i18n="optSeconds">seconds</span></span
-          >
-        </span>
-        <input
-          id="maxLoadWaitSeconds"
-          type="range"
-          min="1"
-          max="30"
-          step="1"
-          value="5"
-        />
-      </label>
+      <section class="group">
+        <h2 class="group__title" data-i18n="optSectionContent">Content</h2>
+        <div class="group__panel">
+          <label class="check">
+            <input id="includeNsfw" type="checkbox" />
+            <span>
+              <span data-i18n="optIncludeNsfw">Include NSFW content</span>
+              <span class="hint" data-i18n="optIncludeNsfwHint"
+                >As Reddit shows it for your session.</span
+              >
+            </span>
+          </label>
 
-      <label class="check">
-        <input id="autoplay" type="checkbox" />
-        <span data-i18n="optAutoplay">Autoplay videos</span>
-      </label>
+          <label class="check">
+            <input id="dedupe" type="checkbox" />
+            <span>
+              <span data-i18n="optDedupe">Hide duplicate media</span>
+              <span class="hint" data-i18n="optDedupeHint"
+                >Skip reposts and crossposts already shown.</span
+              >
+            </span>
+          </label>
 
-      <label class="check">
-        <input id="startMuted" type="checkbox" />
-        <span data-i18n="optStartMuted">Start videos muted</span>
-      </label>
+          <label class="check">
+            <input id="contentDedup" type="checkbox" />
+            <span>
+              <span data-i18n="optContentDedup"
+                >Also skip re-uploaded images</span
+              >
+              <span class="hint" data-i18n="optContentDedupHint">
+                Catches the same image re-posted under a new link (solo vs in a
+                gallery). On by default; turn off if it ever over-skips.
+              </span>
+            </span>
+          </label>
+        </div>
+      </section>
 
-      <label class="check">
-        <input id="includeNsfw" type="checkbox" />
-        <span>
-          <span data-i18n="optIncludeNsfw">Include NSFW content</span>
-          <span class="hint" data-i18n="optIncludeNsfwHint"
-            >As Reddit shows it for your session.</span
-          >
-        </span>
-      </label>
+      <section class="group">
+        <h2 class="group__title" data-i18n="optSectionDisplay">
+          On-screen info
+        </h2>
+        <div class="group__panel">
+          <label class="check">
+            <input id="alwaysShowCount" type="checkbox" />
+            <span>
+              <span data-i18n="optAlwaysShowCount"
+                >Always show the count &amp; skips</span
+              >
+              <span class="hint" data-i18n="optAlwaysShowCountHint">
+                Keep the position counter and skipped-count badge visible even
+                when the controls auto-hide, so a gap in the count from a
+                skipped item stays explained.
+              </span>
+            </span>
+          </label>
 
-      <label class="check">
-        <input id="dedupe" type="checkbox" />
-        <span>
-          <span data-i18n="optDedupe">Hide duplicate media</span>
-          <span class="hint" data-i18n="optDedupeHint"
-            >Skip reposts and crossposts already shown.</span
-          >
-        </span>
-      </label>
+          <label class="check">
+            <input id="alwaysShowMeta" type="checkbox" />
+            <span>
+              <span data-i18n="optAlwaysShowMeta"
+                >Always show the title &amp; byline</span
+              >
+              <span class="hint" data-i18n="optAlwaysShowMetaHint">
+                Keep the post's title and byline visible even when the controls
+                auto-hide.
+              </span>
+            </span>
+          </label>
+        </div>
+      </section>
 
-      <label class="check">
-        <input id="alwaysShowCount" type="checkbox" />
-        <span>
-          <span data-i18n="optAlwaysShowCount"
-            >Always show the count &amp; skips</span
-          >
-          <span class="hint" data-i18n="optAlwaysShowCountHint">
-            Keep the position counter and skipped-count badge visible even when
-            the controls auto-hide, so a gap in the count from a skipped item
-            stays explained.
-          </span>
-        </span>
-      </label>
-
-      <label class="check">
-        <input id="alwaysShowMeta" type="checkbox" />
-        <span>
-          <span data-i18n="optAlwaysShowMeta"
-            >Always show the title &amp; byline</span
-          >
-          <span class="hint" data-i18n="optAlwaysShowMetaHint">
-            Keep the post's title and byline visible even when the controls
-            auto-hide.
-          </span>
-        </span>
-      </label>
-
-      <label class="check">
-        <input id="contentDedup" type="checkbox" />
-        <span>
-          <span data-i18n="optContentDedup">Also skip re-uploaded images</span>
-          <span class="hint" data-i18n="optContentDedupHint">
-            Catches the same image re-posted under a new link (solo vs in a
-            gallery). On by default; turn off if it ever over-skips.
-          </span>
-        </span>
-      </label>
-
-      <label class="field">
-        <span class="field__label">
-          <span data-i18n="optDownloadSubfolder">Download folder</span>
-        </span>
-        <input
-          id="downloadSubfolder"
-          type="text"
-          placeholder="Reddit Slideshow"
-          autocomplete="off"
-          spellcheck="false"
-        />
-        <span class="hint" data-i18n="optDownloadSubfolderHint"
-          >A folder inside your browser's Downloads folder. Leave empty to save
-          straight into Downloads.</span
-        >
-      </label>
+      <section class="group">
+        <h2 class="group__title" data-i18n="optSectionDownloads">Downloads</h2>
+        <div class="group__panel">
+          <label class="field">
+            <span class="field__label">
+              <span data-i18n="optDownloadSubfolder">Download folder</span>
+            </span>
+            <input
+              id="downloadSubfolder"
+              type="text"
+              placeholder="Reddit Slideshow"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <span class="hint" data-i18n="optDownloadSubfolderHint"
+              >A folder inside your browser's Downloads folder. Leave empty to
+              save straight into Downloads.</span
+            >
+          </label>
+        </div>
+      </section>
 
       <section class="panzoom" id="panZoomCard" data-off="true">
         <label class="panzoom__head">

@@ -432,6 +432,26 @@
     "message": "Einstellungen werden beim nächsten Start einer Diashow übernommen.",
     "description": "Options page subtitle under the heading."
   },
+  "optSectionGeneral": {
+    "message": "Allgemein",
+    "description": "Options section heading: general."
+  },
+  "optSectionPlayback": {
+    "message": "Wiedergabe",
+    "description": "Options section heading: playback."
+  },
+  "optSectionContent": {
+    "message": "Inhalte",
+    "description": "Options section heading: content filters."
+  },
+  "optSectionDisplay": {
+    "message": "Infos auf dem Bildschirm",
+    "description": "Options section heading: on-screen info."
+  },
+  "optSectionDownloads": {
+    "message": "Downloads",
+    "description": "Options section heading: downloads."
+  },
   "optLanguage": {
     "message": "Sprache",
     "description": "Language picker label on the options page."

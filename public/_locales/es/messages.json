@@ -432,6 +432,26 @@
     "message": "La configuración se aplica la próxima vez que inicies un pase de diapositivas.",
     "description": "Options page subtitle under the heading."
   },
+  "optSectionGeneral": {
+    "message": "General",
+    "description": "Options section heading: general."
+  },
+  "optSectionPlayback": {
+    "message": "Reproducción",
+    "description": "Options section heading: playback."
+  },
+  "optSectionContent": {
+    "message": "Contenido",
+    "description": "Options section heading: content filters."
+  },
+  "optSectionDisplay": {
+    "message": "Información en pantalla",
+    "description": "Options section heading: on-screen info."
+  },
+  "optSectionDownloads": {
+    "message": "Descargas",
+    "description": "Options section heading: downloads."
+  },
   "optLanguage": {
     "message": "Idioma",
     "description": "Language picker label on the options page."

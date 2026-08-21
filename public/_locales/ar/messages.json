@@ -432,6 +432,26 @@
     "message": "تُطبَّق الإعدادات في المرّة التالية التي تبدأ فيها عرض شرائح.",
     "description": "Options page subtitle under the heading."
   },
+  "optSectionGeneral": {
+    "message": "عام",
+    "description": "Options section heading: general."
+  },
+  "optSectionPlayback": {
+    "message": "التشغيل",
+    "description": "Options section heading: playback."
+  },
+  "optSectionContent": {
+    "message": "المحتوى",
+    "description": "Options section heading: content filters."
+  },
+  "optSectionDisplay": {
+    "message": "معلومات على الشاشة",
+    "description": "Options section heading: on-screen info."
+  },
+  "optSectionDownloads": {
+    "message": "التنزيلات",
+    "description": "Options section heading: downloads."
+  },
   "optLanguage": {
     "message": "اللغة",
     "description": "Language picker label on the options page."

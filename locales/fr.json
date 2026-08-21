@@ -432,6 +432,26 @@
     "message": "Les paramètres s'appliquent au prochain démarrage du diaporama.",
     "description": "Options page subtitle under the heading."
   },
+  "optSectionGeneral": {
+    "message": "Général",
+    "description": "Options section heading: general."
+  },
+  "optSectionPlayback": {
+    "message": "Lecture",
+    "description": "Options section heading: playback."
+  },
+  "optSectionContent": {
+    "message": "Contenu",
+    "description": "Options section heading: content filters."
+  },
+  "optSectionDisplay": {
+    "message": "Infos à l’écran",
+    "description": "Options section heading: on-screen info."
+  },
+  "optSectionDownloads": {
+    "message": "Téléchargements",
+    "description": "Options section heading: downloads."
+  },
   "optLanguage": {
     "message": "Langue",
     "description": "Language picker label on the options page."
