@@ -498,24 +498,6 @@ iframe.reddit-slideshow-media {
     transform 0.35s ease;
 }
 
-/* Soft scrim behind the stack: invisible over dark media, guarantees
-   contrast over light media. On the meta element itself so it shares the
-   idle-hide fade. */
-.rs-meta::before {
-  content: "";
-  position: absolute;
-  inset: -18px -30px -24px -26px;
-  z-index: -1;
-  background: radial-gradient(
-    130% 130% at 18% 82%,
-    rgba(0, 0, 0, 0.55),
-    rgba(0, 0, 0, 0.32) 55%,
-    transparent 100%
-  );
-  filter: blur(10px);
-  pointer-events: none;
-}
-
 .rs-meta__counter {
   flex: none;
   font-family:
@@ -610,6 +592,12 @@ iframe.reddit-slideshow-media {
     0 0 0.35rem rgba(0, 0, 0, 0.6);
   white-space: nowrap;
   overflow: hidden;
+  /* A tight pill just under this line: the accent-colored links are the one
+     part shadows can't rescue over light media. */
+  padding: 2px 8px;
+  margin-inline-start: -8px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.42);
 }
 
 .rs-meta__author,
