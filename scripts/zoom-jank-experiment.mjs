@@ -1,8 +1,7 @@
 // Measures manual-zoom jank on a large bitmap in real Firefox vs Chromium:
 // bundles the zoom-jank harness, serves it, fulfils the media URL with the
 // JPEG given via IMG, then records the longest rAF gap around each wheel-zoom
-// step. Variants (VARIANTS env, comma-separated) A/B compositing hints - see
-// zoom-jank-harness.js. Make a test image with e.g.:
+// step. Make a test image with e.g.:
 //   sips -z 12000 9000 public/icon/128.png --setProperty format jpeg --out /tmp/huge.jpg
 //   IMG=/tmp/huge.jpg node scripts/zoom-jank-experiment.mjs
 /* global performance, requestAnimationFrame, getComputedStyle */
@@ -62,7 +61,7 @@ await cp(join(harnessSrc, "index.html"), join(dir, "index.html"));
 const jpgBytes = await readFile(HUGE_JPG);
 const { server, port } = await serve(dir);
 
-async function measure(browserType, name, variant) {
+async function measure(browserType, name) {
   const browser = await browserType.launch({ headless: false });
   const page = await browser.newPage({
     viewport: { width: 1200, height: 800 },
@@ -79,7 +78,7 @@ async function measure(browserType, name, variant) {
     });
   });
   await page.goto(
-    `http://127.0.0.1:${port}/?v=${variant}&tx=${process.env.TX ?? "none"}${
+    `http://127.0.0.1:${port}/?tx=${process.env.TX ?? "none"}${
       process.env.NAV_FLOW ? "&nav=1" : ""
     }`,
   );
@@ -192,19 +191,14 @@ async function measure(browserType, name, variant) {
   // SHOT=dir saves a per-run screenshot for eyeballing the zoomed pixels.
   if (process.env.SHOT) {
     await page.screenshot({
-      path: join(process.env.SHOT, `${name}-${variant || "base"}.png`),
+      path: join(process.env.SHOT, `${name}.png`),
     });
   }
   await browser.close();
   const fmt = stepGaps.map((g) => `${Math.round(g)}ms`).join(" ");
-  console.log(
-    `${name.padEnd(9)} v=${(variant || "base").padEnd(6)} step-max-gaps: ${fmt}  final: ${scale}`,
-  );
+  console.log(`${name.padEnd(9)} step-max-gaps: ${fmt}  final: ${scale}`);
 }
 
-const variants = (process.env.VARIANTS ?? "").split(",");
-for (const variant of variants) {
-  await measure(firefox, "firefox", variant);
-}
-if (!process.env.SKIP_CHROMIUM) await measure(chromium, "chromium", "");
+await measure(firefox, "firefox");
+if (!process.env.SKIP_CHROMIUM) await measure(chromium, "chromium");
 server.close();

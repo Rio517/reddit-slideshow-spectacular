@@ -865,6 +865,48 @@ describe("createSlideshowSession", () => {
     expect(decodes).toBeGreaterThan(0);
   });
 
+  it("preloads the preview a mid-size slide paints first, plus its original", async () => {
+    // 8-40 MP slides render the preview first and upgrade in place: both
+    // URLs must be warm or the slide swap waits on a cold preview fetch.
+    /** @type {Array<{ src: string, decoded: boolean }>} */
+    const created = [];
+    const { session } = makeSession({
+      pages: [
+        {
+          slides: [
+            imageSlide("a"),
+            imageSlide("b", {
+              sourceWidth: 5000,
+              sourceHeight: 6000,
+              previewUrl: "https://preview.redd.it/b.jpg?width=1080",
+            }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 2,
+        },
+      ],
+      createImage: () => {
+        const img = {
+          src: "",
+          decoding: "",
+          decoded: false,
+          decode() {
+            img.decoded = true;
+            return Promise.resolve();
+          },
+        };
+        created.push(img);
+        return img;
+      },
+    });
+    await session.start();
+    await flush();
+    const srcs = created.map((i) => i.src);
+    expect(srcs).toContain("https://preview.redd.it/b.jpg?width=1080");
+    expect(srcs).toContain("https://i.redd.it/b.jpg");
+  });
+
   it("preloads a monster's preview and never decodes its original", async () => {
     // >40 MP: decoding costs hundreds of MB per image; the display uses the
     // preview, so that is what the preload warms.

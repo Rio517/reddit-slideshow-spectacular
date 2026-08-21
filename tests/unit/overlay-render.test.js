@@ -59,6 +59,23 @@ describe("renderSlide", () => {
     expect(el.dataset.rsh).toBe("6000");
   });
 
+  it("sizes a preview-first image from the original's dimensions", () => {
+    // The preview's intrinsic size (~1080px) is smaller than most viewports;
+    // without explicit sizing a monster would display sub-viewport, and a
+    // mid-size slide would visibly resize when the upgrade lands.
+    const el = /** @type {HTMLImageElement} */ (
+      renderSlide(
+        slide({
+          previewUrl: "https://preview.redd.it/a.jpg?width=1080",
+          sourceWidth: 8000,
+          sourceHeight: 6000,
+        }),
+      )
+    );
+    expect(el.classList.contains(`${MEDIA_CLASS}--upscale`)).toBe(true);
+    expect(el.style.getPropertyValue("--rs-ar")).toBe(String(8000 / 6000));
+  });
+
   it("keeps the preview as the display for a monster image", () => {
     // >40 MP: decoding the original for display costs hundreds of MB and
     // (with several in flight) freezes the machine; the zoom reads its

@@ -3,7 +3,7 @@ import {
   createMessageRouter,
   isAllowedFetchUrl,
   isHashableHost,
-  isProxyMediaHost,
+  isMediaFetchHost,
   isVredditHost,
 } from "@/lib/background-router.js";
 import { createRedgifsResolver } from "@/lib/redgifs.js";
@@ -90,7 +90,7 @@ export default defineBackground(() => {
     // reddit image originals for the LOD zoom's off-main-thread decode.
     fetchMediaBytes: cappedFetch(
       MAX_MEDIA_BYTES,
-      (host) => isProxyMediaHost(host) || isHashableHost(host),
+      isMediaFetchHost,
       "fetchMedia",
     ),
     // Lazy redgifs: resolve one embed's native mp4 (+ duration/audio) on demand.

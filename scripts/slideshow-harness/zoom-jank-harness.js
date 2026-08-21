@@ -29,13 +29,8 @@ const slide = {
   filenameHint: "huge.jpg",
 };
 
-// ?v=<name> appends experiment CSS; the tried-and-rejected variants are
-// recorded in docs/research/firefox-zoom-raster-jank.md.
-/** @type {Record<string, string>} */
-const VARIANTS = {};
 const params = new URLSearchParams(location.search);
-const variant = params.get("v") ?? "";
-const css = overlayCss + (VARIANTS[variant] ?? "");
+const css = overlayCss;
 const transition = params.get("tx") ?? "none";
 
 const settings = normalizeSettings({

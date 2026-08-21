@@ -2190,6 +2190,31 @@ describe("manual zoom while paused", () => {
     expect(frame.classList.contains("rs-slide--zoomed")).toBe(false);
   });
 
+  it("a zoom made while the next slide loads never leaks onto it", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    overlay.renderCurrent(imageSlide({ mediaUrl: "https://i.redd.it/z.jpg" }), {
+      index: 1,
+      total: 2,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: false,
+    });
+    // Zoom while the new slide is still pending: it applies to the old frame.
+    overlay.manualZoomStep(1);
+    expect(frame.style.transform).toMatch(/scale\(1\.3/);
+    overlay.root
+      .querySelector('img[src="https://i.redd.it/z.jpg"]')
+      ?.dispatchEvent(new Event("load"));
+    for (let i = 0; i < 8; i += 1) await Promise.resolve();
+    const frames = overlay.root.querySelectorAll(".rs-slide");
+    const next = /** @type {HTMLElement} */ (frames[frames.length - 1]);
+    // The committed slide starts clean: the first step in lands at one key
+    // step (1.3x), not compounded onto the old slide's leftover scale.
+    overlay.manualZoomStep(1);
+    expect(next.style.transform).toMatch(/scale\(1\.3\d*\)/);
+  });
+
   it("keeps the outgoing frame zoomed while the next slide loads", async () => {
     const overlay = createOverlay(noopHandlers());
     const frame = await renderPausedImage(overlay);
@@ -2623,6 +2648,64 @@ describe("manual zoom while paused", () => {
         expect(sources[0]).toBe(blob);
       } finally {
         window.createImageBitmap = prev;
+      }
+    });
+
+    it("a stale idle prepare never touches the next slide's levels", async () => {
+      // The idle callback can fire after the user has already advanced; it
+      // must not tear down the CURRENT slide's lod or fetch for a retired one.
+      /** @type {Array<() => void>} */
+      const idleQueue = [];
+      /** @this {unknown} @param {() => void} cb */
+      const ric = function (cb) {
+        idleQueue.push(cb);
+        return 1;
+      };
+      window.requestIdleCallback = /** @type {never} */ (ric);
+      /** @type {string[]} */
+      const fetches = [];
+      try {
+        const overlay = createOverlay({
+          ...noopHandlers(),
+          fetchImageBytes: async (/** @type {string} */ url) => {
+            fetches.push(url);
+            return null;
+          },
+        });
+        const frame = await renderPausedImage(overlay);
+        stubMediaGeometry(frame, {
+          w: 700,
+          h: 933,
+          naturalW: 9000,
+          naturalH: 12000,
+        });
+        // Commit scheduled an idle prepare for slide A; advance before it runs.
+        overlay.renderCurrent(
+          imageSlide({ mediaUrl: "https://i.redd.it/n.jpg" }),
+          {
+            index: 1,
+            total: 2,
+            exhausted: true,
+            effectiveSeconds: 5,
+            playing: false,
+          },
+        );
+        const next = overlay.root.querySelector(
+          'img[src="https://i.redd.it/n.jpg"]',
+        );
+        next?.dispatchEvent(new Event("load"));
+        await new Promise((r) => setTimeout(r, 0));
+        await new Promise((r) => setTimeout(r, 0));
+        expect(overlay.root.querySelectorAll(".rs-slide--pending").length).toBe(
+          0,
+        );
+        expect(fetches).toEqual([]); // nothing may fetch before the idles fire
+        // Fire every queued idle callback now - only the CURRENT media may act.
+        for (const cb of idleQueue.splice(0)) cb();
+        await new Promise((r) => setTimeout(r, 0));
+        expect(fetches).toEqual([]); // slide A retired, slide B not eligible
+      } finally {
+        Reflect.deleteProperty(window, "requestIdleCallback");
       }
     });
 

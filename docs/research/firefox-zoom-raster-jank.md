@@ -83,11 +83,12 @@ render it first (fast decode - the slide swap never waits on the original)
 and upgrade in place; the mip build runs at `requestIdleCallback`; deep zoom
 samples one retained full-resolution bitmap instead of re-decoding per draw.
 
-Remaining lever, unimplemented: fetch the original's bytes through the
-background (host permissions bypass CORS; the video blob proxy is prior
-art) and source `createImageBitmap` from the Blob, moving the one remaining
-decode off the main thread. Costs a base64 hop over runtime messaging for
-tens of MB - measure before committing to it.
+The byte-fetch lever is in place: the background proxies the original's
+bytes (host permissions bypass CORS; base64 over runtime messaging), and
+every LOD build sources `createImageBitmap` from that Blob - decoded off
+the main thread - falling back to the element. Sources over 40 MP are
+never decoded at full size anywhere (preview stays on display; deep zoom
+sharpens from bounded window crops).
 
 ## Decision
 

@@ -88,9 +88,8 @@ export default defineContentScript({
         if (!res?.ok || !res.b64) return null;
         return URL.createObjectURL(await base64ToBlob(res.b64, "video/mp4"));
       },
-      // A very large image's bytes, for the LOD zoom: a blob-sourced
-      // createImageBitmap decodes off Firefox's main thread, an
-      // element-sourced one blocks it. Null falls back to the element.
+      // A very large image's bytes, for the LOD zoom's off-main-thread
+      // decode. Null falls back to the element.
       fetchImageBytes: async (url) => {
         let res;
         try {
