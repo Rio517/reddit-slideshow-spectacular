@@ -498,6 +498,24 @@ iframe.reddit-slideshow-media {
     transform 0.35s ease;
 }
 
+/* Soft scrim behind the stack: invisible over dark media, guarantees
+   contrast over light media. On the meta element itself so it shares the
+   idle-hide fade. */
+.rs-meta::before {
+  content: "";
+  position: absolute;
+  inset: -18px -30px -24px -26px;
+  z-index: -1;
+  background: radial-gradient(
+    130% 130% at 18% 82%,
+    rgba(0, 0, 0, 0.55),
+    rgba(0, 0, 0, 0.32) 55%,
+    transparent 100%
+  );
+  filter: blur(10px);
+  pointer-events: none;
+}
+
 .rs-meta__counter {
   flex: none;
   font-family:
@@ -538,9 +556,10 @@ iframe.reddit-slideshow-media {
   color: #ddd;
   font-size: 14px;
   font-weight: 300;
-  /* A light glow for legibility over a bright image - small enough that it
-     reads as a faint edge, not a filled background behind the text. */
-  text-shadow: 0 0 0.2rem #000;
+  /* Edge + glow so the text holds up even where the scrim thins out. */
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.8),
+    0 0 0.35rem rgba(0, 0, 0, 0.6);
 }
 
 /* Only the title text ellipsizes; the controls beside it are flex:none. */
@@ -586,7 +605,9 @@ iframe.reddit-slideshow-media {
   max-width: 64vw;
   font-size: 12px;
   color: var(--rs-muted);
-  text-shadow: 0 0 0.2rem #000;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.8),
+    0 0 0.35rem rgba(0, 0, 0, 0.6);
   white-space: nowrap;
   overflow: hidden;
 }
