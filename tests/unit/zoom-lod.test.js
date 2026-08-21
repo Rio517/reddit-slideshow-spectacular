@@ -9,10 +9,14 @@ import {
 
 describe("needsLod", () => {
   it("engages only above the source-area threshold", () => {
-    expect(needsLod(4000, 5333)).toBe(false); // 21 MP: transform zoom is smooth
+    // Above ~8 MP the transform path rasterizes GPU surfaces in the
+    // hundreds of MB (profiled as driver stalls); the canvas draws bounded
+    // windows, so it takes over early.
+    expect(needsLod(3000, 2000)).toBe(false); // 6 MP: transform zoom is cheap
+    expect(needsLod(4000, 5333)).toBe(true); // 21 MP
     expect(needsLod(9000, 12000)).toBe(true); // 108 MP
-    expect(needsLod(6000, 4000)).toBe(true); // 24 MP boundary
-    expect(6000 * 4000).toBe(LOD_MIN_SOURCE_PIXELS);
+    expect(needsLod(4000, 2000)).toBe(true); // 8 MP boundary
+    expect(4000 * 2000).toBe(LOD_MIN_SOURCE_PIXELS);
   });
 
   it("never engages for unknown dimensions", () => {

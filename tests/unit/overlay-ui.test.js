@@ -2530,6 +2530,39 @@ describe("manual zoom while paused", () => {
       expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeNull();
     });
 
+    it("builds levels from proxied bytes when the host provides them", async () => {
+      // A blob-sourced createImageBitmap decodes off Gecko's main thread;
+      // the element source re-decodes ON it. Prefer the bytes.
+      const blob = { isFakeBlob: true };
+      /** @type {unknown[]} */
+      const sources = [];
+      const prev = window.createImageBitmap;
+      window.createImageBitmap =
+        /** @type {typeof window.createImageBitmap} */ (
+          /** @type {unknown} */ (
+            async (/** @type {unknown} */ src, /** @type {any} */ opts) => {
+              sources.push(src);
+              return {
+                width: opts?.resizeWidth ?? 9000,
+                height: opts?.resizeHeight ?? 12000,
+                close: () => {},
+              };
+            }
+          )
+        );
+      try {
+        const overlay = createOverlay({
+          ...noopHandlers(),
+          fetchImageBytes: async () =>
+            /** @type {Blob} */ (/** @type {unknown} */ (blob)),
+        });
+        await zoomHuge(overlay);
+        expect(sources[0]).toBe(blob);
+      } finally {
+        window.createImageBitmap = prev;
+      }
+    });
+
     it("survives a brand-checking requestIdleCallback (Firefox)", async () => {
       // Firefox throws when requestIdleCallback is called unbound; a throw
       // inside commit() severed the slide handoff and left the old frame up.

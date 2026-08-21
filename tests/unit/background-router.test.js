@@ -275,6 +275,20 @@ describe("createMessageRouter - fetchMedia", () => {
     expect(result).toEqual({ ok: true, b64: "AQID" });
   });
 
+  it("returns base64 bytes for a reddit image original (LOD decode)", async () => {
+    const router = makeRouter({
+      fetchMediaBytes: async () => new Uint8Array([1, 2, 3]).buffer,
+    });
+    const result = await router(
+      {
+        type: "slideshow.fetchMedia",
+        payload: { url: "https://i.redd.it/huge.jpeg" },
+      },
+      OWN,
+    );
+    expect(result).toEqual({ ok: true, b64: "AQID" });
+  });
+
   it("returns base64 bytes for an Imgur .mp4 media url", async () => {
     const router = makeRouter({
       fetchMediaBytes: async () => new ArrayBuffer(16),
@@ -350,7 +364,7 @@ describe("createMessageRouter - fetchMedia", () => {
     const result = await router(
       {
         type: "slideshow.fetchMedia",
-        payload: { url: "https://i.redd.it/a.jpg" },
+        payload: { url: "https://evil.example/a.jpg" },
       },
       OWN,
     );

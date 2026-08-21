@@ -60,8 +60,8 @@ describe("renderSlide", () => {
       renderSlide(
         slide({
           previewUrl: "https://preview.redd.it/a.jpg?width=1080",
-          sourceWidth: 4000,
-          sourceHeight: 5000,
+          sourceWidth: 2500,
+          sourceHeight: 3000,
         }),
       )
     );

@@ -88,6 +88,27 @@ export default defineContentScript({
         if (!res?.ok || !res.b64) return null;
         return URL.createObjectURL(await base64ToBlob(res.b64, "video/mp4"));
       },
+      // A very large image's bytes, for the LOD zoom: a blob-sourced
+      // createImageBitmap decodes off Firefox's main thread, an
+      // element-sourced one blocks it. Null falls back to the element.
+      fetchImageBytes: async (url) => {
+        let res;
+        try {
+          res = await browser.runtime.sendMessage({
+            type: "slideshow.fetchMedia",
+            payload: { url },
+          });
+        } catch {
+          return null;
+        }
+        if (!res?.ok || !res.b64) return null;
+        const type = /\.png(?:$|\?)/.test(url)
+          ? "image/png"
+          : /\.webp(?:$|\?)/.test(url)
+            ? "image/webp"
+            : "image/jpeg";
+        return base64ToBlob(res.b64, type);
+      },
       // Lazy redgifs: resolve one embed's native mp4 on approach and return the
       // upgraded video slide (proxied on Chrome, where referrerpolicy is a no-op
       // on <video>). Null keeps the iframe embed.

@@ -86,10 +86,11 @@ export default defineBackground(() => {
     fetchQueuePage: fetchQueuePageWithProviders,
     // Layer 2 dedup: returns the perceptual hash hex (computed background-side).
     hashImage,
-    // Redgifs mp4 bytes, played back as a blob to dodge CDN hotlink protection.
+    // Redgifs mp4 bytes played as a blob (CDN hotlink protection), plus
+    // reddit image originals for the LOD zoom's off-main-thread decode.
     fetchMediaBytes: cappedFetch(
       MAX_MEDIA_BYTES,
-      isProxyMediaHost,
+      (host) => isProxyMediaHost(host) || isHashableHost(host),
       "fetchMedia",
     ),
     // Lazy redgifs: resolve one embed's native mp4 (+ duration/audio) on demand.
