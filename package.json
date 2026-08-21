@@ -1,6 +1,6 @@
 {
   "name": "reddit-slideshow",
-  "version": "1.4.0-rc.2",
+  "version": "1.4.0-rc.3",
   "private": true,
   "type": "module",
   "description": "Firefox-first old Reddit media slideshow extension.",
