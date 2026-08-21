@@ -87,6 +87,7 @@ function applyState() {
 
   const card = document.getElementById("panZoomCard");
   if (card) card.dataset.off = "false";
+  document.getElementById("panZoomDetails")?.setAttribute("open", "");
 
   const transition = document.getElementById("transition");
   if (transition) transition.value = "fade";

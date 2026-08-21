@@ -23,6 +23,25 @@ describe("options page sections", () => {
     ]);
   });
 
+  it("puts pan & zoom in the Playback panel, fine-tuning collapsed", () => {
+    const card = doc.querySelector("#panZoomCard");
+    expect(card?.closest(".group__panel")).not.toBeNull();
+    expect(
+      card
+        ?.closest(".group")
+        ?.querySelector(".group__title")
+        ?.getAttribute("data-i18n"),
+    ).toBe("optSectionPlayback");
+    const details = doc.querySelector("#panZoomDetails");
+    // Collapsed by default: the details element ships without `open`.
+    expect(details?.hasAttribute("open")).toBe(false);
+    expect(details?.contains(doc.querySelector("#panZoomScale"))).toBe(true);
+    const summaryKeys = [
+      ...(details?.querySelectorAll("summary [data-i18n]") ?? []),
+    ].map((el) => el.getAttribute("data-i18n"));
+    expect(summaryKeys).toEqual(["optPanZoomMore", "optPanZoomLess"]);
+  });
+
   it("keeps every control inside a section panel", () => {
     for (const id of [
       "locale",

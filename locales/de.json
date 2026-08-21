@@ -600,6 +600,14 @@
     "message": "Ein Ordner im Downloads-Ordner deines Browsers. Leer lassen, um direkt in Downloads zu speichern.",
     "description": "Options hint under the download folder field. Browsers only let extensions save inside the Downloads folder."
   },
+  "optPanZoomMore": {
+    "message": "Feineinstellungen anzeigen",
+    "description": "Options link that expands the collapsed pan-and-zoom fine-tuning."
+  },
+  "optPanZoomLess": {
+    "message": "Feineinstellungen ausblenden",
+    "description": "Options link that collapses the pan-and-zoom fine-tuning."
+  },
   "optPanZoom": {
     "message": "Große Bilder schwenken & zoomen",
     "description": "Options pan-and-zoom card title."

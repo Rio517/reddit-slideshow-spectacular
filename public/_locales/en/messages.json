@@ -600,6 +600,14 @@
     "message": "A folder inside your browser's Downloads folder. Leave empty to save straight into Downloads.",
     "description": "Options hint under the download folder field. Browsers only let extensions save inside the Downloads folder."
   },
+  "optPanZoomMore": {
+    "message": "Show fine-tuning options",
+    "description": "Options link that expands the collapsed pan-and-zoom fine-tuning."
+  },
+  "optPanZoomLess": {
+    "message": "Hide fine-tuning options",
+    "description": "Options link that collapses the pan-and-zoom fine-tuning."
+  },
   "optPanZoom": {
     "message": "Pan & zoom large images",
     "description": "Options pan-and-zoom card title."

@@ -350,21 +350,49 @@
         margin-top: 2px;
       }
 
-      /* Pan & zoom: one marquee card, the five phases as a lit sequence. */
+      /* Pan & zoom: a Playback row whose fine-tuning sits in a <details>
+         that always ships collapsed. */
       .panzoom {
-        margin-top: 30px;
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        overflow: hidden;
+        padding: 0;
       }
       .panzoom__head {
         display: flex;
         gap: 13px;
         align-items: flex-start;
-        padding: 18px;
+        padding: 16px 18px;
         margin: 0;
         cursor: pointer;
+      }
+      .panzoom__summary {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 18px;
+        border-top: 1px solid var(--line);
+        color: var(--accent);
+        font-weight: 500;
+        font-size: 13px;
+        cursor: pointer;
+        list-style: none;
+      }
+      .panzoom__summary::-webkit-details-marker {
+        display: none;
+      }
+      .panzoom__summary::after {
+        content: "▾";
+        transition: transform 0.15s ease;
+      }
+      .panzoom__details[open] .panzoom__summary::after {
+        transform: rotate(180deg);
+      }
+      /* One summary label at a time: "show" closed, "hide" open. */
+      .panzoom__details:not([open]) .panzoom__summary span:last-of-type,
+      .panzoom__details[open] .panzoom__summary span:first-of-type {
+        display: none;
+      }
+      .panzoom__summary:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: -2px;
       }
       /* The enable control is the same toggle switch as the other settings
          (styled with .check input above); only nudge it to align with the
@@ -652,6 +680,176 @@
             <input id="startMuted" type="checkbox" />
             <span data-i18n="optStartMuted">Start videos muted</span>
           </label>
+
+          <div class="panzoom" id="panZoomCard" data-off="true">
+            <label class="panzoom__head">
+              <input id="panZoom" type="checkbox" />
+              <span class="panzoom__heading">
+                <span class="panzoom__title" data-i18n="optPanZoom"
+                  >Pan &amp; zoom large images</span
+                >
+                <span class="hint" data-i18n="optPanZoomHint">
+                  A slow pan and zoom, only on images too big to see at once -
+                  push in, drift top→bottom, pull back out.
+                </span>
+              </span>
+            </label>
+
+            <details class="panzoom__details" id="panZoomDetails">
+              <summary class="panzoom__summary">
+                <span data-i18n="optPanZoomMore">Show fine-tuning options</span>
+                <span data-i18n="optPanZoomLess">Hide fine-tuning options</span>
+              </summary>
+              <div class="panzoom__body">
+                <div class="pz-row">
+                  <span class="pz-row__label">
+                    <span data-i18n="optPanZoomApplies"
+                      >Pan &amp; zoom applies to</span
+                    >
+                    <!-- The "×" lives in the output; main.js shows "All images" at 1×. -->
+                    <span
+                      ><output id="panZoomMinOversizeValue">1.5×</output></span
+                    >
+                  </span>
+                  <input
+                    id="panZoomMinOversize"
+                    type="range"
+                    min="1"
+                    max="3"
+                    step="0.05"
+                    value="1.5"
+                  />
+                  <span class="pz-row__note" data-i18n="optPanZoomAppliesNote">
+                    “All images” moves every image. Higher only moves images
+                    that much larger than the window - the rest just show for
+                    the normal timer.
+                  </span>
+                </div>
+
+                <div class="pz-row">
+                  <span class="pz-row__label">
+                    <span data-i18n="optPanZoomZoomLevel">Maximum zoom</span>
+                    <span><output id="panZoomScaleValue">6</output>×</span>
+                  </span>
+                  <input
+                    id="panZoomScale"
+                    type="range"
+                    min="1.1"
+                    max="10"
+                    step="0.1"
+                    value="6"
+                  />
+                </div>
+
+                <div class="pz-seq">
+                  <span class="pz-seq__title" data-i18n="optPanZoomSequence"
+                    >Per-image sequence</span
+                  >
+                  <ol class="pz-steps">
+                    <li class="pz-step">
+                      <span class="pz-step__num">1</span>
+                      <label class="pz-step__ctl">
+                        <span class="pz-row__label">
+                          <span data-i18n="optPanZoomShow"
+                            >Show whole image</span
+                          >
+                          <span
+                            ><output id="panZoomShowValue">2</output> s</span
+                          >
+                        </span>
+                        <input
+                          id="panZoomShowSeconds"
+                          type="range"
+                          min="0"
+                          max="30"
+                          step="0.5"
+                          value="2"
+                        />
+                      </label>
+                    </li>
+                    <li class="pz-step">
+                      <span class="pz-step__num">2</span>
+                      <label class="pz-step__ctl">
+                        <span class="pz-row__label">
+                          <span data-i18n="optPanZoomZoomIn">Zoom in</span>
+                          <span
+                            ><output id="panZoomZoomInValue">2</output> s</span
+                          >
+                        </span>
+                        <input
+                          id="panZoomZoomInSeconds"
+                          type="range"
+                          min="0"
+                          max="30"
+                          step="0.5"
+                          value="2"
+                        />
+                      </label>
+                    </li>
+                    <li class="pz-step">
+                      <span class="pz-step__num">3</span>
+                      <label class="pz-step__ctl">
+                        <span class="pz-row__label">
+                          <span data-i18n="optPanZoomPan"
+                            >Pan top → bottom</span
+                          >
+                          <span><output id="panZoomPanValue">6</output> s</span>
+                        </span>
+                        <input
+                          id="panZoomPanSeconds"
+                          type="range"
+                          min="0"
+                          max="30"
+                          step="0.5"
+                          value="6"
+                        />
+                      </label>
+                    </li>
+                    <li class="pz-step">
+                      <span class="pz-step__num">4</span>
+                      <label class="pz-step__ctl">
+                        <span class="pz-row__label">
+                          <span data-i18n="optPanZoomZoomOut">Zoom out</span>
+                          <span
+                            ><output id="panZoomZoomOutValue">2</output> s</span
+                          >
+                        </span>
+                        <input
+                          id="panZoomZoomOutSeconds"
+                          type="range"
+                          min="0"
+                          max="30"
+                          step="0.5"
+                          value="2"
+                        />
+                      </label>
+                    </li>
+                    <li class="pz-step">
+                      <span class="pz-step__num">5</span>
+                      <label class="pz-step__ctl">
+                        <span class="pz-row__label">
+                          <span data-i18n="optPanZoomShowEnd"
+                            >Show whole image again</span
+                          >
+                          <span
+                            ><output id="panZoomShowEndValue">2</output> s</span
+                          >
+                        </span>
+                        <input
+                          id="panZoomShowEndSeconds"
+                          type="range"
+                          min="0"
+                          max="30"
+                          step="0.5"
+                          value="2"
+                        />
+                      </label>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </details>
+          </div>
         </div>
       </section>
 
@@ -746,155 +944,6 @@
               save straight into Downloads.</span
             >
           </label>
-        </div>
-      </section>
-
-      <section class="panzoom" id="panZoomCard" data-off="true">
-        <label class="panzoom__head">
-          <input id="panZoom" type="checkbox" />
-          <span class="panzoom__heading">
-            <span class="panzoom__title" data-i18n="optPanZoom"
-              >Pan &amp; zoom large images</span
-            >
-            <span class="hint" data-i18n="optPanZoomHint">
-              A slow pan and zoom, only on images too big to see at once - push
-              in, drift top→bottom, pull back out.
-            </span>
-          </span>
-        </label>
-
-        <div class="panzoom__body">
-          <div class="pz-row">
-            <span class="pz-row__label">
-              <span data-i18n="optPanZoomApplies"
-                >Pan &amp; zoom applies to</span
-              >
-              <!-- The "×" lives in the output; main.js shows "All images" at 1×. -->
-              <span><output id="panZoomMinOversizeValue">1.5×</output></span>
-            </span>
-            <input
-              id="panZoomMinOversize"
-              type="range"
-              min="1"
-              max="3"
-              step="0.05"
-              value="1.5"
-            />
-            <span class="pz-row__note" data-i18n="optPanZoomAppliesNote">
-              “All images” moves every image. Higher only moves images that much
-              larger than the window - the rest just show for the normal timer.
-            </span>
-          </div>
-
-          <div class="pz-row">
-            <span class="pz-row__label">
-              <span data-i18n="optPanZoomZoomLevel">Maximum zoom</span>
-              <span><output id="panZoomScaleValue">6</output>×</span>
-            </span>
-            <input
-              id="panZoomScale"
-              type="range"
-              min="1.1"
-              max="10"
-              step="0.1"
-              value="6"
-            />
-          </div>
-
-          <div class="pz-seq">
-            <span class="pz-seq__title" data-i18n="optPanZoomSequence"
-              >Per-image sequence</span
-            >
-            <ol class="pz-steps">
-              <li class="pz-step">
-                <span class="pz-step__num">1</span>
-                <label class="pz-step__ctl">
-                  <span class="pz-row__label">
-                    <span data-i18n="optPanZoomShow">Show whole image</span>
-                    <span><output id="panZoomShowValue">2</output> s</span>
-                  </span>
-                  <input
-                    id="panZoomShowSeconds"
-                    type="range"
-                    min="0"
-                    max="30"
-                    step="0.5"
-                    value="2"
-                  />
-                </label>
-              </li>
-              <li class="pz-step">
-                <span class="pz-step__num">2</span>
-                <label class="pz-step__ctl">
-                  <span class="pz-row__label">
-                    <span data-i18n="optPanZoomZoomIn">Zoom in</span>
-                    <span><output id="panZoomZoomInValue">2</output> s</span>
-                  </span>
-                  <input
-                    id="panZoomZoomInSeconds"
-                    type="range"
-                    min="0"
-                    max="30"
-                    step="0.5"
-                    value="2"
-                  />
-                </label>
-              </li>
-              <li class="pz-step">
-                <span class="pz-step__num">3</span>
-                <label class="pz-step__ctl">
-                  <span class="pz-row__label">
-                    <span data-i18n="optPanZoomPan">Pan top → bottom</span>
-                    <span><output id="panZoomPanValue">6</output> s</span>
-                  </span>
-                  <input
-                    id="panZoomPanSeconds"
-                    type="range"
-                    min="0"
-                    max="30"
-                    step="0.5"
-                    value="6"
-                  />
-                </label>
-              </li>
-              <li class="pz-step">
-                <span class="pz-step__num">4</span>
-                <label class="pz-step__ctl">
-                  <span class="pz-row__label">
-                    <span data-i18n="optPanZoomZoomOut">Zoom out</span>
-                    <span><output id="panZoomZoomOutValue">2</output> s</span>
-                  </span>
-                  <input
-                    id="panZoomZoomOutSeconds"
-                    type="range"
-                    min="0"
-                    max="30"
-                    step="0.5"
-                    value="2"
-                  />
-                </label>
-              </li>
-              <li class="pz-step">
-                <span class="pz-step__num">5</span>
-                <label class="pz-step__ctl">
-                  <span class="pz-row__label">
-                    <span data-i18n="optPanZoomShowEnd"
-                      >Show whole image again</span
-                    >
-                    <span><output id="panZoomShowEndValue">2</output> s</span>
-                  </span>
-                  <input
-                    id="panZoomShowEndSeconds"
-                    type="range"
-                    min="0"
-                    max="30"
-                    step="0.5"
-                    value="2"
-                  />
-                </label>
-              </li>
-            </ol>
-          </div>
         </div>
       </section>
 

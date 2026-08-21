@@ -600,6 +600,14 @@
     "message": "Una carpeta dentro de la carpeta de Descargas de tu navegador. Déjala vacía para guardar directamente en Descargas.",
     "description": "Options hint under the download folder field. Browsers only let extensions save inside the Downloads folder."
   },
+  "optPanZoomMore": {
+    "message": "Mostrar ajustes finos",
+    "description": "Options link that expands the collapsed pan-and-zoom fine-tuning."
+  },
+  "optPanZoomLess": {
+    "message": "Ocultar ajustes finos",
+    "description": "Options link that collapses the pan-and-zoom fine-tuning."
+  },
   "optPanZoom": {
     "message": "Paneo y zoom en imágenes grandes",
     "description": "Options pan-and-zoom card title."
