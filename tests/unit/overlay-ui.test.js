@@ -2446,10 +2446,17 @@ describe("manual zoom while paused", () => {
       const frame = await zoomHuge(overlay);
       // Zoom until the needed detail exceeds the top mip (naturalW / 2).
       for (let i = 0; i < 10; i += 1) spinWheel(frame, -100);
+      // Until the full bitmap resolves, draws come from the top mip (soft
+      // but instant) - never from the element (main-thread re-decode).
+      let draws = ctxCalls.filter(([op]) => op === "draw");
+      let lastSrc = /** @type {{ width: number }} */ (
+        draws[draws.length - 1][1][0]
+      );
+      expect(lastSrc.width).toBe(4500);
       for (let i = 0; i < 8; i += 1) await Promise.resolve();
       spinWheel(frame, -100);
-      const draws = ctxCalls.filter(([op]) => op === "draw");
-      const lastSrc = /** @type {{ width: number }} */ (
+      draws = ctxCalls.filter(([op]) => op === "draw");
+      lastSrc = /** @type {{ width: number }} */ (
         draws[draws.length - 1][1][0]
       );
       // The draw sources the retained full-size bitmap (fake reports the

@@ -33,13 +33,15 @@ const slide = {
 // recorded in docs/research/firefox-zoom-raster-jank.md.
 /** @type {Record<string, string>} */
 const VARIANTS = {};
-const variant = new URLSearchParams(location.search).get("v") ?? "";
+const params = new URLSearchParams(location.search);
+const variant = params.get("v") ?? "";
 const css = overlayCss + (VARIANTS[variant] ?? "");
+const transition = params.get("tx") ?? "none";
 
 const settings = normalizeSettings({
   autoplay: true,
   imageTimerSeconds: 60,
-  transition: "none",
+  transition,
   panZoom: false,
   // The two probe slides are the same bytes on purpose.
   dedupe: false,
@@ -47,7 +49,26 @@ const settings = normalizeSettings({
 
 // Two identical huge slides, so the runner can also measure the
 // pause-then-skip flow (the second slide renders while already paused).
-const slides = [slide, { ...slide, id: "t3_huge2:0", postId: "t3_huge2" }];
+// NAV_FLOW (?nav=1) instead uses four ordinary-size slides of alternating
+// aspect ratio, reproducing plain forward navigation.
+/** @param {number} n @param {string} u @param {number} w @param {number} h */
+const navSlide = (n, u, w, h) => ({
+  ...slide,
+  id: `t3_nav${n}:0`,
+  postId: `t3_nav${n}`,
+  mediaUrl: u,
+  sourceUrl: u,
+  sourceWidth: w,
+  sourceHeight: h,
+});
+const slides = params.get("nav")
+  ? [
+      navSlide(1, "https://i.redd.it/rs-l1.jpg", 4500, 3000),
+      navSlide(2, "https://i.redd.it/rs-p1.jpg", 4000, 5333),
+      navSlide(3, "https://i.redd.it/rs-l2.jpg", 4500, 3000),
+      navSlide(4, "https://i.redd.it/rs-p2.jpg", 4000, 5333),
+    ]
+  : [slide, { ...slide, id: "t3_huge2:0", postId: "t3_huge2" }];
 
 const session = createSlideshowSession({
   doc: document,

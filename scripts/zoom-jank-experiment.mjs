@@ -5,7 +5,7 @@
 // zoom-jank-harness.js. Make a test image with e.g.:
 //   sips -z 12000 9000 public/icon/128.png --setProperty format jpeg --out /tmp/huge.jpg
 //   IMG=/tmp/huge.jpg node scripts/zoom-jank-experiment.mjs
-/* global performance, requestAnimationFrame */
+/* global performance, requestAnimationFrame, getComputedStyle */
 import { createServer } from "node:http";
 import { mkdtemp, cp, readFile } from "node:fs/promises";
 import { createReadStream } from "node:fs";
@@ -67,10 +67,22 @@ async function measure(browserType, name, variant) {
   const page = await browser.newPage({
     viewport: { width: 1200, height: 800 },
   });
-  await page.route("https://i.redd.it/**", (route) =>
-    route.fulfill({ contentType: "image/jpeg", body: jpgBytes }),
+  const landBytes = process.env.IMG_LAND
+    ? await readFile(process.env.IMG_LAND)
+    : jpgBytes;
+  const routeDelay = Number(process.env.ROUTE_DELAY ?? 0);
+  await page.route("https://i.redd.it/**", async (route) => {
+    if (routeDelay) await new Promise((r) => setTimeout(r, routeDelay));
+    await route.fulfill({
+      contentType: "image/jpeg",
+      body: route.request().url().includes("rs-l") ? landBytes : jpgBytes,
+    });
+  });
+  await page.goto(
+    `http://127.0.0.1:${port}/?v=${variant}&tx=${process.env.TX ?? "none"}${
+      process.env.NAV_FLOW ? "&nav=1" : ""
+    }`,
   );
-  await page.goto(`http://127.0.0.1:${port}/?v=${variant}`);
   await page.waitForFunction(
     () => {
       const host = document.getElementById("reddit-slideshow-host");
@@ -105,6 +117,55 @@ async function measure(browserType, name, variant) {
     requestAnimationFrame(loop);
   });
   await page.mouse.move(600, 400);
+
+  // NAV_FLOW: plain forward navigation while playing; count lingering frames.
+  if (process.env.NAV_FLOW) {
+    const gap = Number(process.env.NAV_GAP ?? 1100);
+    const presses = Number(process.env.NAV_PRESSES ?? 3);
+    const counts = [];
+    for (let i = 0; i < presses; i += 1) {
+      await page.keyboard.press(i % 4 === 3 ? "ArrowLeft" : "ArrowRight");
+      await page.waitForTimeout(gap);
+      counts.push(
+        await page.evaluate(() => {
+          const shadow = document.getElementById(
+            "reddit-slideshow-host",
+          )?.shadowRoot;
+          return shadow?.querySelectorAll(".rs-slide").length ?? -1;
+        }),
+      );
+    }
+    await page.waitForTimeout(1500);
+    const settled = await page.evaluate(() => {
+      const shadow = document.getElementById(
+        "reddit-slideshow-host",
+      )?.shadowRoot;
+      const frames = [...(shadow?.querySelectorAll(".rs-slide") ?? [])];
+      return frames.map(
+        (f) =>
+          `${f.className}|op=${getComputedStyle(f).opacity}` +
+          `|img=${f.querySelector("img")?.src.split("/").pop()}`,
+      );
+    });
+    console.log(
+      `${name} counts=${counts} settled=${settled.length}: ${settled.join("  ")}`,
+    );
+    if (process.env.SHOT) {
+      await page.screenshot({ path: `${process.env.SHOT}/nav-${name}.png` });
+    }
+    await browser.close();
+    return;
+  }
+
+  // BREAK_FLOW: zoom in first, then navigate forward while zoomed.
+  if (process.env.BREAK_FLOW) {
+    for (let i = 0; i < 3; i += 1) {
+      await page.mouse.wheel(0, -120);
+      await page.waitForTimeout(250);
+    }
+    await page.keyboard.press("ArrowRight");
+    await page.waitForTimeout(2000);
+  }
 
   const stepGaps = [];
   for (let i = 0; i < 4; i += 1) {
