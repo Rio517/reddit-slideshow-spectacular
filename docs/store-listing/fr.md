@@ -18,7 +18,7 @@ Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API
 
 NOUVEAUTÉS — V1.4.0
 
-- NOUVEAU : zoomez dans une diapositive en pause - faites défiler ou appuyez sur + / - pour zoomer au pointeur, puis faites glisser pour vous déplacer
+- NOUVEAU : zoomez dans n'importe quelle diapositive - faites défiler ou appuyez sur + / - pour zoomer au pointeur (le diaporama se met en pause tout seul), puis faites glisser pour vous déplacer
 - Diverses améliorations de performances et corrections de bugs
 
 NOUVEAUTÉS — V1.3.1
@@ -43,7 +43,7 @@ La file d'attente est exclusivement multimédia : les publications textuelles, l
 COMMANDES
 
 - Clavier : Left/Right pour naviguer (Shift+Right passe à la publication suivante ; Page Up/Page Down sautent 10 positions en arrière/avant), Up/Down pour voter pour ou contre la publication, Space pour lire/mettre en pause, M pour couper le son, F pour le plein écran, D pour télécharger, I pour bloquer l'auteur (et passer sa publication), A pour l'ajouter en ami ou le suivre, Esc pour fermer
-- En pause : faites défiler ou appuyez sur + / - pour zoomer au pointeur, et faites glisser la diapositive zoomée pour la déplacer
+- Faites défiler ou appuyez sur + / - pour zoomer au pointeur (le diaporama se met en pause tout seul et reprend quand vous dézoomez complètement) ; faites glisser la diapositive zoomée pour la déplacer
 - Une barre de commandes à l'écran : précédent, lecture/pause, suivant, sourdine, plein écran, ouvrir dans une fenêtre et paramètres
 - Sous chaque diapositive : une ligne d'informations (auteur, subreddit, source et résolution), avec des boutons pour ouvrir la publication originale ou télécharger le média
 - Cliquez sur le compteur de position pour accéder directement à n'importe quelle publication de la file chargée

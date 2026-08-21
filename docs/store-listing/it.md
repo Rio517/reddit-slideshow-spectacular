@@ -18,7 +18,7 @@ La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave
 
 NOVITÀ - V1.4.0
 
-- NUOVO: ingrandisci una diapositiva in pausa - scorri o premi + / - per zoomare sul puntatore, poi trascina per spostarti
+- NUOVO: ingrandisci qualsiasi diapositiva - scorri o premi + / - per zoomare sul puntatore (la presentazione si mette in pausa da sola), poi trascina per spostarti
 - Varie ottimizzazioni delle prestazioni e correzioni di bug
 
 NOVITÀ - V1.3.1
@@ -43,7 +43,7 @@ La coda contiene solo contenuti multimediali: post di testo, link esterni, annun
 CONTROLLI
 
 - Tastiera: Left/Right per spostarsi (Shift+Right salta al post successivo; Page Up/Page Down saltano avanti o indietro di 10 post), Up/Down per votare positivamente o negativamente, Space per riprodurre/mettere in pausa, M per silenziare, F per il fullscreen, D per scaricare, I per bloccare l'autore (e saltare il suo post), A per aggiungerlo agli amici o seguirlo, Esc per chiudere
-- In pausa: scorri o premi + / - per zoomare sul puntatore, e trascina la diapositiva ingrandita per spostarla
+- Scorri o premi + / - per zoomare sul puntatore (la presentazione si mette in pausa da sola e riprende quando riduci del tutto); trascina la diapositiva ingrandita per spostarla
 - Una barra di controlli a schermo: precedente, riproduci/pausa, successivo, silenzia, schermo intero, apri in finestra e impostazioni
 - Sotto ogni diapositiva: la firma (chi ha pubblicato, in quale subreddit, la fonte e la risoluzione), con pulsanti per aprire il post originale o scaricare il media
 - Fai clic sul contatore di posizione per passare direttamente a qualsiasi post nella coda caricata

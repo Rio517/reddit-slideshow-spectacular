@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "أثناء الإيقاف المؤقت، تكبير أو تصغير عند المؤشر (أو بالتمرير)؛ اسحب للتحريك",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
+    "message": "تكبير أو تصغير عند المؤشر (أو بالتمرير) - يوقف العرض مؤقتًا؛ اسحب للتحريك",
+    "description": "Help-panel shortcut description: manual zoom at the pointer (auto-pauses the show); the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "إظهار هذه الاختصارات أو إخفاؤها",
@@ -258,6 +258,14 @@
   "uiPlay": {
     "message": "تشغيل (مسافة)",
     "description": "Play-button tooltip while paused (with the Space shortcut)."
+  },
+  "uiToastZoomPaused": {
+    "message": "أُوقف عرض الشرائح مؤقتًا للتكبير",
+    "description": "Brief notice when starting a zoom pauses the show."
+  },
+  "uiToastZoomResumed": {
+    "message": "استُؤنف عرض الشرائح",
+    "description": "Brief notice when zooming back out resumes the show."
   },
   "uiPause": {
     "message": "إيقاف مؤقت (مسافة)",

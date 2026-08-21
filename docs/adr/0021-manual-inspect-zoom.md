@@ -12,7 +12,12 @@ under the cursor stays put.
 
 ## Decision
 
-While the show is **paused**, the current slide can be zoomed manually:
+The current slide can be zoomed manually at any time, but the zoom itself is
+a **paused-only mode**: starting a zoom on a playing slide pauses the show
+first (with a brief "paused to zoom" toast), and zooming fully back out - or
+dismissing with Escape - resumes it, with a "resumed" toast. The auto-resume
+fires only when the zoom caused the pause; a pause the user chose is never
+overridden. While paused:
 
 - **Mouse wheel** (and trackpad pinch, which arrives as a wheel event) zooms
   about the pointer; **`+` / `-`** (and their unshifted `=` / `_`) step the
@@ -94,6 +99,7 @@ While the show is **paused**, the current slide can be zoomed manually:
 - **Zoom the media element:** fights the Ken Burns WAAPI animation for the
   `transform` property (animations beat inline styles). The frame-level
   transform sidesteps the conflict entirely. Rejected.
-- **Always-on wheel zoom (not just paused):** scroll would then hijack a
-  playing show and fight the automatic motion. Paused-only matches the
-  "stopped to look closer" intent. Rejected.
+- **Zooming while the show keeps playing:** the zoom would fight the
+  automatic motion and the advance timer for the same slide. Auto-pausing on
+  zoom start keeps the paused-only model and still lets a zoom begin at any
+  moment. Rejected in favor of auto-pause.

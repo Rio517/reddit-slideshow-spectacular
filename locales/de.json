@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "Bei Pause am Zeiger hinein- oder herauszoomen (oder scrollen); ziehen zum Verschieben",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
+    "message": "Am Zeiger hinein- oder herauszoomen (oder scrollen) - pausiert die Show; ziehen zum Verschieben",
+    "description": "Help-panel shortcut description: manual zoom at the pointer (auto-pauses the show); the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "Diese Tastenkürzel ein- oder ausblenden",
@@ -258,6 +258,14 @@
   "uiPlay": {
     "message": "Abspielen (Space)",
     "description": "Play-button tooltip while paused (with the Space shortcut)."
+  },
+  "uiToastZoomPaused": {
+    "message": "Diashow zum Zoomen pausiert",
+    "description": "Brief notice when starting a zoom pauses the show."
+  },
+  "uiToastZoomResumed": {
+    "message": "Diashow fortgesetzt",
+    "description": "Brief notice when zooming back out resumes the show."
   },
   "uiPause": {
     "message": "Pause (Space)",

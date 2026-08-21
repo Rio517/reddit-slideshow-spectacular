@@ -18,7 +18,7 @@ Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüs
 
 NEU IN V1.4.0
 
-- NEU: Zoome in eine pausierte Folie - scrolle oder drücke + / -, um am Zeiger zu zoomen, und ziehe zum Verschieben
+- NEU: Zoome in jede Folie - scrolle oder drücke + / -, um am Zeiger zu zoomen (die Show pausiert von selbst), und ziehe zum Verschieben
 - Diverse Performance-Verbesserungen und Fehlerbehebungen
 
 NEU IN V1.3.1
@@ -43,7 +43,7 @@ Die Warteschlange enthält nur Medienbeiträge: Text- und Self-Posts, ausgehende
 STEUERUNG
 
 - Tastatur: Left/Right zum Navigieren (Shift+Right springt zum nächsten Beitrag; Page Up/Page Down springen 10 Einträge zurück/vor), Up/Down zum Hoch-/Runtervoten, Space zum Abspielen/Pausieren, M zum Stummschalten, F für Vollbild, D zum Herunterladen, I zum Blockieren des Autors (und Überspringen seines Beitrags), A um ihn als Freund hinzuzufügen oder ihm zu folgen, Esc zum Schließen
-- Im Pausenzustand: scrolle oder drücke + / -, um am Zeiger zu zoomen, und ziehe die gezoomte Folie zum Verschieben
+- Scrolle oder drücke + / -, um am Zeiger zu zoomen (die Show pausiert von selbst und läuft weiter, wenn du ganz herauszoomst); ziehe die gezoomte Folie zum Verschieben
 - Eine Steuerungsleiste auf dem Bildschirm: zurück, Abspielen/Pausieren, weiter, Stummschalten, Vollbild, in einem Fenster öffnen und Einstellungen
 - Unter jeder Folie: eine Infozeile (wer den Beitrag gepostet hat, in welchem Subreddit, Quelle und Auflösung) sowie Schaltflächen zum Öffnen des Originalbeitrags oder zum Herunterladen des Mediums
 - Klicke auf den Positionszähler, um direkt zu einem beliebigen Beitrag in der geladenen Warteschlange zu springen

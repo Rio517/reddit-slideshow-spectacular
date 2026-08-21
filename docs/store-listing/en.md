@@ -18,7 +18,7 @@ The Slideshow reuses your existing logged-in Reddit session - no API keys, no si
 
 WHAT'S NEW - V1.4.0
 
-- NEW: Zoom into a paused slide - scroll or press + / - to zoom at the pointer, then drag to pan
+- NEW: Zoom into any slide - scroll or press + / - to zoom at the pointer (the show pauses itself), then drag to pan
 - Various performance and bug fixes
 
 WHAT'S NEW - V1.3.1
@@ -43,7 +43,7 @@ The queue is media-only: text/self posts, outbound article links, stickied annou
 CONTROLS
 
 - Keyboard: Left/Right to move (Shift+Right skips to the next post; Page Up/Page Down jump back/ahead 10), Up/Down to upvote/downvote the post, Space to play/pause, M to mute, F for fullscreen, D to download, I to block the author (and skip their post), A to friend/follow the author, Esc to close
-- While paused: scroll or press + / - to zoom at the pointer, and drag to pan the zoomed slide
+- Scroll or press + / - to zoom at the pointer (the show pauses itself, and resumes when you zoom back out); drag to pan the zoomed slide
 - An on-screen control rail: previous, play/pause, next, mute, fullscreen, open in a window, and settings
 - Under each slide: a byline (who posted it, to which subreddit, the source and resolution), with buttons to open the original post or download the media
 - Click the position counter to jump straight to any post in the loaded queue

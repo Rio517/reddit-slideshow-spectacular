@@ -1712,7 +1712,7 @@ describe("manual zoom keys (paused)", () => {
     expect(frame?.style.transform).toBe("");
   });
 
-  it("ignores the zoom keys while playing", async () => {
+  it("auto-pauses and zooms on a zoom key while playing", async () => {
     const { session } = makeSession({
       settingsOverrides: { autoplay: true },
     });
@@ -1721,7 +1721,10 @@ describe("manual zoom keys (paused)", () => {
     await flush();
     session.handleKeydown(key("+"));
     const frame = /** @type {HTMLElement | null} */ (q(".rs-slide"));
-    expect(frame?.style.transform ?? "").toBe("");
+    expect(frame?.style.transform).toMatch(/scale\(1\.3/);
+    // The controller really paused: a second step needs no further toggling.
+    session.handleKeydown(key("+"));
+    expect(frame?.style.transform).toMatch(/scale\(1\.6/);
   });
 
   it("leaves browser shortcuts alone: a modified key is neither swallowed nor acted on", async () => {

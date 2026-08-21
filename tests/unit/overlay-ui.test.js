@@ -2113,6 +2113,62 @@ describe("manual zoom while paused", () => {
     expect(frame.style.transform).toBe("");
   });
 
+  describe("auto-pause on zoom", () => {
+    function playingHandlers() {
+      let paused = false;
+      const h = {
+        ...noopHandlers(),
+        toggles: 0,
+        isPaused: () => paused,
+        onTogglePlay() {
+          paused = !paused;
+          h.toggles += 1;
+        },
+      };
+      return h;
+    }
+
+    it("wheel over a playing slide pauses, zooms, and toasts", async () => {
+      const h = playingHandlers();
+      const overlay = createOverlay(h);
+      const frame = await renderPausedImage(overlay);
+      spinWheel(frame, -100);
+      expect(h.toggles).toBe(1);
+      expect(frame.style.transform).toMatch(/scale\(1\./);
+      expect(overlay.root.querySelector(".rs-toast")?.textContent).toMatch(
+        /paused/i,
+      );
+    });
+
+    it("zooming back out fully auto-resumes with a toast", async () => {
+      const h = playingHandlers();
+      const overlay = createOverlay(h);
+      const frame = await renderPausedImage(overlay);
+      spinWheel(frame, -100);
+      spinWheel(frame, 100);
+      expect(h.toggles).toBe(2);
+      expect(frame.style.transform).toBe("");
+      expect(overlay.root.querySelector(".rs-toast")?.textContent).toMatch(
+        /resumed/i,
+      );
+    });
+
+    it("a manually paused show never auto-resumes on zoom-out", async () => {
+      let toggles = 0;
+      const overlay = createOverlay({
+        ...noopHandlers(),
+        onTogglePlay: () => {
+          toggles += 1;
+        },
+      });
+      const frame = await renderPausedImage(overlay);
+      spinWheel(frame, -100);
+      spinWheel(frame, 100);
+      expect(toggles).toBe(0);
+      expect(overlay.root.querySelector(".rs-toast")).toBeNull();
+    });
+  });
+
   it("steps in via manualZoomStep, and Esc-dismiss resets it", async () => {
     const overlay = createOverlay(noopHandlers());
     const frame = await renderPausedImage(overlay);

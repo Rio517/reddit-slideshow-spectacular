@@ -150,6 +150,49 @@
   pointer-events: none;
 }
 
+/* Brief notice (auto-pause/resume on zoom): fades itself out. */
+.rs-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(10, 14, 20, 0.85);
+  color: #fff;
+  font-size: 13px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 40;
+}
+
+.rs-toast--show {
+  animation: rs-toast-fade 1.6s ease both;
+}
+
+@keyframes rs-toast-fade {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Without the fade animation the timed class removal hides it. */
+@media (prefers-reduced-motion: reduce) {
+  .rs-toast--show {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 /* Held invisible until its media is decoded, so the entrance never animates a
    blank/undecoded frame in. */
 .rs-slide--pending {

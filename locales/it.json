@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "In pausa, ingrandisci o riduci sul puntatore (oppure scorri); trascina per spostare",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
+    "message": "Ingrandisci o riduci sul puntatore (oppure scorri) - mette in pausa la presentazione; trascina per spostare",
+    "description": "Help-panel shortcut description: manual zoom at the pointer (auto-pauses the show); the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "Mostra o nascondi queste scorciatoie",
@@ -258,6 +258,14 @@
   "uiPlay": {
     "message": "Riproduci (Space)",
     "description": "Play-button tooltip while paused (with the Space shortcut)."
+  },
+  "uiToastZoomPaused": {
+    "message": "Presentazione in pausa per lo zoom",
+    "description": "Brief notice when starting a zoom pauses the show."
+  },
+  "uiToastZoomResumed": {
+    "message": "Presentazione ripresa",
+    "description": "Brief notice when zooming back out resumes the show."
   },
   "uiPause": {
     "message": "Pausa (Space)",

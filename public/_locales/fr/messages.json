@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "En pause, zoomer ou dézoomer au pointeur (ou faire défiler) ; glisser pour déplacer",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
+    "message": "Zoomer ou dézoomer au pointeur (ou faire défiler) - met le diaporama en pause ; glisser pour déplacer",
+    "description": "Help-panel shortcut description: manual zoom at the pointer (auto-pauses the show); the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "Afficher ou masquer ces raccourcis",
@@ -258,6 +258,14 @@
   "uiPlay": {
     "message": "Lecture (Espace)",
     "description": "Play-button tooltip while paused (with the Space shortcut)."
+  },
+  "uiToastZoomPaused": {
+    "message": "Diaporama mis en pause pour zoomer",
+    "description": "Brief notice when starting a zoom pauses the show."
+  },
+  "uiToastZoomResumed": {
+    "message": "Diaporama repris",
+    "description": "Brief notice when zooming back out resumes the show."
   },
   "uiPause": {
     "message": "Pause (Espace)",

@@ -82,8 +82,11 @@ async function measure(browserType, name, variant) {
   );
   // Let decode + the initial raster fully settle.
   await page.waitForTimeout(2500);
-  await page.keyboard.press("Space"); // pause
-  await page.waitForTimeout(500);
+  // NO_PAUSE: zoom straight into the playing slide (exercises auto-pause).
+  if (!process.env.NO_PAUSE) {
+    await page.keyboard.press("Space"); // pause
+    await page.waitForTimeout(500);
+  }
   // SKIP_FLOW: skip to the next slide while paused, then zoom.
   if (process.env.SKIP_FLOW) {
     await page.keyboard.press("ArrowRight");

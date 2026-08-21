@@ -104,8 +104,8 @@
     "description": "Help-panel shortcut description: friend/follow author."
   },
   "helpShortcutZoom": {
-    "message": "En pausa, acercar o alejar en el puntero (o desplazarse); arrastra para mover",
-    "description": "Help-panel shortcut description: manual zoom at the pointer while paused; the mouse wheel works too, and dragging pans the zoomed image."
+    "message": "Acercar o alejar en el puntero (o desplazarse) - pausa el pase; arrastra para mover",
+    "description": "Help-panel shortcut description: manual zoom at the pointer (auto-pauses the show); the mouse wheel works too, and dragging pans the zoomed image."
   },
   "helpShortcutHelp": {
     "message": "Mostrar u ocultar estos atajos",
@@ -258,6 +258,14 @@
   "uiPlay": {
     "message": "Reproducir (Space)",
     "description": "Play-button tooltip while paused (with the Space shortcut)."
+  },
+  "uiToastZoomPaused": {
+    "message": "Pase de diapositivas pausado para hacer zoom",
+    "description": "Brief notice when starting a zoom pauses the show."
+  },
+  "uiToastZoomResumed": {
+    "message": "Pase de diapositivas reanudado",
+    "description": "Brief notice when zooming back out resumes the show."
   },
   "uiPause": {
     "message": "Pausar (Space)",
