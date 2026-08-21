@@ -112,6 +112,12 @@ async function measure(browserType, name, variant) {
     const slideEl = host?.shadowRoot?.querySelector(".rs-slide");
     return slideEl?.style.transform ?? "";
   });
+  // SHOT=dir saves a per-run screenshot for eyeballing the zoomed pixels.
+  if (process.env.SHOT) {
+    await page.screenshot({
+      path: join(process.env.SHOT, `${name}-${variant || "base"}.png`),
+    });
+  }
   await browser.close();
   const fmt = stepGaps.map((g) => `${Math.round(g)}ms`).join(" ");
   console.log(

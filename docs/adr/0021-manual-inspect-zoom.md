@@ -39,6 +39,17 @@ While the show is **paused**, the current slide can be zoomed manually:
   rasterized-surface budget of sixteen viewport areas, all in device pixels.
   The first zoom of a very large source still pays a one-time rasterization;
   the budget keeps that a brief hitch rather than a stall.
+- Very large images (>= 24 MP) zoom through a **viewport-sized canvas**
+  instead of transform-scaling the media: Gecko re-rasterizes a
+  transform-scaled element by re-reading the whole decoded bitmap, janking in
+  proportion to source size (docs/research/firefox-zoom-raster-jank.md).
+  Pausing pre-builds a halved mip chain (`createImageBitmap`); once ready,
+  the canvas paints the visible window from the smallest sufficient level
+  (deep zoom reads a window of the original) while the frame transform keeps
+  driving geometry, clamps, and anchors unchanged. Below the threshold - and
+  while levels are still building - the plain transform path carries the
+  zoom. Canvas-backed zoom is bounded by construction, so the surface budget
+  does not apply and such images reach the full detail cap.
 - Engaging the zoom on a slide with a paused pan & zoom hold first **rewinds
   the hold** to its whole-image frame (`currentTime = 0`; the animation
   object survives, so advance-on-finish still works after resume, replaying

@@ -2191,6 +2191,151 @@ describe("manual zoom while paused", () => {
     expect(scale).toBeCloseTo(6);
   });
 
+  describe("LOD canvas for very large images", () => {
+    /** @type {Array<[string, unknown[]]>} */
+    let ctxCalls;
+    let closed = 0;
+    const proto = window.HTMLCanvasElement.prototype;
+    const origGetContext = proto.getContext;
+
+    beforeEach(() => {
+      ctxCalls = [];
+      closed = 0;
+      /** @this {HTMLCanvasElement} */
+      function fakeGetContext() {
+        return {
+          canvas: this,
+          imageSmoothingQuality: "",
+          clearRect: /** @type {(...a: unknown[]) => void} */ (
+            (...a) => ctxCalls.push(["clear", a])
+          ),
+          drawImage: /** @type {(...a: unknown[]) => void} */ (
+            (...a) => ctxCalls.push(["draw", a])
+          ),
+        };
+      }
+      proto.getContext = /** @type {typeof proto.getContext} */ (
+        /** @type {unknown} */ (fakeGetContext)
+      );
+      /** @param {ImageBitmapSource} _src @param {ImageBitmapOptions} [opts] */
+      const fakeCreateImageBitmap = async (_src, opts) => ({
+        width: opts?.resizeWidth ?? 0,
+        height: opts?.resizeHeight ?? 0,
+        close: () => {
+          closed += 1;
+        },
+      });
+      window.createImageBitmap =
+        /** @type {typeof window.createImageBitmap} */ (
+          /** @type {unknown} */ (fakeCreateImageBitmap)
+        );
+    });
+
+    afterEach(() => {
+      proto.getContext = origGetContext;
+      Reflect.deleteProperty(window, "createImageBitmap");
+    });
+
+    /**
+     * First wheel starts the mip build on the transform path; once the
+     * levels resolve, the next interaction activates the canvas.
+     * @param {Overlay} overlay
+     */
+    async function zoomHuge(overlay) {
+      const frame = await renderPausedImage(overlay);
+      stubMediaGeometry(frame, {
+        w: 700,
+        h: 933,
+        naturalW: 9000,
+        naturalH: 12000,
+      });
+      spinWheel(frame, -100);
+      for (let i = 0; i < 8; i += 1) await Promise.resolve();
+      spinWheel(frame, -100);
+      return frame;
+    }
+
+    it("zooms a huge image through a canvas, hiding the media", async () => {
+      const overlay = createOverlay(noopHandlers());
+      const frame = await zoomHuge(overlay);
+      const canvas = overlay.root.querySelector(".rs-zoom-canvas");
+      expect(canvas).toBeTruthy();
+      expect(frame.classList.contains("rs-slide--lod")).toBe(true);
+      const img = /** @type {HTMLElement} */ (
+        frame.querySelector(".reddit-slideshow-media")
+      );
+      expect(img.style.visibility).toBe("hidden");
+      expect(ctxCalls.some(([op]) => op === "draw")).toBe(true);
+    });
+
+    it("pausing pre-builds the levels so the first zoom uses the canvas", async () => {
+      const overlay = createOverlay(noopHandlers());
+      const frame = await renderPausedImage(overlay);
+      stubMediaGeometry(frame, {
+        w: 700,
+        h: 933,
+        naturalW: 9000,
+        naturalH: 12000,
+      });
+      overlay.setPlaying(false);
+      for (let i = 0; i < 8; i += 1) await Promise.resolve();
+      spinWheel(frame, -100);
+      expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeTruthy();
+    });
+
+    it("stays on the transform path until the levels are built", async () => {
+      const overlay = createOverlay(noopHandlers());
+      const frame = await renderPausedImage(overlay);
+      stubMediaGeometry(frame, {
+        w: 700,
+        h: 933,
+        naturalW: 9000,
+        naturalH: 12000,
+      });
+      spinWheel(frame, -100);
+      expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeNull();
+      expect(frame.style.transform).toMatch(/scale\(1\./);
+    });
+
+    it("keeps the transform path for ordinary images", async () => {
+      const overlay = createOverlay(noopHandlers());
+      const frame = await renderPausedImage(overlay);
+      stubMediaGeometry(frame, {
+        w: 700,
+        h: 933,
+        naturalW: 4000,
+        naturalH: 5333,
+      });
+      spinWheel(frame, -100);
+      expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeNull();
+    });
+
+    it("dismissing restores the media and closes the levels", async () => {
+      const overlay = createOverlay(noopHandlers());
+      const frame = await zoomHuge(overlay);
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(overlay.dismissTopLayer()).toBe(true);
+      expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeNull();
+      const img = /** @type {HTMLElement} */ (
+        frame.querySelector(".reddit-slideshow-media")
+      );
+      expect(img.style.visibility).toBe("");
+      expect(closed).toBeGreaterThan(0);
+    });
+
+    it("the surface budget does not cap an LOD zoom", async () => {
+      const overlay = createOverlay(noopHandlers());
+      const frame = await zoomHuge(overlay);
+      for (let i = 0; i < 12; i += 1) spinWheel(frame, -100);
+      const scale = Number(
+        /scale\(([\d.]+)\)/.exec(frame.style.transform)?.[1],
+      );
+      expect(scale).toBeCloseTo(8);
+    });
+  });
+
   it("the surface budget still caps an oversized media box", async () => {
     const overlay = createOverlay(noopHandlers());
     const frame = await renderPausedImage(overlay);
