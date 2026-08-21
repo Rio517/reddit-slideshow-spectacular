@@ -2190,6 +2190,29 @@ describe("manual zoom while paused", () => {
     expect(frame.classList.contains("rs-slide--zoomed")).toBe(false);
   });
 
+  it("keeps the outgoing frame zoomed while the next slide loads", async () => {
+    const overlay = createOverlay(noopHandlers());
+    const frame = await renderPausedImage(overlay);
+    overlay.manualZoomStep(1);
+    overlay.renderCurrent(imageSlide({ mediaUrl: "https://i.redd.it/b.jpg" }), {
+      index: 1,
+      total: 2,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: false,
+    });
+    // The retiring frame holds its zoom until the new slide commits.
+    expect(frame.style.transform).toMatch(/scale\(1\.3/);
+    overlay.root
+      .querySelector('img[src="https://i.redd.it/b.jpg"]')
+      ?.dispatchEvent(new Event("load"));
+    await Promise.resolve();
+    await Promise.resolve();
+    const frames = overlay.root.querySelectorAll(".rs-slide");
+    const next = /** @type {HTMLElement} */ (frames[frames.length - 1]);
+    expect(next.style.transform).toBe("");
+  });
+
   it("resuming play resets the zoom", async () => {
     const overlay = createOverlay(noopHandlers());
     const frame = await renderPausedImage(overlay);
@@ -2408,6 +2431,29 @@ describe("manual zoom while paused", () => {
       spinWheel(frame, -100);
       expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeTruthy();
       expect(paused).toBe(true);
+    });
+
+    it("keeps the LOD canvas up while the next slide loads", async () => {
+      const overlay = createOverlay(noopHandlers());
+      await zoomHuge(overlay);
+      expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeTruthy();
+      overlay.renderCurrent(
+        imageSlide({ mediaUrl: "https://i.redd.it/next.jpg" }),
+        {
+          index: 1,
+          total: 2,
+          exhausted: true,
+          effectiveSeconds: 5,
+          playing: false,
+        },
+      );
+      // Still up during the load; gone once the new slide commits.
+      expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeTruthy();
+      overlay.root
+        .querySelector('img[src="https://i.redd.it/next.jpg"]')
+        ?.dispatchEvent(new Event("load"));
+      for (let i = 0; i < 8; i += 1) await Promise.resolve();
+      expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeNull();
     });
 
     it("stays on the transform path until the levels are built", async () => {
