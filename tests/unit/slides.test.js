@@ -153,7 +153,50 @@ describe("slidesFromListing", () => {
       },
     };
     const slides = slidesFromListing(listing);
-    expect(slides[0].filenameHint).toBe("t3_notitle.png");
+    expect(slides[0].filenameHint).toBe("rss-notitle.png");
+  });
+
+  it("caps a long title at a word boundary in the filename", () => {
+    const listing = {
+      data: {
+        children: [
+          {
+            kind: "t3",
+            data: {
+              name: "t3_1abcd",
+              title:
+                "The quick brown fox jumps over the lazy dog again and again forever and ever",
+              url_overridden_by_dest: "https://i.redd.it/fox.jpg",
+              post_hint: "image",
+            },
+          },
+        ],
+      },
+    };
+    const slides = slidesFromListing(listing);
+    expect(slides[0].filenameHint).toBe(
+      "rss-the-quick-brown-fox-jumps-over-the-lazy-dog-again-and-again-1abcd.jpg",
+    );
+  });
+
+  it("hard-caps a single unbroken word in the filename", () => {
+    const listing = {
+      data: {
+        children: [
+          {
+            kind: "t3",
+            data: {
+              name: "t3_2wxyz",
+              title: "a".repeat(70),
+              url_overridden_by_dest: "https://i.redd.it/word.jpg",
+              post_hint: "image",
+            },
+          },
+        ],
+      },
+    };
+    const slides = slidesFromListing(listing);
+    expect(slides[0].filenameHint).toBe(`rss-${"a".repeat(60)}-2wxyz.jpg`);
   });
 
   it("uses url when url_overridden_by_dest is missing", () => {
@@ -261,10 +304,10 @@ describe("gallery posts", () => {
       sourceWidth: 4000,
       sourceHeight: 3000,
       mimeType: "image/jpeg",
-      filenameHint: "t3_gal1-three-photo-set-0.jpg",
+      filenameHint: "rss-three-photo-set-1-gal1.jpg",
     });
     expect(slides[1].mimeType).toBe("image/png");
-    expect(slides[2].filenameHint).toBe("t3_gal1-three-photo-set-2.jpg");
+    expect(slides[2].filenameHint).toBe("rss-three-photo-set-3-gal1.jpg");
   });
 
   it("skips deleted or invalid gallery items without leaving index gaps", () => {
@@ -336,7 +379,7 @@ describe("Reddit-hosted video posts", () => {
       mimeType: "video/mp4",
       dashUrl: "https://v.redd.it/vidfake1/DASHPlaylist.mpd?a=000&v=1&f=sd",
       hlsUrl: "https://v.redd.it/vidfake1/HLSPlaylist.m3u8?a=000&v=1&f=sd",
-      filenameHint: "t3_vid1-short-clip-with-sound.mp4",
+      filenameHint: "rss-short-clip-with-sound-vid1.mp4",
     });
   });
 
@@ -388,7 +431,7 @@ describe("Imgur .gifv posts", () => {
       mimeType: "video/mp4",
       sourceWidth: 800,
       sourceHeight: 600,
-      filenameHint: "t3_img1-imgur-gifv-clip.mp4",
+      filenameHint: "rss-imgur-gifv-clip-img1.mp4",
     });
   });
 
@@ -431,7 +474,7 @@ describe("Catbox video posts", () => {
       title: "Catbox clip",
       durationMode: "media",
       mimeType: "video/mp4",
-      filenameHint: "t3_cat1-catbox-clip.mp4",
+      filenameHint: "rss-catbox-clip-cat1.mp4",
     });
     expect(slides[0].proxied).toBeUndefined(); // direct play, no background fetch
   });
