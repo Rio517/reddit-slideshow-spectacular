@@ -125,7 +125,7 @@ async function measure(browserType, name, variant) {
   );
 }
 
-const variants = (process.env.VARIANTS ?? ",media,frame").split(",");
+const variants = (process.env.VARIANTS ?? "").split(",");
 for (const variant of variants) {
   await measure(firefox, "firefox", variant);
 }

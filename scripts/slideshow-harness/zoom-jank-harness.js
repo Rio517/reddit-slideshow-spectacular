@@ -29,11 +29,10 @@ const slide = {
   filenameHint: "huge.jpg",
 };
 
-const VARIANTS = {
-  media: ".reddit-slideshow-media{will-change:transform}",
-  frame: ".rs-slide{will-change:transform}",
-  notx: ".rs-slide--zoomed{transition:none !important}",
-};
+// ?v=<name> appends experiment CSS; the tried-and-rejected variants are
+// recorded in docs/research/firefox-zoom-raster-jank.md.
+/** @type {Record<string, string>} */
+const VARIANTS = {};
 const variant = new URLSearchParams(location.search).get("v") ?? "";
 const css = overlayCss + (VARIANTS[variant] ?? "");
 
