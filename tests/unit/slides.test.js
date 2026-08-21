@@ -156,6 +156,71 @@ describe("slidesFromListing", () => {
     expect(slides[0].filenameHint).toBe("rss-notitle.png");
   });
 
+  it("carries the largest reddit preview for the preview-first swap", () => {
+    const listing = {
+      data: {
+        children: [
+          {
+            kind: "t3",
+            data: {
+              name: "t3_prev1",
+              title: "Huge",
+              url_overridden_by_dest: "https://i.redd.it/huge.jpg",
+              post_hint: "image",
+              preview: {
+                images: [
+                  {
+                    source: {
+                      url: "https://preview.redd.it/huge.jpg",
+                      width: 9000,
+                      height: 12000,
+                    },
+                    resolutions: [
+                      { url: "https://preview.redd.it/huge.jpg?width=108" },
+                      { url: "https://preview.redd.it/huge.jpg?width=1080" },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
+    const slides = slidesFromListing(listing);
+    expect(slides[0].previewUrl).toBe(
+      "https://preview.redd.it/huge.jpg?width=1080",
+    );
+  });
+
+  it("drops a preview from a host outside the allowlist", () => {
+    const listing = {
+      data: {
+        children: [
+          {
+            kind: "t3",
+            data: {
+              name: "t3_prev2",
+              title: "Sneaky",
+              url_overridden_by_dest: "https://i.redd.it/x.jpg",
+              post_hint: "image",
+              preview: {
+                images: [
+                  {
+                    source: { url: "https://evil.example/x.jpg" },
+                    resolutions: [{ url: "https://evil.example/x.jpg" }],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
+    const slides = slidesFromListing(listing);
+    expect(slides[0].previewUrl).toBeUndefined();
+  });
+
   it("caps a long title at a word boundary in the filename", () => {
     const listing = {
       data: {
@@ -313,6 +378,38 @@ describe("gallery posts", () => {
   it("skips deleted or invalid gallery items without leaving index gaps", () => {
     const slides = slidesFromListing(galleryFixture);
     expect(slides).toHaveLength(3);
+  });
+
+  it("carries the largest gallery-item preview", () => {
+    const listing = {
+      data: {
+        children: [
+          {
+            data: {
+              name: "t3_gprev",
+              title: "Gallery with previews",
+              permalink: "/r/x/comments/gprev/",
+              is_gallery: true,
+              gallery_data: { items: [{ media_id: "img_a" }] },
+              media_metadata: {
+                img_a: {
+                  status: "valid",
+                  s: { u: "https://i.redd.it/a.jpg", x: 9000, y: 12000 },
+                  p: [
+                    { u: "https://preview.redd.it/a.jpg?width=108" },
+                    { u: "https://preview.redd.it/a.jpg?width=1080" },
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      },
+    };
+    const slides = slidesFromListing(listing);
+    expect(slides[0].previewUrl).toBe(
+      "https://preview.redd.it/a.jpg?width=1080",
+    );
   });
 
   it("numbers gallery items so they are distinguishable in the jump list", () => {

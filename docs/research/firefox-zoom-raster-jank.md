@@ -67,6 +67,28 @@ and eats memory) is a known pain point for map/design-tool style zooming.
 4. **Upstream Gecko fix.** File the re-raster stall with the profiler
    capture. Worth doing for the ecosystem; no help on any useful timeline.
 
+## Main-thread decode (second round)
+
+With the canvas LOD in place, profiling still showed sub-second stalls whose
+CPU went to progressive-JPEG decode (`decode_mcu_AC_refine`) and Skia
+resampling on the content main thread. Cause: Gecko snapshots an
+element-sourced `createImageBitmap` on the main thread, and it does not
+cache decoded surfaces of very large images - so the mip build and any draw
+from the original re-decode the (progressive, slow) JPEG synchronously.
+Blob-sourced `createImageBitmap` decodes off-main (`DecodeImageAsync`,
+bug 1420223 context).
+
+In place now: reddit slides carry the largest preview; very large sources
+render it first (fast decode - the slide swap never waits on the original)
+and upgrade in place; the mip build runs at `requestIdleCallback`; deep zoom
+samples one retained full-resolution bitmap instead of re-decoding per draw.
+
+Remaining lever, unimplemented: fetch the original's bytes through the
+background (host permissions bypass CORS; the video blob proxy is prior
+art) and source `createImageBitmap` from the Blob, moving the one remaining
+decode off the main thread. Costs a base64 hop over runtime messaging for
+tens of MB - measure before committing to it.
+
 ## Decision
 
 Option 1, engaged only for very large sources, keeping today's transform

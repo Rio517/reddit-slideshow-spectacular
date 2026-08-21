@@ -2457,6 +2457,49 @@ describe("manual zoom while paused", () => {
       expect(lastSrc.width).toBe(9000);
     });
 
+    it("commits on the preview, then upgrades to the original in place", async () => {
+      const overlay = createOverlay(noopHandlers());
+      overlay.show();
+      overlay.setPlaying(false);
+      overlay.renderCurrent(
+        imageSlide({
+          mediaUrl: "https://i.redd.it/orig.jpg",
+          previewUrl: "https://preview.redd.it/orig.jpg?width=1080",
+          sourceWidth: 9000,
+          sourceHeight: 12000,
+        }),
+        {
+          index: 0,
+          total: 1,
+          exhausted: true,
+          effectiveSeconds: 5,
+          playing: false,
+        },
+      );
+      const img = /** @type {HTMLImageElement} */ (
+        overlay.root.querySelector(
+          'img[src="https://preview.redd.it/orig.jpg?width=1080"]',
+        )
+      );
+      expect(img).toBeTruthy();
+      img.dispatchEvent(new Event("load"));
+      for (let i = 0; i < 4; i += 1) await Promise.resolve();
+      // Committed on the preview; the same element now loads the original.
+      expect(img.src).toBe("https://i.redd.it/orig.jpg");
+      // The upgrade's load arms the LOD prep with the real dimensions.
+      const frame = /** @type {HTMLElement} */ (img.closest(".rs-slide"));
+      stubMediaGeometry(frame, {
+        w: 700,
+        h: 933,
+        naturalW: 9000,
+        naturalH: 12000,
+      });
+      img.dispatchEvent(new Event("load"));
+      for (let i = 0; i < 8; i += 1) await Promise.resolve();
+      spinWheel(frame, -100);
+      expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeTruthy();
+    });
+
     it("keeps the LOD canvas up while the next slide loads", async () => {
       const overlay = createOverlay(noopHandlers());
       await zoomHuge(overlay);

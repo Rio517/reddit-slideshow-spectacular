@@ -41,6 +41,34 @@ describe("renderSlide", () => {
     expect(el.dataset.slideId).toBe("t3_x:0");
   });
 
+  it("starts a very large image from its preview, keeping the original", () => {
+    const el = /** @type {HTMLImageElement} */ (
+      renderSlide(
+        slide({
+          previewUrl: "https://preview.redd.it/a.jpg?width=1080",
+          sourceWidth: 9000,
+          sourceHeight: 12000,
+        }),
+      )
+    );
+    expect(el.src).toBe("https://preview.redd.it/a.jpg?width=1080");
+    expect(el.dataset.rsFull).toBe(slide().mediaUrl);
+  });
+
+  it("renders an ordinary-size image directly from the original", () => {
+    const el = /** @type {HTMLImageElement} */ (
+      renderSlide(
+        slide({
+          previewUrl: "https://preview.redd.it/a.jpg?width=1080",
+          sourceWidth: 4000,
+          sourceHeight: 5000,
+        }),
+      )
+    );
+    expect(el.src).toBe(slide().mediaUrl);
+    expect(el.dataset.rsFull).toBeUndefined();
+  });
+
   it("fills the viewport for videos and gif images, but not static images", () => {
     const fill = `${MEDIA_CLASS}--fill`;
     expect(renderSlide(slide()).classList.contains(fill)).toBe(false);
