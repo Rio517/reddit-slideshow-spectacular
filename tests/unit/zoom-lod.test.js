@@ -27,10 +27,22 @@ describe("needsLod", () => {
 
 describe("mipPlan", () => {
   it("halves until the level drops under the floor", () => {
-    expect(mipPlan(9000, 12000)).toEqual([
-      { width: 4500, height: 6000 },
-      { width: 2250, height: 3000 },
-      { width: 1125, height: 1500 },
+    // 9000x12000 = 108 MP: halving alone would start at 54 MP, so the top
+    // level first shrinks under the area cap (keeping the aspect), then
+    // halves. Every level stays bounded no matter the source.
+    const plan = mipPlan(9000, 12000);
+    for (const { width, height } of plan) {
+      expect(width * height).toBeLessThanOrEqual(24e6);
+    }
+    expect(plan[0].width * plan[0].height).toBeGreaterThan(20e6);
+    expect(plan[0].width / plan[0].height).toBeCloseTo(9000 / 12000, 2);
+    expect(plan.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("halves plainly when the source is already under the cap", () => {
+    expect(mipPlan(6000, 6000)).toEqual([
+      { width: 3000, height: 3000 },
+      { width: 1500, height: 1500 },
     ]);
   });
 

@@ -41,7 +41,28 @@ describe("renderSlide", () => {
     expect(el.dataset.slideId).toBe("t3_x:0");
   });
 
-  it("starts a very large image from its preview, keeping the original", () => {
+  it("starts a large image from its preview and upgrades to the original", () => {
+    // 30 MP: big enough for the canvas zoom, small enough to display the
+    // decoded original.
+    const el = /** @type {HTMLImageElement} */ (
+      renderSlide(
+        slide({
+          previewUrl: "https://preview.redd.it/a.jpg?width=1080",
+          sourceWidth: 5000,
+          sourceHeight: 6000,
+        }),
+      )
+    );
+    expect(el.src).toBe("https://preview.redd.it/a.jpg?width=1080");
+    expect(el.dataset.rsFull).toBe(slide().mediaUrl);
+    expect(el.dataset.rsw).toBe("5000");
+    expect(el.dataset.rsh).toBe("6000");
+  });
+
+  it("keeps the preview as the display for a monster image", () => {
+    // >40 MP: decoding the original for display costs hundreds of MB and
+    // (with several in flight) freezes the machine; the zoom reads its
+    // detail from proxied bytes instead.
     const el = /** @type {HTMLImageElement} */ (
       renderSlide(
         slide({
@@ -52,7 +73,9 @@ describe("renderSlide", () => {
       )
     );
     expect(el.src).toBe("https://preview.redd.it/a.jpg?width=1080");
-    expect(el.dataset.rsFull).toBe(slide().mediaUrl);
+    expect(el.dataset.rsFull).toBeUndefined();
+    expect(el.dataset.rsLod).toBe(slide().mediaUrl);
+    expect(el.dataset.rsw).toBe("9000");
   });
 
   it("renders an ordinary-size image directly from the original", () => {

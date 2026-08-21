@@ -865,6 +865,53 @@ describe("createSlideshowSession", () => {
     expect(decodes).toBeGreaterThan(0);
   });
 
+  it("preloads a monster's preview and never decodes its original", async () => {
+    // >40 MP: decoding costs hundreds of MB per image; the display uses the
+    // preview, so that is what the preload warms.
+    /** @type {Array<{ src: string, decoded: boolean }>} */
+    const created = [];
+    const { session } = makeSession({
+      pages: [
+        {
+          slides: [
+            imageSlide("a"),
+            imageSlide("b", {
+              sourceWidth: 9000,
+              sourceHeight: 12000,
+              previewUrl: "https://preview.redd.it/b.jpg?width=1080",
+            }),
+            imageSlide("c", { sourceWidth: 9000, sourceHeight: 12000 }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 3,
+        },
+      ],
+      createImage: () => {
+        const img = {
+          src: "",
+          decoding: "",
+          decoded: false,
+          decode() {
+            img.decoded = true;
+            return Promise.resolve();
+          },
+        };
+        created.push(img);
+        return img;
+      },
+    });
+    await session.start();
+    await flush();
+    const bySrc = new Map(created.map((i) => [i.src, i]));
+    // The monster with a preview preloads (and decodes) the preview.
+    expect(bySrc.get("https://preview.redd.it/b.jpg?width=1080")?.decoded).toBe(
+      true,
+    );
+    // The monster without a preview fetches bytes but never decodes.
+    expect(bySrc.get("https://i.redd.it/c.jpg")?.decoded).toBe(false);
+  });
+
   it("does not preload an upcoming image whose URL is unsafe", async () => {
     /** @type {Array<{ src: string }>} */
     const created = [];

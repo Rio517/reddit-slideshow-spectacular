@@ -2273,12 +2273,15 @@ describe("manual zoom while paused", () => {
   describe("LOD canvas for very large images", () => {
     /** @type {Array<[string, unknown[]]>} */
     let ctxCalls;
+    /** @type {unknown[][]} */
+    let cibCalls;
     let closed = 0;
     const proto = window.HTMLCanvasElement.prototype;
     const origGetContext = proto.getContext;
 
     beforeEach(() => {
       ctxCalls = [];
+      cibCalls = [];
       closed = 0;
       /** @this {HTMLCanvasElement} */
       function fakeGetContext() {
@@ -2296,22 +2299,26 @@ describe("manual zoom while paused", () => {
       proto.getContext = /** @type {typeof proto.getContext} */ (
         /** @type {unknown} */ (fakeGetContext)
       );
-      /** @param {ImageBitmapSource} _src @param {ImageBitmapOptions} [opts] */
-      const fakeCreateImageBitmap = async (_src, opts) => ({
+      /** @param {unknown[]} args */
+      const fakeCreateImageBitmap = async (...args) => {
+        cibCalls.push(args);
+        const close = () => {
+          closed += 1;
+        };
+        // Crop form: (source, sx, sy, sw, sh).
+        if (args.length === 5) {
+          return { width: args[3], height: args[4], close };
+        }
+        const src = /** @type {HTMLImageElement} */ (args[0]);
+        const opts = /** @type {ImageBitmapOptions | undefined} */ (args[1]);
         // A resize-less call (the retained full-resolution level) reports
         // the source's natural size, like the real API.
-        width:
-          opts?.resizeWidth ??
-          /** @type {HTMLImageElement} */ (_src)?.naturalWidth ??
-          0,
-        height:
-          opts?.resizeHeight ??
-          /** @type {HTMLImageElement} */ (_src)?.naturalHeight ??
-          0,
-        close: () => {
-          closed += 1;
-        },
-      });
+        return {
+          width: opts?.resizeWidth ?? src?.naturalWidth ?? 0,
+          height: opts?.resizeHeight ?? src?.naturalHeight ?? 0,
+          close,
+        };
+      };
       window.createImageBitmap =
         /** @type {typeof window.createImageBitmap} */ (
           /** @type {unknown} */ (fakeCreateImageBitmap)
@@ -2441,30 +2448,85 @@ describe("manual zoom while paused", () => {
       expect(paused).toBe(true);
     });
 
-    it("deep zoom retains one full-resolution bitmap instead of re-reading", async () => {
+    it("deep zoom on a mid-size image retains one full bitmap", async () => {
+      // 30 MP: cheap enough to hold decoded once for sharp deep zoom.
       const overlay = createOverlay(noopHandlers());
-      const frame = await zoomHuge(overlay);
-      // Zoom until the needed detail exceeds the top mip (naturalW / 2).
+      const frame = await renderPausedImage(overlay);
+      stubMediaGeometry(frame, {
+        w: 700,
+        h: 840,
+        naturalW: 5000,
+        naturalH: 6000,
+      });
+      spinWheel(frame, -100);
+      for (let i = 0; i < 8; i += 1) await Promise.resolve();
       for (let i = 0; i < 10; i += 1) spinWheel(frame, -100);
-      // Until the full bitmap resolves, draws come from the top mip (soft
-      // but instant) - never from the element (main-thread re-decode).
-      let draws = ctxCalls.filter(([op]) => op === "draw");
-      let lastSrc = /** @type {{ width: number }} */ (
-        draws[draws.length - 1][1][0]
-      );
-      expect(lastSrc.width).toBe(4500);
       for (let i = 0; i < 8; i += 1) await Promise.resolve();
       spinWheel(frame, -100);
-      draws = ctxCalls.filter(([op]) => op === "draw");
-      lastSrc = /** @type {{ width: number }} */ (
+      const draws = ctxCalls.filter(([op]) => op === "draw");
+      const lastSrc = /** @type {{ width: number }} */ (
         draws[draws.length - 1][1][0]
       );
-      // The draw sources the retained full-size bitmap (fake reports the
-      // source's natural size for a resize-less createImageBitmap call).
-      expect(lastSrc.width).toBe(9000);
+      // Resize-less createImageBitmap: the fake reports the natural size.
+      expect(lastSrc.width).toBe(5000);
     });
 
-    it("commits on the preview, then upgrades to the original in place", async () => {
+    it("deep zoom on a monster crops windows from the bytes, never the whole", async () => {
+      const blob = { isFakeBlob: true };
+      const overlay = createOverlay({
+        ...noopHandlers(),
+        fetchImageBytes: async () =>
+          /** @type {Blob} */ (/** @type {unknown} */ (blob)),
+      });
+      const frame = await zoomHuge(overlay);
+      for (let i = 0; i < 10; i += 1) spinWheel(frame, -100);
+      // The settle timer (160ms) fires the crop request.
+      await new Promise((r) => setTimeout(r, 260));
+      for (let i = 0; i < 8; i += 1) await Promise.resolve();
+      const cropCalls = cibCalls.filter(
+        (args) => args.length === 5 && args[0] === blob,
+      );
+      expect(cropCalls.length).toBeGreaterThan(0);
+      // The crop stays bounded - never anywhere near the full source.
+      const [, , , cw, ch] = cropCalls[cropCalls.length - 1];
+      expect(
+        /** @type {number} */ (cw) * /** @type {number} */ (ch),
+      ).toBeLessThan(30e6);
+      // A monster never gets a resize-less (full-source) bitmap.
+      expect(cibCalls.some((args) => args.length === 1)).toBe(false);
+    });
+
+    it("a mid-size image commits on the preview, then upgrades in place", async () => {
+      const overlay = createOverlay(noopHandlers());
+      overlay.show();
+      overlay.setPlaying(false);
+      overlay.renderCurrent(
+        imageSlide({
+          mediaUrl: "https://i.redd.it/mid.jpg",
+          previewUrl: "https://preview.redd.it/mid.jpg?width=1080",
+          sourceWidth: 5000,
+          sourceHeight: 6000,
+        }),
+        {
+          index: 0,
+          total: 1,
+          exhausted: true,
+          effectiveSeconds: 5,
+          playing: false,
+        },
+      );
+      const img = /** @type {HTMLImageElement} */ (
+        overlay.root.querySelector(
+          'img[src="https://preview.redd.it/mid.jpg?width=1080"]',
+        )
+      );
+      expect(img).toBeTruthy();
+      img.dispatchEvent(new Event("load"));
+      for (let i = 0; i < 8; i += 1) await Promise.resolve();
+      expect(img.src).toBe("https://i.redd.it/mid.jpg");
+    });
+
+    it("a monster commits on the preview and never swaps to the original", async () => {
       const overlay = createOverlay(noopHandlers());
       overlay.show();
       overlay.setPlaying(false);
@@ -2490,18 +2552,19 @@ describe("manual zoom while paused", () => {
       );
       expect(img).toBeTruthy();
       img.dispatchEvent(new Event("load"));
-      for (let i = 0; i < 4; i += 1) await Promise.resolve();
-      // Committed on the preview; the same element now loads the original.
-      expect(img.src).toBe("https://i.redd.it/orig.jpg");
-      // The upgrade's load arms the LOD prep with the real dimensions.
+      for (let i = 0; i < 8; i += 1) await Promise.resolve();
+      // The display never decodes the original: the preview stays.
+      expect(img.src).toBe("https://preview.redd.it/orig.jpg?width=1080");
+      // The zoom still knows the true dimensions (dataset), so the canvas
+      // engages with full range.
       const frame = /** @type {HTMLElement} */ (img.closest(".rs-slide"));
       stubMediaGeometry(frame, {
         w: 700,
         h: 933,
-        naturalW: 9000,
-        naturalH: 12000,
+        naturalW: 1080,
+        naturalH: 1440,
       });
-      img.dispatchEvent(new Event("load"));
+      spinWheel(frame, -100);
       for (let i = 0; i < 8; i += 1) await Promise.resolve();
       spinWheel(frame, -100);
       expect(overlay.root.querySelector(".rs-zoom-canvas")).toBeTruthy();

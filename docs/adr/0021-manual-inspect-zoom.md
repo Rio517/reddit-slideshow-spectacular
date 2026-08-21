@@ -44,17 +44,27 @@ overridden. While paused:
   rasterized-surface budget of sixteen viewport areas, all in device pixels.
   The first zoom of a very large source still pays a one-time rasterization;
   the budget keeps that a brief hitch rather than a stall.
-- Very large images (>= 24 MP) zoom through a **viewport-sized canvas**
-  instead of transform-scaling the media: Gecko re-rasterizes a
-  transform-scaled element by re-reading the whole decoded bitmap, janking in
-  proportion to source size (docs/research/firefox-zoom-raster-jank.md).
-  Pausing pre-builds a halved mip chain (`createImageBitmap`); once ready,
-  the canvas paints the visible window from the smallest sufficient level
-  (deep zoom reads a window of the original) while the frame transform keeps
-  driving geometry, clamps, and anchors unchanged. Below the threshold - and
-  while levels are still building - the plain transform path carries the
-  zoom. Canvas-backed zoom is bounded by construction, so the surface budget
-  does not apply and such images reach the full detail cap.
+- Large images (>= 8 MP) zoom through a **viewport-sized canvas** instead of
+  transform-scaling the media: Gecko re-rasterizes a transform-scaled
+  element by re-reading the whole decoded bitmap, janking in proportion to
+  source size, and the transform path's rasterized GPU surfaces grow into
+  the hundreds of MB (docs/research/firefox-zoom-raster-jank.md). A mip
+  chain (each level capped at 24 MP) builds at idle from the original's
+  bytes - fetched through the privileged background so `createImageBitmap`
+  decodes a Blob off the main thread - and the canvas paints the visible
+  window from the smallest sufficient level while the frame transform keeps
+  driving geometry, clamps, and anchors unchanged. Below the threshold, and
+  while levels are still building, the plain transform path carries the
+  zoom.
+- **A monster source (> 40 MP) is never decoded at full size anywhere.**
+  Decoded monsters stack up - the display, the zoom levels, the preloads -
+  into gigabytes of pixel buffers and freeze the whole machine via memory
+  pressure. So its reddit preview stays on display (no in-place upgrade),
+  preloads skip its decode, and deep zoom shows the top mip (briefly soft)
+  sharpened by a bounded window cropped from the bytes when the interaction
+  settles, one crop at a time. Mid-size sources (8-40 MP) upgrade the
+  display to the original in place and retain one full-resolution bitmap
+  for sharp deep zoom.
 - Engaging the zoom on a slide with a paused pan & zoom hold first **rewinds
   the hold** to its whole-image frame (`currentTime = 0`; the animation
   object survives, so advance-on-finish still works after resume, replaying
