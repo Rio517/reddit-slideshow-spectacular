@@ -293,15 +293,25 @@ async function captureFirefox() {
     // domain, so land on a cheap reddit page first.
     await driver.get("https://old.reddit.com/robots.txt");
     for (const c of cookies) {
-      await driver.manage().addCookie({
-        name: c.name,
-        value: c.value,
-        domain: c.domain,
-        path: c.path,
-        secure: c.secure,
-        httpOnly: c.httpOnly,
-        ...(c.expires > 0 ? { expiry: c.expires } : {}),
-      });
+      // Marionette rejects cookies that don't domain-match the current page:
+      // .reddit.com and old.reddit.com pass, sibling subdomains (www.,
+      // accounts., ...) throw. The session lives on .reddit.com, so skipping
+      // siblings loses nothing.
+      const domain = c.domain.replace(/^\./, "");
+      if (domain !== "reddit.com" && domain !== "old.reddit.com") continue;
+      try {
+        await driver.manage().addCookie({
+          name: c.name,
+          value: c.value,
+          domain: c.domain,
+          path: c.path,
+          secure: c.secure,
+          httpOnly: c.httpOnly,
+          ...(c.expires > 0 ? { expiry: c.expires } : {}),
+        });
+      } catch {
+        // One odd cookie must not sink the capture.
+      }
     }
 
     // Land the viewport exactly on the store canvas.
