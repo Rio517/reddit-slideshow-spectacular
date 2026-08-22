@@ -60,15 +60,15 @@ const slides = [
     1402,
     "image/png",
   ),
-  // The Giphy cat is a GIF; declare it as a still so the overlay letterboxes it
-  // (the bytes still animate in the <img>) rather than cover-cropping 400x225.
+  // The Giphy cat is an animated GIF: image/gif gets the --fill treatment, so
+  // the reel shows it viewport-fit like the real app instead of sitting tiny.
   slide(
     "cat2",
     "Spectacular Cat",
     "https://i.redd.it/rs-catgif.gif",
     400,
     225,
-    "image/jpeg",
+    "image/gif",
   ),
 ];
 

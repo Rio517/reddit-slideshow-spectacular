@@ -961,6 +961,11 @@ kbd {
   margin-top: 1.5rem;
 }
 
+/* Slimmer than the global .btn so all three fit on one slate row. */
+.clapper__cta .btn {
+  padding-inline: 1.1rem;
+}
+
 /* ---------- Credits / tip jar (end-credit card) ---------- */
 .credits {
   padding: 0 0 clamp(2.5rem, 6vw, 4rem);
