@@ -137,6 +137,7 @@ npm run webext:lint
 npm run dev
 npm run locales
 npm run screenshots
+npm run reel
 npm run ship
 ```
 
@@ -152,7 +153,8 @@ Roles:
 - `npm run dev`: WXT dev runner for Firefox (DEV logger on).
 - `npm run locales`: regenerate the committed `public/_locales/**` from `locales/`.
 - `npm run screenshots`: offline docs shots (options page + deterministic slideshow).
-- `npm run ship`: store zips, live hero shots (`heroes`), and promo tiles (`promo`).
+- `npm run reel`: re-record + encode the website demo reel `docs/slideshow.webm` (offline; auto-downloads its demo media, needs ffmpeg).
+- `npm run ship`: store zips, live hero shots (`heroes`), promo tiles (`promo`), and the demo reel (`reel`).
 
 Visual/browser tooling:
 

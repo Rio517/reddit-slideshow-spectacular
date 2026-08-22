@@ -153,7 +153,8 @@ npm run locales      # regenerate public/_locales from locales/
 npm run screenshots  # offline docs shots: options page + deterministic slideshow
 npm run heroes       # live store/site hero shots via the built extensions
 npm run promo        # Chrome Web Store promo tiles around the hero
-npm run ship         # store zips + hero shots + promo tiles
+npm run reel         # re-record + encode the website demo reel (docs/slideshow.webm)
+npm run ship         # store zips + hero shots + promo tiles + demo reel
 ```
 
 The same source builds both browsers; WXT emits a Chrome `service_worker`
@@ -188,6 +189,11 @@ Reddit, so prefer the temporary-add-on flow above for real testing.
 > Firefox Add-ons), and the website hero `docs/slideshow-demo.png`. It needs
 > geckodriver (`brew install geckodriver`). `SHIP_HERO_TITLE` selects a
 > different post.
+>
+> `npm run reel` (also part of `npm run ship`) re-records the website demo
+> reel `docs/slideshow.webm`: the real overlay over three offline demo
+> slides, crossfaded into a seamless loop. The demo media downloads itself
+> into `/tmp/rs-media` on first run; it needs ffmpeg (`brew install ffmpeg`).
 
 ## Publishing
 
@@ -198,9 +204,10 @@ each release - both stores reject a re-used version.
 
 `npm run ship` regenerates the store zips, the hero screenshots for both
 stores and the website (see
-[Regenerating Screenshots](#regenerating-screenshots)), and the Chrome Web
-Store promo tiles (`docs/promo/`). Commit and push the refreshed `docs/`
-files to update the website.
+[Regenerating Screenshots](#regenerating-screenshots)), the Chrome Web
+Store promo tiles (`docs/promo/`), and the website demo reel
+(`docs/slideshow.webm`). Commit and push the refreshed `docs/` files to
+update the website.
 
 The listing copy, including each version's what's-new text, lives in
 `docs/store-listing/<lang>.md`, one file per locale. Update it with the

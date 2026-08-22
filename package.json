@@ -25,7 +25,8 @@
     "webext:lint": "web-ext lint --source-dir .output/firefox-mv3",
     "screenshots": "node scripts/screenshots.mjs",
     "heroes": "node scripts/ship-heroes.mjs",
-    "ship": "npm run zip && npm run heroes && npm run promo",
+    "reel": "node scripts/record-slideshow.mjs",
+    "ship": "npm run zip && npm run heroes && npm run promo && npm run reel",
     "promo": "node scripts/promo-tiles.mjs",
     "locales": "node scripts/build-locales.mjs"
   },
