@@ -458,6 +458,16 @@ video.reddit-slideshow-media {
   border-radius: 4px;
 }
 
+/* Preview-first slides: the box is sized from the ORIGINAL's aspect ratio
+   (--rs-ar, set inline), so the sub-viewport preview upscales to viewport
+   fit and the in-place upgrade cannot resize it. The double class outweighs
+   `img.reddit-slideshow-media`'s width/height: auto. */
+.reddit-slideshow-media.reddit-slideshow-media--upscale {
+  aspect-ratio: var(--rs-ar);
+  width: min(100vw, calc(100vh * var(--rs-ar)));
+  height: auto;
+}
+
 /* Videos and animated gifs fill the viewport (object-fit keeps aspect) so a
    small clip - a Giphy gif, a low-res mp4 - scales up instead of sitting tiny.
    Static images keep their intrinsic size (and pan & zoom when large). The
