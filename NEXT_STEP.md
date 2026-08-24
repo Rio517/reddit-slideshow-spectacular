@@ -1,10 +1,12 @@
 # NEXT_STEP - Reddit Slideshow Spectacular!
 
-**Branch:** `main` · **Status:** CI-green. v1.3.1 is tagged and released on
-GitHub with the three store zips attached (pan & zoom letterbox fix + the
-download-folder setting, both verified in real Chrome and Firefox). v1.3.0 is
-submitted to both stores and pending review; §1 has the v1.3.1 submission
-steps. Streaming the proxy fallback is parked (see the §1 note).
+**Branch:** `main` · **Status:** CI-green. v1.4.0 is released on GitHub with the
+three store zips attached, and is live on both stores. v1.4.1 is prepped
+locally - version bumped, per-locale store copy refreshed, ship assets
+regenerated, zips built, tag made - and is waiting on a push plus the store
+rollout in §1 (reddit gif posts play as video, gallery gifs no longer dropped,
+control rail and byline brought into the overlay's own material). Streaming the
+proxy fallback is parked (see the §1 note).
 
 > **Hard rule:** work directly on `main`. Do not create branches or worktrees unless the user explicitly asks. See `AGENTS.md`.
 
@@ -41,7 +43,7 @@ giant commit.
 
 ### Requested, not yet done
 
-- **v1.3.1 store rollout.** From the GitHub release, upload `*-chrome.zip` to
+- **v1.4.1 store rollout.** From the GitHub release, upload `*-chrome.zip` to
   the Chrome Web Store and `*-firefox.zip` plus `*-sources.zip` (the build
   minifies) to Firefox Add-ons, and paste the per-locale listing copy from
   `docs/store-listing/<lang>.md` (its what's-new shows the last two versions).

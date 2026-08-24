@@ -16,17 +16,18 @@ Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard
 
 The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
 
+WHAT'S NEW - V1.4.1
+
+- FIXED: Reddit GIFs play as video - they get a countdown bar, and the slide waits for the clip to finish instead of cutting it off
+- FIXED: GIFs inside a gallery are no longer skipped
+- IMPROVED: The control rail and the byline match the rest of the overlay
+
 WHAT'S NEW - V1.4.0
 
 - NEW: Zoom into any slide - scroll or press + / - to zoom at the pointer (the show pauses itself), then drag to pan
 - NEW: Downloaded files get clean, sortable names
 - IMPROVED: The settings page is organized into sections
 - Various performance and bug fixes
-
-WHAT'S NEW - V1.3.1
-
-- NEW: Choose a download folder (a folder inside your browser's Downloads folder)
-- FIXED: Zooming a tall image now fills the screen instead of staying cropped to a narrow column
 
 Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 

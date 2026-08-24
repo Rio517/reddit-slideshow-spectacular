@@ -16,17 +16,18 @@ Reddit Slideshow Spectacular! trasforma i tuoi feed Reddit in una presentazione 
 
 La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave API, nessun accesso aggiuntivo, nessun account extra. Scorre i post multimediali nell'ordine in cui Reddit li restituisce e sfoglia automaticamente il feed, così la presentazione prosegue oltre la prima pagina.
 
+NOVITÀ - V1.4.1
+
+- CORRETTO: le GIF di Reddit vengono riprodotte come video - con barra di conto alla rovescia, e la diapositiva aspetta la fine della clip invece di troncarla
+- CORRETTO: le GIF dentro una galleria non vengono più saltate
+- MIGLIORATO: la barra di controlli e la firma si accordano al resto dell'interfaccia
+
 NOVITÀ - V1.4.0
 
 - NUOVO: ingrandisci qualsiasi diapositiva - scorri o premi + / - per zoomare sul puntatore (la presentazione si mette in pausa da sola), poi trascina per spostarti
 - NUOVO: i file scaricati ricevono nomi puliti e ordinabili
 - MIGLIORATO: la pagina delle impostazioni è organizzata in sezioni
 - Varie ottimizzazioni delle prestazioni e correzioni di bug
-
-NOVITÀ - V1.3.1
-
-- NUOVO: cartella di download configurabile (una cartella dentro la cartella Download del tuo browser)
-- CORRETTO: lo zoom su un'immagine alta ora riempie tutto lo schermo invece di restare ritagliato in una colonna stretta
 
 Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 

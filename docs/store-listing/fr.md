@@ -16,17 +16,18 @@ Reddit Slideshow Spectacular! transforme vos fils Reddit en un diaporama multim�
 
 Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API, aucune connexion supplémentaire, aucun compte additionnel. Il parcourt les publications multimédia dans l'ordre où Reddit les renvoie et pagine automatiquement le fil, de sorte que le diaporama se poursuit au-delà de la première page.
 
+NOUVEAUTÉS — V1.4.1
+
+- CORRIGÉ : les GIF de Reddit sont lus comme des vidéos - avec une barre de décompte, et la diapositive attend la fin du clip au lieu de le couper
+- CORRIGÉ : les GIF d'une galerie ne sont plus ignorés
+- AMÉLIORÉ : la barre de commandes et la ligne d'informations s'accordent au reste de l'interface
+
 NOUVEAUTÉS — V1.4.0
 
 - NOUVEAU : zoomez dans n'importe quelle diapositive - faites défiler ou appuyez sur + / - pour zoomer au pointeur (le diaporama se met en pause tout seul), puis faites glisser pour vous déplacer
 - NOUVEAU : les fichiers téléchargés reçoivent des noms propres et triables
 - AMÉLIORÉ : la page de réglages est organisée en sections
 - Diverses améliorations de performances et corrections de bugs
-
-NOUVEAUTÉS — V1.3.1
-
-- NOUVEAU : dossier de téléchargement configurable (un dossier dans le dossier Téléchargements de votre navigateur)
-- CORRIGÉ : le zoom sur une image haute remplit désormais tout l'écran au lieu de rester rogné sur une colonne étroite
 
 Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases
 

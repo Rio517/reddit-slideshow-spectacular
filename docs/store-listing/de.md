@@ -16,17 +16,18 @@ Reddit Slideshow Spectacular! verwandelt deine Reddit-Feeds in eine bildschirmf�
 
 Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüssel, keine separate Anmeldung, kein zusätzliches Konto. Sie geht die Medienbeiträge in der Reihenfolge durch, in der Reddit sie liefert, und blättert automatisch durch den Feed, sodass die Diashow über die erste Seite hinaus weiterläuft.
 
+NEU IN V1.4.1
+
+- BEHOBEN: Reddit-GIFs laufen als Video - mit Fortschrittsleiste, und die Folie wartet, bis der Clip zu Ende ist, statt ihn abzuschneiden
+- BEHOBEN: GIFs in einer Galerie werden nicht mehr übersprungen
+- VERBESSERT: Steuerungsleiste und Infozeile passen zum übrigen Overlay
+
 NEU IN V1.4.0
 
 - NEU: Zoome in jede Folie - scrolle oder drücke + / -, um am Zeiger zu zoomen (die Show pausiert von selbst), und ziehe zum Verschieben
 - NEU: Heruntergeladene Dateien bekommen saubere, sortierbare Namen
 - VERBESSERT: Die Einstellungsseite ist in Abschnitte gegliedert
 - Diverse Performance-Verbesserungen und Fehlerbehebungen
-
-NEU IN V1.3.1
-
-- NEU: Wählbarer Download-Ordner (ein Ordner im Downloads-Ordner deines Browsers)
-- BEHOBEN: Beim Zoomen füllt ein hohes Bild jetzt den ganzen Bildschirm, statt auf eine schmale Spalte beschnitten zu bleiben
 
 Vollständige Versionshinweise: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
