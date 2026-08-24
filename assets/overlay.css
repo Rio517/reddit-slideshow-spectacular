@@ -693,6 +693,9 @@ iframe.reddit-slideshow-media {
 }
 
 /* Control bar */
+/* Same surface as the panels (border, blur, shadow, rounded-rect radius) so the
+   chrome reads as one material. It sits over media permanently, so its fill is
+   lighter than a panel's 0.94 - a role, not a drift. */
 .rs-controls {
   position: absolute;
   inset-inline-end: 16px;
@@ -703,12 +706,12 @@ iframe.reddit-slideshow-media {
   flex-direction: column;
   gap: 4px;
   padding: 7px;
-  border-radius: 999px;
-  background: rgba(10, 12, 18, 0.62);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  background: rgba(10, 12, 18, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
   transition:
     opacity 0.35s ease,
     transform 0.35s ease;
@@ -749,12 +752,20 @@ iframe.reddit-slideshow-media {
   color: var(--rs-fg);
   cursor: pointer;
   transition:
+    color 0.2s ease,
     background 0.2s ease,
     transform 0.12s ease;
 }
 
 .rs-btn--primary {
   color: var(--rs-accent);
+}
+
+/* Secondary controls (view, help, preferences) rest muted and lift on hover,
+   the same way the panels' own secondary affordances do; transport and
+   play/pause stay at full weight. */
+.rs-btn--secondary {
+  color: var(--rs-muted);
 }
 
 /* Paused: the play button pulses turquoise (orange's complement) so it's
@@ -792,8 +803,15 @@ iframe.reddit-slideshow-media {
   }
 }
 
-.rs-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+.rs-btn:hover:not(.rs-btn--paused) {
+  color: var(--rs-accent);
+  background: rgba(255, 122, 24, 0.14);
+}
+
+/* Paused owns its turquoise; hovering deepens it instead of overriding the
+   state signal with the accent. */
+.rs-btn--paused:hover {
+  background: rgba(31, 224, 207, 0.26);
 }
 
 .rs-btn:active {
@@ -818,11 +836,11 @@ iframe.reddit-slideshow-media {
   top: 18px;
   inset-inline-end: 22px;
   z-index: 7;
-  background: rgba(10, 12, 18, 0.62);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
+  background: rgba(10, 12, 18, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
   transition:
     opacity 0.35s ease,
     background 0.2s ease,
