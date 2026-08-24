@@ -7,6 +7,7 @@ import {
 import fixture from "../fixtures/reddit-json/subreddit-direct-images.json";
 import galleryFixture from "../fixtures/reddit-json/gallery.json";
 import videoFixture from "../fixtures/reddit-json/reddit-video.json";
+import gifFixture from "../fixtures/reddit-json/reddit-gif.json";
 import redgifsFixture from "../fixtures/reddit-json/redgifs.json";
 import imgurGifvFixture from "../fixtures/reddit-json/imgur-gifv.json";
 import catboxVideoFixture from "../fixtures/reddit-json/catbox-video.json";
@@ -487,6 +488,75 @@ describe("Reddit-hosted video posts", () => {
       isGif: true,
       audioAvailable: false,
       durationSeconds: 6,
+    });
+  });
+});
+
+describe("Reddit gif posts", () => {
+  it("plays an i.redd.it gif from reddit's mp4 transcode, not as a timed image", () => {
+    const slides = slidesFromListing(gifFixture);
+    expect(slides[0]).toMatchObject({
+      id: "t3_gif1:0",
+      postId: "t3_gif1",
+      provider: "reddit-image",
+      kind: "video",
+      mediaUrl: "https://preview.redd.it/gif1.gif?format=mp4&s=fakemp4",
+      sourceUrl: "https://i.redd.it/gif1.gif",
+      durationMode: "media",
+      audioAvailable: false,
+      isGif: true,
+      mimeType: "video/mp4",
+      sourceWidth: 498,
+      sourceHeight: 373,
+      quality: "original",
+    });
+  });
+
+  it("saves the original gif rather than the transcode", () => {
+    const slides = slidesFromListing(gifFixture);
+    expect(slides[0].downloadUrl).toBe("https://i.redd.it/gif1.gif");
+    expect(slides[0].filenameHint).toBe("rss-cat-loaf-timelapse-gif1.gif");
+  });
+
+  it("keeps the still preview as hashUrl so a reposted gif still dedups", () => {
+    const slides = slidesFromListing(gifFixture);
+    expect(slides[0].hashUrl).toBe(
+      "https://preview.redd.it/gif1.gif?width=108&crop=smart&format=png8&s=fake108",
+    );
+  });
+
+  it("falls back to the image path when reddit shipped no mp4 transcode", () => {
+    const slides = slidesFromListing(gifFixture);
+    expect(slides[1]).toMatchObject({
+      id: "t3_gif2:0",
+      kind: "image",
+      mediaUrl: "https://i.redd.it/gif2.gif",
+      durationMode: "timer",
+      mimeType: "image/gif",
+    });
+  });
+
+  it("ignores an mp4 transcode on a host outside the allowlist", () => {
+    const slides = slidesFromListing(gifFixture);
+    expect(slides[2]).toMatchObject({
+      id: "t3_gif3:0",
+      kind: "image",
+      mediaUrl: "https://i.redd.it/gif3.gif",
+      durationMode: "timer",
+    });
+  });
+
+  it("upgrades an externally hosted gif from its external-preview transcode", () => {
+    const slides = slidesFromListing(gifFixture);
+    expect(slides[3]).toMatchObject({
+      id: "t3_gif4:0",
+      kind: "video",
+      mediaUrl:
+        "https://external-preview.redd.it/gif4.gif?format=mp4&s=fakemp4",
+      sourceUrl: "https://i.imgur.com/gif4.gif",
+      durationMode: "media",
+      isGif: true,
+      over18: true,
     });
   });
 });

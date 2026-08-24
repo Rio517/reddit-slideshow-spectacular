@@ -35,6 +35,7 @@ Product, research, and decision docs for the extension, plus the shipped assets:
 - [ADR 0019](adr/0019-post-voting.md): upvote/downvote the current post with the ↑/↓ keys through the logged-in session.
 - [ADR 0020](adr/0020-download-folder-setting.md): download folder as a subfolder-of-Downloads setting — the platform offers no usable folder picker for extensions.
 - [ADR 0021](adr/0021-manual-inspect-zoom.md): manual inspect-zoom on a paused slide — wheel or +/− at the pointer, drag to pan, on the slide frame so it composes with pan & zoom.
+- [ADR 0022](adr/0022-reddit-gif-native-video.md): play reddit gif posts as native video from reddit's own mp4 transcode (countdown bar, dwell = the clip).
 - [Foundation plan](superpowers/plans/2026-05-29-foundation-wxt-mv3.md): task-by-task plan for the WXT/MV3 scaffold, shared core, and offline fixtures.
 
 ## Status

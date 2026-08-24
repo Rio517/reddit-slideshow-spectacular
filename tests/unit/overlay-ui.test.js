@@ -1521,6 +1521,132 @@ describe("createOverlay", () => {
     expect(timer?.hidden).toBe(false);
   });
 
+  it("takes the countdown from a clip's own duration when the listing had none", async () => {
+    vi.useRealTimers();
+    /** @type {Array<[string, number]>} */
+    const reported = [];
+    const overlay = createOverlay({
+      ...noopHandlers(),
+      onMediaDuration: (slide, seconds) => reported.push([slide.id, seconds]),
+    });
+    overlay.show();
+    overlay.renderCurrent(
+      imageSlide({
+        id: "gif",
+        kind: "video",
+        durationMode: "media",
+        isGif: true,
+        mediaUrl: "https://preview.redd.it/gif.gif?format=mp4&s=x",
+      }),
+      {
+        index: 0,
+        total: 1,
+        exhausted: true,
+        effectiveSeconds: 5,
+        playing: true,
+      },
+    );
+    const video = /** @type {HTMLVideoElement} */ (
+      overlay.root.querySelector("video")
+    );
+    Object.defineProperty(video, "duration", { value: 4.9, writable: true });
+    video.dispatchEvent(new Event("loadedmetadata"));
+    video.dispatchEvent(new Event("loadeddata"));
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(reported).toEqual([["gif", 4.9]]);
+    // The bar sweeps the clip's length, not the image dwell it was rendered with.
+    expect(
+      /** @type {HTMLElement | null} */ (
+        overlay.root.querySelector(".rs-timer__fill")
+      )?.style.animation,
+    ).toContain("4.9s");
+  });
+
+  it("keeps the listing's duration when the clip reports its own", async () => {
+    vi.useRealTimers();
+    /** @type {Array<[string, number]>} */
+    const reported = [];
+    const overlay = createOverlay({
+      ...noopHandlers(),
+      onMediaDuration: (slide, seconds) => reported.push([slide.id, seconds]),
+    });
+    overlay.show();
+    overlay.renderCurrent(
+      imageSlide({
+        id: "vid",
+        kind: "video",
+        durationMode: "media",
+        durationSeconds: 12,
+        mediaUrl: "https://v.redd.it/vid.mp4",
+      }),
+      {
+        index: 0,
+        total: 1,
+        exhausted: true,
+        effectiveSeconds: 12,
+        playing: true,
+      },
+    );
+    const video = /** @type {HTMLVideoElement} */ (
+      overlay.root.querySelector("video")
+    );
+    Object.defineProperty(video, "duration", { value: 4.9, writable: true });
+    video.dispatchEvent(new Event("loadedmetadata"));
+    video.dispatchEvent(new Event("loadeddata"));
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(reported).toEqual([]);
+    expect(
+      /** @type {HTMLElement | null} */ (
+        overlay.root.querySelector(".rs-timer__fill")
+      )?.style.animation,
+    ).toContain("12s");
+  });
+
+  it("ignores a clip that reports no usable duration", async () => {
+    vi.useRealTimers();
+    /** @type {Array<[string, number]>} */
+    const reported = [];
+    const overlay = createOverlay({
+      ...noopHandlers(),
+      onMediaDuration: (slide, seconds) => reported.push([slide.id, seconds]),
+    });
+    overlay.show();
+    overlay.renderCurrent(
+      imageSlide({
+        id: "live",
+        kind: "video",
+        durationMode: "media",
+        mediaUrl: "https://v.redd.it/live.mp4",
+      }),
+      {
+        index: 0,
+        total: 1,
+        exhausted: true,
+        effectiveSeconds: 5,
+        playing: true,
+      },
+    );
+    const video = /** @type {HTMLVideoElement} */ (
+      overlay.root.querySelector("video")
+    );
+    Object.defineProperty(video, "duration", {
+      value: Infinity,
+      writable: true,
+    });
+    video.dispatchEvent(new Event("loadedmetadata"));
+    video.dispatchEvent(new Event("loadeddata"));
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(reported).toEqual([]);
+    expect(
+      /** @type {HTMLElement | null} */ (
+        overlay.root.querySelector(".rs-timer__fill")
+      )?.style.animation,
+    ).toContain("5s");
+  });
+
   it("shows the timer bar for images when the mode is 'all'", async () => {
     vi.useRealTimers();
     const overlay = createOverlay(noopHandlers());

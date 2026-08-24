@@ -58,6 +58,52 @@ const LISTING = {
     ],
   },
 };
+// A gif post: reddit ships an mp4 transcode of it among the preview variants,
+// and the extension must play that rather than time it like a still image.
+const GIF_MP4 = "https://preview.redd.it/gif.gif?format=mp4&s=fake";
+const GIF_LISTING = {
+  kind: "Listing",
+  data: {
+    after: null,
+    children: [
+      {
+        kind: "t3",
+        data: {
+          name: "t3_gif",
+          title: "A test loop",
+          author: "gif_user",
+          subreddit: "slideshowspectacular",
+          permalink: "/r/slideshowspectacular/comments/gif/x/",
+          url: "https://i.redd.it/gif.gif",
+          post_hint: "image",
+          over_18: false,
+          preview: {
+            images: [
+              {
+                source: {
+                  url: "https://preview.redd.it/gif.gif?format=png8&s=fake",
+                  width: 64,
+                  height: 64,
+                },
+                variants: {
+                  mp4: { source: { url: GIF_MP4, width: 64, height: 64 } },
+                },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
+};
+// 1.5s of video, against the 5s default image dwell. Served as webm: this
+// Chromium has no proprietary codecs, and what's under test is the pipeline
+// (host gate -> <video> -> reported duration), not the codec.
+const GIF_CLIP = resolve(
+  process.cwd(),
+  "tests/fixtures/media/gif-transcode.webm",
+);
+const GIF_CLIP_SECONDS = "1.5s";
 const SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080"><rect width="1920" height="1080" fill="#356"/></svg>`;
 const TALL_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="3500" height="6250"><rect width="3500" height="6250" fill="#635"/></svg>`;
 
@@ -387,6 +433,56 @@ async function main() {
       assert.equal(afterEscape.transform, "");
       assert.equal(afterEscape.open, true);
     });
+
+    // A gif post: it must play as reddit's transcode and take its dwell from the
+    // clip. Only a real browser reports a media duration, so this can't be a
+    // unit test. The listing fetch runs in the background service worker, so the
+    // swap has to happen on the context's route, not the page's.
+    await context.unroute("**/*.json?*");
+    await context.route("**/*.json?*", (route) =>
+      route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify(GIF_LISTING),
+      }),
+    );
+    await context.route("https://preview.redd.it/**", (route) =>
+      route.fulfill({ path: GIF_CLIP, contentType: "video/webm" }),
+    );
+    const gifPage = await context.newPage();
+    await gifPage.goto(FEED, { waitUntil: "domcontentloaded", timeout: 45000 });
+    const gif = await gifPage
+      .waitForFunction(
+        () => {
+          const sr = document.querySelector(
+            "#reddit-slideshow-host",
+          )?.shadowRoot;
+          const media = sr?.querySelector(".reddit-slideshow-media");
+          const timer = sr?.querySelector(".rs-timer");
+          const fill = sr?.querySelector(".rs-timer__fill");
+          if (!media || !timer || !fill || timer.hidden) return null;
+          return {
+            tag: media.tagName,
+            src: media.getAttribute("src"),
+            loops: media.loop,
+            sweep: window.getComputedStyle(fill).animationDuration,
+          };
+        },
+        { timeout: 20000 },
+      )
+      .then((handle) => handle.jsonValue())
+      .catch(() => null);
+    check(
+      "a gif post plays as reddit's mp4 transcode, with a countdown",
+      () => {
+        assert.ok(gif, "no video frame with a visible countdown bar appeared");
+        assert.equal(gif.tag, "VIDEO");
+        assert.equal(gif.src, GIF_MP4);
+        assert.equal(gif.loops, true);
+      },
+    );
+    check("the gif's countdown runs the clip, not the flat image dwell", () =>
+      assert.equal(gif?.sweep, GIF_CLIP_SECONDS),
+    );
   } finally {
     await context.close();
     await rm(userDataDir, { recursive: true, force: true });

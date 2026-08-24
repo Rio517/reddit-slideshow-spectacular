@@ -1,0 +1,161 @@
+{
+  "kind": "Listing",
+  "data": {
+    "after": null,
+    "before": null,
+    "children": [
+      {
+        "kind": "t3",
+        "data": {
+          "id": "gif1",
+          "name": "t3_gif1",
+          "title": "Cat loaf timelapse",
+          "permalink": "/r/example/comments/gif1/cat_loaf_timelapse/",
+          "url": "https://i.redd.it/gif1.gif",
+          "url_overridden_by_dest": "https://i.redd.it/gif1.gif",
+          "domain": "i.redd.it",
+          "post_hint": "image",
+          "is_video": false,
+          "over_18": false,
+          "preview": {
+            "images": [
+              {
+                "source": {
+                  "url": "https://preview.redd.it/gif1.gif?format=png8&s=fake",
+                  "width": 498,
+                  "height": 373
+                },
+                "resolutions": [
+                  {
+                    "url": "https://preview.redd.it/gif1.gif?width=108&crop=smart&format=png8&s=fake108",
+                    "width": 108,
+                    "height": 81
+                  }
+                ],
+                "variants": {
+                  "gif": {
+                    "source": {
+                      "url": "https://preview.redd.it/gif1.gif?s=fakegif",
+                      "width": 498,
+                      "height": 373
+                    }
+                  },
+                  "mp4": {
+                    "source": {
+                      "url": "https://preview.redd.it/gif1.gif?format=mp4&s=fakemp4",
+                      "width": 498,
+                      "height": 373
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "kind": "t3",
+        "data": {
+          "id": "gif2",
+          "name": "t3_gif2",
+          "title": "Gif with no transcode",
+          "permalink": "/r/example/comments/gif2/gif_with_no_transcode/",
+          "url": "https://i.redd.it/gif2.gif",
+          "url_overridden_by_dest": "https://i.redd.it/gif2.gif",
+          "domain": "i.redd.it",
+          "post_hint": "image",
+          "is_video": false,
+          "over_18": false,
+          "preview": {
+            "images": [
+              {
+                "source": {
+                  "url": "https://preview.redd.it/gif2.gif?format=png8&s=fake",
+                  "width": 320,
+                  "height": 240
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "kind": "t3",
+        "data": {
+          "id": "gif3",
+          "name": "t3_gif3",
+          "title": "Gif with an off-host transcode",
+          "permalink": "/r/example/comments/gif3/gif_with_an_off_host_transcode/",
+          "url": "https://i.redd.it/gif3.gif",
+          "url_overridden_by_dest": "https://i.redd.it/gif3.gif",
+          "domain": "i.redd.it",
+          "post_hint": "image",
+          "is_video": false,
+          "over_18": false,
+          "preview": {
+            "images": [
+              {
+                "source": {
+                  "url": "https://preview.redd.it/gif3.gif?format=png8&s=fake",
+                  "width": 320,
+                  "height": 240
+                },
+                "variants": {
+                  "mp4": {
+                    "source": {
+                      "url": "https://evil.example/gif3.mp4",
+                      "width": 320,
+                      "height": 240
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "kind": "t3",
+        "data": {
+          "id": "gif4",
+          "name": "t3_gif4",
+          "title": "Externally hosted gif",
+          "permalink": "/r/example/comments/gif4/externally_hosted_gif/",
+          "url": "https://i.imgur.com/gif4.gif",
+          "url_overridden_by_dest": "https://i.imgur.com/gif4.gif",
+          "domain": "i.imgur.com",
+          "post_hint": "image",
+          "is_video": false,
+          "over_18": true,
+          "preview": {
+            "images": [
+              {
+                "source": {
+                  "url": "https://external-preview.redd.it/gif4.gif?format=png8&s=fake",
+                  "width": 600,
+                  "height": 600
+                },
+                "resolutions": [
+                  {
+                    "url": "https://external-preview.redd.it/gif4.gif?width=108&crop=smart&format=png8&s=fake108",
+                    "width": 108,
+                    "height": 108
+                  }
+                ],
+                "variants": {
+                  "mp4": {
+                    "source": {
+                      "url": "https://external-preview.redd.it/gif4.gif?format=mp4&s=fakemp4",
+                      "width": 600,
+                      "height": 600
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

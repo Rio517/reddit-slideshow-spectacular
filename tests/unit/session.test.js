@@ -683,6 +683,84 @@ describe("createSlideshowSession", () => {
     ]);
   });
 
+  it("saves a gif post's original gif rather than the mp4 it plays", async () => {
+    /** @type {Array<{ url: string, filename: string }>} */
+    const calls = [];
+    const { session } = makeSession({
+      downloadMedia: (url, filename) => calls.push({ url, filename }),
+      pages: [
+        {
+          slides: [
+            videoSlide("gif", {
+              mediaUrl: "https://preview.redd.it/gif.gif?format=mp4&s=x",
+              sourceUrl: "https://i.redd.it/gif.gif",
+              downloadUrl: "https://i.redd.it/gif.gif",
+              filenameHint: "gif.gif",
+            }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 1,
+        },
+      ],
+    });
+    await session.start();
+    /** @type {HTMLButtonElement | null} */ (
+      q('[aria-label^="Download"]')
+    )?.click();
+    expect(calls).toEqual([
+      { url: "https://i.redd.it/gif.gif", filename: "gif.gif" },
+    ]);
+  });
+
+  it("records a clip's own duration so its dwell runs the clip out", async () => {
+    const gif = videoSlide("gif", {
+      mediaUrl: "https://preview.redd.it/gif.gif?format=mp4&s=x",
+      isGif: true,
+    });
+    const { session } = makeSession({
+      pages: [{ slides: [gif], after: null, exhausted: true, postsScanned: 1 }],
+    });
+    await session.start();
+    const video = /** @type {HTMLVideoElement} */ (
+      q("video.reddit-slideshow-media")
+    );
+    Object.defineProperty(video, "duration", { value: 4.9, writable: true });
+    video.dispatchEvent(new Event("loadedmetadata"));
+    // The controller reads this when the frame commits (scheduleAdvance).
+    expect(gif.durationSeconds).toBe(4.9);
+  });
+
+  it("hashes a gif post's still preview even though it plays as a video", async () => {
+    /** @type {string[]} */
+    const hashedUrls = [];
+    const { session } = makeSession({
+      settingsOverrides: { contentDedup: true },
+      computeImageHash: async (url) => {
+        hashedUrls.push(url);
+        return null;
+      },
+      pages: [
+        {
+          slides: [
+            videoSlide("gif", {
+              mediaUrl: "https://preview.redd.it/gif.gif?format=mp4&s=x",
+              hashUrl: "https://preview.redd.it/gif.gif?width=108&s=small",
+            }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 1,
+        },
+      ],
+    });
+    await session.start();
+    await flush();
+    expect(hashedUrls).toEqual([
+      "https://preview.redd.it/gif.gif?width=108&s=small",
+    ]);
+  });
+
   it("filters a perceptual duplicate during preload, before it is shown", async () => {
     /** @type {Record<string, string>} */
     const hashes = {
