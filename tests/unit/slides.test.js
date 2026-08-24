@@ -6,6 +6,7 @@ import {
 } from "../../lib/slides.js";
 import fixture from "../fixtures/reddit-json/subreddit-direct-images.json";
 import galleryFixture from "../fixtures/reddit-json/gallery.json";
+import animatedGalleryFixture from "../fixtures/reddit-json/gallery-animated.json";
 import videoFixture from "../fixtures/reddit-json/reddit-video.json";
 import gifFixture from "../fixtures/reddit-json/reddit-gif.json";
 import redgifsFixture from "../fixtures/reddit-json/redgifs.json";
@@ -420,6 +421,74 @@ describe("gallery posts", () => {
       [2, 3],
       [3, 3],
     ]);
+  });
+
+  it("keeps animated members instead of dropping them", () => {
+    // An AnimatedImage member carries `s.gif`/`s.mp4` where a still carries
+    // `s.u`; requiring `s.u` silently lost every gif in a gallery.
+    const slides = slidesFromListing(animatedGalleryFixture);
+    expect(slides.map((s) => s.id)).toEqual([
+      "t3_galgif:0",
+      "t3_galgif:1",
+      "t3_galgif:2",
+      "t3_galgif:3",
+    ]);
+    expect(slides.map((s) => s.galleryIndex)).toEqual([1, 2, 3, 4]);
+  });
+
+  it("plays an animated member from reddit's mp4 transcode", () => {
+    const slides = slidesFromListing(animatedGalleryFixture);
+    expect(slides[1]).toMatchObject({
+      id: "t3_galgif:1",
+      provider: "reddit-gallery",
+      kind: "video",
+      mediaUrl: "https://preview.redd.it/anim1.gif?format=mp4&s=fakemp4",
+      sourceUrl: "https://i.redd.it/anim1.gif",
+      downloadUrl: "https://i.redd.it/anim1.gif",
+      durationMode: "media",
+      isGif: true,
+      mimeType: "video/mp4",
+      sourceWidth: 480,
+      sourceHeight: 792,
+      filenameHint: "rss-mixed-set-2-galgif.gif",
+    });
+    expect(slides[1].hashUrl).toBe(
+      "https://preview.redd.it/anim1.gif?width=108&crop=smart&format=png8&s=fake108",
+    );
+  });
+
+  it("shows the gif itself when an animated member has no transcode", () => {
+    const slides = slidesFromListing(animatedGalleryFixture);
+    expect(slides[2]).toMatchObject({
+      id: "t3_galgif:2",
+      kind: "image",
+      mediaUrl: "https://i.redd.it/anim2.gif",
+      durationMode: "timer",
+      mimeType: "image/gif",
+    });
+  });
+
+  it("ignores an animated member's transcode on a host outside the allowlist", () => {
+    const slides = slidesFromListing(animatedGalleryFixture);
+    expect(slides[3]).toMatchObject({
+      id: "t3_galgif:3",
+      kind: "image",
+      mediaUrl: "https://i.redd.it/anim3.gif",
+      durationMode: "timer",
+    });
+  });
+
+  it("leaves the still members of a mixed gallery untouched", () => {
+    const slides = slidesFromListing(animatedGalleryFixture);
+    expect(slides[0]).toMatchObject({
+      id: "t3_galgif:0",
+      kind: "image",
+      mediaUrl:
+        "https://preview.redd.it/still1.jpg?width=1600&format=pjpg&auto=webp&s=fakestill",
+      durationMode: "timer",
+      mimeType: "image/jpeg",
+    });
+    expect(slides[0].downloadUrl).toBeUndefined();
   });
 
   it("leaves a single-surviving-image gallery unnumbered (no '1/1')", () => {

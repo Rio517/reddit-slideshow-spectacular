@@ -41,6 +41,11 @@ transcode), and `hashUrl` (the still preview, so Layer-2 dedup still catches a
 repost). The Layer-1 identity key is unchanged either way - it is the reddit
 basename, which the gif and its transcode share.
 
+Gallery members follow the same rule. An `AnimatedImage` member carries `s.gif`
+and `s.mp4` where a still carries `s.u`, so requiring `s.u` dropped every gif in
+a gallery outright; the member is now resolved from `s.gif`, upgraded to `s.mp4`
+under the same host gate, and numbered in place among the stills.
+
 A clip's duration is not in the listing, so the overlay reports the element's own
 `loadedmetadata` duration through `onMediaDuration`, and the session records it on
 the slide. That fills the same gap for Imgur `.gifv` and Catbox clips, whose
@@ -57,6 +62,7 @@ Benefits:
 
 Costs:
 
+- Galleries containing gifs are no longer short a slide (or empty).
 - A gif post whose transcode 404s is skipped as broken media, where before the
   gif itself would have shown. Reddit serves these from its own CDN (verified
   back to 2020 posts), and a missing variant already falls back to the image.

@@ -1,0 +1,80 @@
+{
+  "kind": "Listing",
+  "data": {
+    "after": null,
+    "before": null,
+    "children": [
+      {
+        "kind": "t3",
+        "data": {
+          "name": "t3_galgif",
+          "title": "Mixed set",
+          "permalink": "/r/example/comments/galgif/mixed_set/",
+          "domain": "old.reddit.com",
+          "is_gallery": true,
+          "over_18": false,
+          "gallery_data": {
+            "items": [
+              { "media_id": "still1", "id": 1 },
+              { "media_id": "anim1", "id": 2 },
+              { "media_id": "anim2", "id": 3 },
+              { "media_id": "anim3", "id": 4 }
+            ]
+          },
+          "media_metadata": {
+            "still1": {
+              "status": "valid",
+              "e": "Image",
+              "m": "image/jpg",
+              "s": {
+                "x": 1600,
+                "y": 900,
+                "u": "https://preview.redd.it/still1.jpg?width=1600&format=pjpg&auto=webp&s=fakestill"
+              }
+            },
+            "anim1": {
+              "status": "valid",
+              "e": "AnimatedImage",
+              "m": "image/gif",
+              "s": {
+                "x": 480,
+                "y": 792,
+                "gif": "https://i.redd.it/anim1.gif",
+                "mp4": "https://preview.redd.it/anim1.gif?format=mp4&s=fakemp4"
+              },
+              "p": [
+                {
+                  "u": "https://preview.redd.it/anim1.gif?width=108&crop=smart&format=png8&s=fake108"
+                },
+                {
+                  "u": "https://preview.redd.it/anim1.gif?width=320&crop=smart&format=png8&s=fake320"
+                }
+              ]
+            },
+            "anim2": {
+              "status": "valid",
+              "e": "AnimatedImage",
+              "m": "image/gif",
+              "s": {
+                "x": 320,
+                "y": 240,
+                "gif": "https://i.redd.it/anim2.gif"
+              }
+            },
+            "anim3": {
+              "status": "valid",
+              "e": "AnimatedImage",
+              "m": "image/gif",
+              "s": {
+                "x": 320,
+                "y": 240,
+                "gif": "https://i.redd.it/anim3.gif",
+                "mp4": "https://evil.example/anim3.mp4"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
