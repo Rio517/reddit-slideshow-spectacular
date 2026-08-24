@@ -607,7 +607,21 @@ iframe.reddit-slideshow-media {
     0 0 16px rgba(0, 0, 0, 0.6),
     0 0 26px rgba(0, 0, 0, 0.45);
   white-space: nowrap;
+  /* The overflow guard (a long username must not spill across the slide) clips
+     at the box edge, which cropped the smudge into the hard-edged rectangle it
+     exists to avoid. Room for the widest shadow, taken straight back out as
+     margin, so the smudge falls off softly with the layout unmoved. Content-box
+     keeps the truncation point where it was. */
+  padding: 26px;
+  margin: -26px;
   overflow: hidden;
+  /* The grown box would otherwise swallow backdrop clicks around the byline;
+     only the links themselves are interactive. */
+  pointer-events: none;
+}
+
+.rs-meta__byline a {
+  pointer-events: auto;
 }
 
 .rs-meta__author,
