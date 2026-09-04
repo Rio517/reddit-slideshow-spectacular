@@ -68,8 +68,8 @@ justification per host; Chrome asks per-host too (see section 8).
 API permissions:
 
 - **storage** - Save the user's settings (timer, transitions, mute/autoplay,
-  NSFW and dedup toggles, etc.) locally on the computer. Nothing is synced or
-  uploaded.
+  NSFW and dedup toggles, the local ignored-author list, etc.) locally on the
+  computer. Nothing is synced or uploaded.
 - **downloads** - Save the media the user is currently viewing to their computer,
   with a sensible filename, when they use the in-overlay download control.
 
@@ -143,7 +143,7 @@ Use these answers:
 
 Plain-language summary to paste where a free-text box is offered:
 
-Reddit Slideshow Spectacular! collects nothing and sends nothing to the developer - there is no developer server, no analytics, no telemetry, no tracking, no ads, and no accounts. It makes network requests only to Reddit, Reddit's media hosts, and the content providers a post links to (Imgur, Redgifs, Streamable, Giphy, Catbox), to fetch the media you're viewing; those provider requests are made without cookies. The only thing it stores is your own settings, kept locally via the browser's extension storage; removing the extension removes them. The extension contains no remote code.
+Reddit Slideshow Spectacular! collects nothing and sends nothing to the developer - there is no developer server, no analytics, no telemetry, no tracking, no ads, and no accounts. It makes network requests only to Reddit, Reddit's media hosts, and the content providers a post links to (Imgur, Redgifs, Streamable, Giphy, Catbox), to fetch the media you're viewing; those provider requests are made without cookies. The only things it stores are your own settings, including any authors you choose to ignore locally in Slideshow, kept locally via the browser's extension storage; removing the extension removes them. The extension contains no remote code.
 
 **AMO data-collection declaration:** the Firefox manifest already declares
 `data_collection_permissions: { required: ["none"] }` (see `wxt.config.ts`), so

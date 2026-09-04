@@ -1,12 +1,10 @@
 # NEXT_STEP - Reddit Slideshow Spectacular!
 
-**Branch:** `main` · **Status:** CI-green. v1.4.0 is released on GitHub with the
-three store zips attached, and is live on both stores. v1.4.1 is prepped
-locally - version bumped, per-locale store copy refreshed, ship assets
-regenerated, zips built, tag made - and is waiting on a push plus the store
-rollout in §1 (reddit gif posts play as video, gallery gifs no longer dropped,
-control rail and byline brought into the overlay's own material). Streaming the
-proxy fallback is parked (see the §1 note).
+**Branch:** `main` · **Status:** CI-green. v1.4.0 is live on both stores. v1.4.2
+is prepared locally - version and per-locale store copy refreshed, Firefox,
+Chrome, and source zips built, promo tiles and the demo reel regenerated, and
+the full unit/browser/package gates passed. The existing hero screenshots are
+intentionally reused for this release. The manual store rollout remains in §1.
 
 > **Hard rule:** work directly on `main`. Do not create branches or worktrees unless the user explicitly asks. See `AGENTS.md`.
 
@@ -43,12 +41,14 @@ giant commit.
 
 ### Requested, not yet done
 
-- **v1.4.1 store rollout.** From the GitHub release, upload `*-chrome.zip` to
-  the Chrome Web Store and `*-firefox.zip` plus `*-sources.zip` (the build
-  minifies) to Firefox Add-ons, and paste the per-locale listing copy from
+- **v1.4.2 store rollout.** Upload
+  `.output/reddit-slideshow-1.4.2-chrome.zip` to the Chrome Web Store and
+  `.output/reddit-slideshow-1.4.2-firefox.zip` plus
+  `.output/reddit-slideshow-1.4.2-sources.zip` (the build minifies) to Firefox
+  Add-ons. Paste the per-locale listing copy from
   `docs/store-listing/<lang>.md` (its what's-new shows the last two versions).
-  The store heroes and promo tiles are committed under `docs/`; `npm run ship`
-  regenerates them.
+  The promo tiles and demo reel were regenerated; reuse the existing store hero
+  screenshots for this release.
 - Optional: a native-speaker pass on the machine-drafted translations,
   especially Arabic (~25% of installs). English fallback covers any gap, and a
   locale file can be refreshed without code changes.

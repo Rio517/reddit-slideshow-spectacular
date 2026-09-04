@@ -16,6 +16,14 @@ Reddit Slideshow Spectacular! verwandelt deine Reddit-Feeds in eine bildschirmf�
 
 Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüssel, keine separate Anmeldung, kein zusätzliches Konto. Sie geht die Medienbeiträge in der Reihenfolge durch, in der Reddit sie liefert, und blättert automatisch durch den Feed, sodass die Diashow über die erste Seite hinaus weiterläuft.
 
+NEU IN V1.4.2
+
+- NEU: Einen Autor zu ignorieren/blockieren fügt ihn auch einer lokalen Ignorierliste der Diashow hinzu, damit seine Beiträge weiter übersprungen werden, selbst wenn Reddit keinen weiteren Kontoblock akzeptiert
+- VERBESSERT: Vorgeladene Videos wechseln flüssiger, wodurch Pausen zwischen Clips kürzer werden
+- BEHOBEN: Ein Timing-Fehler beim schnellen Wechseln durch Fotos konnte dazu führen, dass die erreichte Folie zu schnell weiterlief
+- VERBESSERT: Lange Beitragstitel zeigen nach 200 ms einen klareren Tooltip, und das Lesen hält den nächsten Übergang auf, ohne die Videowiedergabe zu pausieren
+- VERBESSERT: Einstellungs-, Hilfe-, Sprung- und Übersprungen-Panels bleiben unabhängig von Folienwechseln geöffnet
+
 NEU IN V1.4.1
 
 - BEHOBEN: Reddit-GIFs laufen als Video - mit Fortschrittsleiste, und die Folie wartet, bis der Clip zu Ende ist, statt ihn abzuschneiden
