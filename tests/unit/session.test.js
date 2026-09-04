@@ -108,6 +108,7 @@ function settings(overrides) {
     panZoomMinOversize: 1.5,
     locale: "auto",
     downloadSubfolder: "",
+    ignoredAuthors: [],
     ...overrides,
   };
 }
@@ -133,7 +134,7 @@ function fakeRequest(pages) {
 }
 
 /**
- * @param {{ pages?: any[], settingsOverrides?: Record<string, unknown>, openUrl?: (url: string) => void, openPopout?: () => void, saveSettings?: (patch: object) => Promise<unknown>, computeImageHash?: (url: string) => Promise<string | null>, createImage?: () => { src: string, decoding?: string }, createVideo?: () => { src: string, preload?: string, muted?: boolean }, resolveMedia?: (url: string) => Promise<string | null>, downloadMedia?: (url: string, filename: string) => void, resolveRedgifs?: (slide: any) => Promise<any>, resolveRedditAudio?: (slide: any) => Promise<string | null>, vote?: (id: string, dir: number) => Promise<any>, block?: (name: string) => Promise<{ ok?: boolean }>, friend?: (name: string) => Promise<{ ok?: boolean }>, frontend?: "old" | "new" }} [opts]
+ * @param {{ pages?: any[], settingsOverrides?: Record<string, unknown>, openUrl?: (url: string) => void, openPopout?: () => void, saveSettings?: (patch: object) => Promise<unknown>, computeImageHash?: (url: string) => Promise<string | null>, createImage?: () => { src: string, decoding?: string }, createVideo?: () => { src: string, preload?: string, muted?: boolean }, resolveMedia?: (url: string) => Promise<string | null>, downloadMedia?: (url: string, filename: string) => void, resolveRedgifs?: (slide: any) => Promise<any>, resolveRedditAudio?: (slide: any) => Promise<string | null>, vote?: (id: string, dir: number) => Promise<any>, block?: (name: string) => Promise<{ ok?: boolean, error?: any }>, friend?: (name: string) => Promise<{ ok?: boolean }>, frontend?: "old" | "new" }} [opts]
  */
 function makeSession({
   pages,
@@ -205,6 +206,20 @@ const key = (k) => ({
   stopImmediatePropagation() {},
 });
 
+/** @param {string} type @returns {Event} */
+function untrustedEvent(type) {
+  const event = new Event(type, { bubbles: true });
+  Object.defineProperty(event, "isTrusted", { value: false });
+  return event;
+}
+
+/** @param {string} type @returns {MouseEvent} */
+function untrustedMouseEvent(type) {
+  const event = new MouseEvent(type, { bubbles: true });
+  Object.defineProperty(event, "isTrusted", { value: false });
+  return event;
+}
+
 describe("createSlideshowSession", () => {
   it("renders the first slide and position counter", async () => {
     const { session } = makeSession();
@@ -269,6 +284,20 @@ describe("createSlideshowSession", () => {
     /** @type {HTMLElement} */ (q('[aria-label^="Open in a window"]')).click();
     expect(openPopout).toHaveBeenCalledTimes(1);
     expect(session.isOpen()).toBe(false);
+  });
+
+  it("ignores synthetic popout clicks from the page", async () => {
+    const openPopout = vi.fn();
+    const { session } = makeSession({ openPopout });
+    await session.start();
+    expect(session.isOpen()).toBe(true);
+
+    q('[aria-label^="Open in a window"]')?.dispatchEvent(
+      untrustedMouseEvent("click"),
+    );
+
+    expect(openPopout).not.toHaveBeenCalled();
+    expect(session.isOpen()).toBe(true);
   });
 
   it("ignores keys when the overlay is closed", async () => {
@@ -683,6 +712,19 @@ describe("createSlideshowSession", () => {
     ]);
   });
 
+  it("ignores synthetic download clicks from the page", async () => {
+    /** @type {Array<{ url: string, filename: string }>} */
+    const calls = [];
+    const { session } = makeSession({
+      downloadMedia: (url, filename) => calls.push({ url, filename }),
+    });
+    await session.start();
+
+    q('[aria-label^="Download"]')?.dispatchEvent(untrustedMouseEvent("click"));
+
+    expect(calls).toEqual([]);
+  });
+
   it("saves a gif post's original gif rather than the mp4 it plays", async () => {
     /** @type {Array<{ url: string, filename: string }>} */
     const calls = [];
@@ -1095,6 +1137,47 @@ describe("createSlideshowSession", () => {
     expect(videos.every((v) => v.src === "")).toBe(true);
   });
 
+  it("keeps the preloaded direct video alive while that video becomes current", async () => {
+    /** @type {Array<{ src: string, preload?: string }>} */
+    const videos = [];
+    const { session } = makeSession({
+      pages: [
+        {
+          slides: [videoSlide("a"), videoSlide("b"), videoSlide("c")],
+          after: null,
+          exhausted: true,
+          postsScanned: 3,
+        },
+      ],
+      createVideo: () => {
+        const v = { src: "", preload: "" };
+        videos.push(v);
+        return v;
+      },
+    });
+
+    await session.start();
+    const preloadedB = videos.find(
+      (v) => v.src === "https://v.redd.it/b/CMAF_720.mp4",
+    );
+
+    session.handleKeydown(key("ArrowRight"));
+
+    expect(preloadedB?.src).toBe("https://v.redd.it/b/CMAF_720.mp4");
+    const preloadedC = videos.find(
+      (v) => v.src === "https://v.redd.it/c/CMAF_720.mp4",
+    );
+    expect(preloadedC).toBeTruthy();
+
+    session.handleKeydown(key("ArrowRight"));
+
+    expect(preloadedB?.src).toBe("");
+
+    session.handleKeydown(key("ArrowRight"));
+
+    expect(preloadedC?.src).toBe("");
+  });
+
   it("suppresses handled keys but not others", async () => {
     const { session } = makeSession();
     await session.start();
@@ -1138,6 +1221,41 @@ describe("createSlideshowSession", () => {
     );
     const fill = /** @type {HTMLElement | null} */ (q(".rs-timer__fill"));
     expect(fill?.style.animation).toContain("20s");
+  });
+
+  it("holds the next slide while the title tooltip is active", async () => {
+    vi.useFakeTimers();
+    try {
+      const full =
+        "This is a very long title that goes well beyond fifty characters in length";
+      const { session } = makeSession({
+        settingsOverrides: { autoplay: true, imageTimerSeconds: 1 },
+        pages: [
+          {
+            slides: [imageSlide("a", { title: full }), imageSlide("b")],
+            after: null,
+            exhausted: true,
+            postsScanned: 2,
+          },
+        ],
+      });
+      await session.start();
+      const titleText = /** @type {HTMLElement | null} */ (
+        q(".rs-meta__title-text")
+      );
+      titleText?.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
+      q("img.reddit-slideshow-media")?.dispatchEvent(new Event("load"));
+      await Promise.resolve();
+      await Promise.resolve();
+
+      vi.advanceTimersByTime(1000);
+      expect(mediaSrc()).toBe("https://i.redd.it/a.jpg");
+
+      titleText?.dispatchEvent(new MouseEvent("mouseleave", { bubbles: true }));
+      expect(mediaSrc()).toBe("https://i.redd.it/b.jpg");
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("skips broken media and records it in the skipped list", async () => {
@@ -1262,6 +1380,21 @@ describe("createSlideshowSession", () => {
     expect(saved.at(-1)).toEqual({ imageTimerSeconds: expected });
     const fill = /** @type {HTMLElement | null} */ (q(".rs-timer__fill"));
     expect(fill?.style.animation).toContain(`${expected}s`);
+  });
+
+  it("ignores synthetic settings changes from the page", async () => {
+    /** @type {object[]} */
+    const saved = [];
+    const { session } = makeSession({
+      saveSettings: async (patch) => saved.push(patch),
+    });
+    await session.start();
+    const range = /** @type {HTMLInputElement} */ (q(".rs-set__range"));
+    range.value = "20";
+
+    range.dispatchEvent(untrustedEvent("change"));
+
+    expect(saved).toEqual([]);
   });
 
   it("pan-zooms only oversized (UHD) images", async () => {
@@ -1533,10 +1666,15 @@ describe("createSlideshowSession", () => {
     ]);
   });
 
-  it("blocks the author and skips to the next post with the I key", async () => {
+  it("locally ignores the current author, skips their loaded posts, and still tries Reddit block", async () => {
     /** @type {string[]} */
     const blocked = [];
+    /** @type {object[]} */
+    const saved = [];
     const { session } = makeSession({
+      saveSettings: async (patch) => {
+        saved.push(patch);
+      },
       block: async (name) => {
         blocked.push(name);
         return { ok: true };
@@ -1544,21 +1682,46 @@ describe("createSlideshowSession", () => {
       pages: [
         {
           slides: [
-            imageSlide("p1", { postId: "p1", author: "spez" }),
+            imageSlide("p1", { postId: "p1", author: "Spez" }),
             imageSlide("p2", { postId: "p2", author: "other" }),
+            imageSlide("p3", { postId: "p3", author: "spez" }),
           ],
           after: null,
           exhausted: true,
-          postsScanned: 2,
+          postsScanned: 3,
         },
       ],
     });
     await session.start();
     session.handleKeydown(key("i"));
     await flush();
-    expect(blocked).toEqual(["spez"]);
+    expect(saved.at(-1)).toEqual({ ignoredAuthors: ["spez"] });
+    expect(blocked).toEqual(["Spez"]);
     expect(mediaSrc()).toBe("https://i.redd.it/p2.jpg");
-    expect(text(".rs-vote-flash")).toContain("spez");
+    expect(text(".rs-skipped")).toBe("2 skipped");
+    expect(text(".rs-vote-flash")).toContain("Spez");
+  });
+
+  it("skips stored ignored authors before their slides display", async () => {
+    const { session } = makeSession({
+      settingsOverrides: { ignoredAuthors: ["spez"] },
+      pages: [
+        {
+          slides: [
+            imageSlide("p1", { postId: "p1", author: "Spez" }),
+            imageSlide("p2", { postId: "p2", author: "other" }),
+            imageSlide("p3", { postId: "p3", author: "spez" }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 3,
+        },
+      ],
+    });
+    await session.start();
+    await flush();
+    expect(mediaSrc()).toBe("https://i.redd.it/p2.jpg");
+    expect(text(".rs-skipped")).toBe("2 skipped");
   });
 
   it("does nothing for the I key when the author is unknown", async () => {
@@ -1626,9 +1789,117 @@ describe("createSlideshowSession", () => {
     await session.start();
     session.handleKeydown(key("i"));
     await flush();
-    // The optimistic "Blocked u/spez" flash is replaced by the error flash.
-    expect(text(".rs-vote-flash")).toContain("Couldn't");
-    expect(text(".rs-vote-flash")).not.toContain("spez");
+    // Local ignore still sticks; the Reddit-side block failure is secondary.
+    expect(text(".rs-vote-flash")).toContain("block failed");
+    expect(text(".rs-vote-flash")).toContain("spez");
+  });
+
+  it("stops retrying Reddit blocks after a block-limit response but keeps local ignores", async () => {
+    /** @type {string[]} */
+    const blocked = [];
+    /** @type {object[]} */
+    const saved = [];
+    const { session } = makeSession({
+      saveSettings: async (patch) => {
+        saved.push(patch);
+      },
+      block: async (name) => {
+        blocked.push(name);
+        return {
+          ok: false,
+          error: { message: "BLOCK_LIMIT: too many blocked users" },
+        };
+      },
+      pages: [
+        {
+          slides: [
+            imageSlide("one", { author: "one" }),
+            imageSlide("two", { author: "two" }),
+            imageSlide("three", { author: "three" }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 3,
+        },
+      ],
+    });
+    await session.start();
+    session.handleKeydown(key("i")); // one: tries Reddit, discovers limit
+    await flush();
+    session.handleKeydown(key("i")); // two: local-only because limit is known
+    await flush();
+
+    expect(blocked).toEqual(["one"]);
+    expect(saved.at(-1)).toEqual({ ignoredAuthors: ["one", "two"] });
+    expect(mediaSrc()).toBe("https://i.redd.it/three.jpg");
+  });
+
+  it("removes a local ignore from the jump list and allows that author's loaded slides again", async () => {
+    /** @type {object[]} */
+    const saved = [];
+    const { session } = makeSession({
+      settingsOverrides: { ignoredAuthors: ["spez"] },
+      saveSettings: async (patch) => {
+        saved.push(patch);
+      },
+      pages: [
+        {
+          slides: [
+            imageSlide("p1", { postId: "p1", author: "spez" }),
+            imageSlide("p2", { postId: "p2", author: "other" }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 2,
+        },
+      ],
+    });
+    await session.start();
+    await flush();
+    expect(mediaSrc()).toBe("https://i.redd.it/p2.jpg");
+    expect(text(".rs-skipped")).toBe("1 skipped");
+
+    /** @type {HTMLElement} */ (q(".rs-meta__counter")).click();
+    /** @type {HTMLElement} */ (q(".rs-jump-panel__unignore")).click();
+    await flush();
+
+    expect(saved.at(-1)).toEqual({ ignoredAuthors: [] });
+    expect(q(".rs-skipped")?.hasAttribute("hidden")).toBe(true);
+    expect(q(".rs-jump-panel__item--skipped")).toBeNull();
+    /** @type {HTMLElement} */ (qa(".rs-jump-panel__item")[0]).click();
+    expect(mediaSrc()).toBe("https://i.redd.it/p1.jpg");
+  });
+
+  it("ignores synthetic unignore clicks from the page", async () => {
+    /** @type {object[]} */
+    const saved = [];
+    const { session } = makeSession({
+      settingsOverrides: { ignoredAuthors: ["spez"] },
+      saveSettings: async (patch) => {
+        saved.push(patch);
+      },
+      pages: [
+        {
+          slides: [
+            imageSlide("p1", { postId: "p1", author: "spez" }),
+            imageSlide("p2", { postId: "p2", author: "other" }),
+          ],
+          after: null,
+          exhausted: true,
+          postsScanned: 2,
+        },
+      ],
+    });
+    await session.start();
+    await flush();
+    /** @type {HTMLElement} */ (q(".rs-meta__counter")).click();
+
+    q(".rs-jump-panel__unignore")?.dispatchEvent(untrustedMouseEvent("click"));
+    await flush();
+
+    expect(saved).toEqual([]);
+    expect(text(".rs-skipped")).toBe("1 skipped");
+    expect(q(".rs-jump-panel__item--skipped")).toBeTruthy();
   });
 
   it("flashes an error when the friend write throws", async () => {

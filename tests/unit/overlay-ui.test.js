@@ -1,7 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { createOverlay } from "../../lib/overlay-ui.js";
 import { setLocale } from "../../lib/i18n.js";
 import { imageTimerStopSeconds } from "../../lib/settings.js";
+
+const overlayCss = readFileSync(join(process.cwd(), "assets/overlay.css"), {
+  encoding: "utf8",
+});
 
 /** @typedef {ReturnType<typeof createOverlay>} Overlay */
 
@@ -343,9 +349,12 @@ describe("createOverlay", () => {
       range.dispatchEvent(new Event("change", { bubbles: true }));
     }
     // The range is a stops index; the panel emits that stop's seconds.
-    expect(onChangeSetting).toHaveBeenCalledWith({
-      imageTimerSeconds: imageTimerStopSeconds(12),
-    });
+    expect(onChangeSetting).toHaveBeenCalledWith(
+      {
+        imageTimerSeconds: imageTimerStopSeconds(12),
+      },
+      expect.any(Event),
+    );
   });
 
   it("renders a slide with the position counter, title, and NSFW tag", () => {
@@ -373,7 +382,7 @@ describe("createOverlay", () => {
     ).toBeTruthy();
   });
 
-  it("truncates a long title to 50 chars + ellipsis, keeping the full title on hover", () => {
+  it("truncates a long title to 50 chars + ellipsis, keeping the full title for assistive tech", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
     const full =
@@ -391,7 +400,129 @@ describe("createOverlay", () => {
     expect(text?.textContent).toBe(`${full.slice(0, 50).trimEnd()}…`);
     // Truncated visible text is 50 chars of title plus the ellipsis.
     expect(text?.textContent?.length).toBe(51);
-    expect(text?.title).toBe(full);
+    expect(text?.getAttribute("aria-label")).toBe(full);
+    expect(text?.hasAttribute("title")).toBe(false);
+  });
+
+  it("shows the full title tooltip after the pointer rests for 200ms", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    const full =
+      "This is a very long title that goes well beyond fifty characters in length";
+    overlay.renderCurrent(imageSlide({ title: full }), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    const text = /** @type {HTMLElement | null} */ (
+      overlay.root.querySelector(".rs-meta__title-text")
+    );
+    const tooltip = /** @type {HTMLElement | null} */ (
+      overlay.root.querySelector(".rs-title-tip")
+    );
+
+    text?.dispatchEvent(
+      new MouseEvent("mouseenter", { clientX: 120, clientY: 720 }),
+    );
+    expect(tooltip?.hidden).toBe(true);
+    vi.advanceTimersByTime(199);
+    expect(tooltip?.hidden).toBe(true);
+    vi.advanceTimersByTime(1);
+    expect(tooltip?.hidden).toBe(false);
+    expect(tooltip?.textContent).toBe(full);
+
+    text?.dispatchEvent(new MouseEvent("mouseleave"));
+    expect(tooltip?.hidden).toBe(true);
+
+    text?.dispatchEvent(
+      new MouseEvent("mouseenter", { clientX: 120, clientY: 720 }),
+    );
+    vi.advanceTimersByTime(100);
+    text?.dispatchEvent(
+      new MouseEvent("mousemove", {
+        clientX: 128,
+        clientY: 720,
+        bubbles: true,
+      }),
+    );
+    vi.advanceTimersByTime(199);
+    expect(tooltip?.hidden).toBe(true);
+    vi.advanceTimersByTime(1);
+    expect(tooltip?.hidden).toBe(false);
+    expect(tooltip?.textContent).toBe(full);
+
+    text?.dispatchEvent(new MouseEvent("mouseleave"));
+    expect(tooltip?.hidden).toBe(true);
+  });
+
+  it("keeps a pinned idle title interactive with a default cursor", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.setSettings(
+      /** @type {any} */ ({
+        ...PANEL_SETTINGS,
+        alwaysShowMeta: true,
+        alwaysShowCount: false,
+      }),
+    );
+    overlay.show();
+    overlay.renderCurrent(imageSlide({ title: "Interactive title" }), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    overlay.root.dispatchEvent(new Event("mouseleave"));
+
+    expect(overlay.root.classList.contains("rs-pin-meta")).toBe(true);
+    expect(overlay.root.classList.contains("rs-idle")).toBe(true);
+    expect(overlayCss).toMatch(
+      /#reddit-slideshow-root\.rs-pin-meta\.rs-idle\s+\.rs-meta\s*{[^}]*pointer-events:\s*auto;/,
+    );
+    expect(overlayCss).toMatch(
+      /\.rs-meta__title-text\s*{[^}]*cursor:\s*default;/,
+    );
+    expect(overlayCss).toMatch(
+      /\.rs-meta__title-text\s*{[^}]*user-select:\s*none;/,
+    );
+  });
+
+  it("holds auto-advance while the truncated title tooltip is active", () => {
+    /** @type {boolean[]} */
+    const holds = [];
+    const overlay = createOverlay({
+      ...noopHandlers(),
+      onTitleTooltipHoldChange: (active) => holds.push(active),
+    });
+    overlay.show();
+    const full =
+      "This is a very long title that goes well beyond fifty characters in length";
+    overlay.renderCurrent(imageSlide({ title: full }), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    const text = /** @type {HTMLElement | null} */ (
+      overlay.root.querySelector(".rs-meta__title-text")
+    );
+
+    text?.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
+    vi.advanceTimersByTime(600);
+    text?.dispatchEvent(
+      new MouseEvent("mousemove", {
+        clientX: 100,
+        clientY: 100,
+        bubbles: true,
+      }),
+    );
+    vi.advanceTimersByTime(600);
+    text?.dispatchEvent(new MouseEvent("mouseleave", { bubbles: true }));
+
+    expect(holds).toEqual([true, false]);
   });
 
   it("renders a clickable /u/author byline rooted at the permalink origin", () => {
@@ -1098,16 +1229,30 @@ describe("createOverlay", () => {
     expect(overlay.root.classList.contains("rs-idle")).toBe(false);
   });
 
-  it("dismisses an open settings panel when the overlay goes idle", () => {
+  it("keeps an open settings panel visible when a slide change lets the chrome go idle", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
+    overlay.renderCurrent(imageSlide({ title: "First" }), {
+      index: 0,
+      total: 2,
+      exhausted: false,
+      effectiveSeconds: 5,
+      playing: true,
+    });
     clickByLabel(overlay.root, "Settings");
     const panel = /** @type {HTMLElement | null} */ (
       overlay.root.querySelector(".rs-settings-panel")
     );
     expect(panel?.hidden).toBe(false);
-    overlay.root.dispatchEvent(new Event("mouseleave")); // leave → idle
-    expect(panel?.hidden).toBe(true);
+    overlay.renderCurrent(imageSlide({ title: "Second" }), {
+      index: 1,
+      total: 2,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    overlay.root.dispatchEvent(new Event("mouseleave")); // force idle
+    expect(panel?.hidden).toBe(false);
     expect(overlay.root.classList.contains("rs-idle")).toBe(true);
   });
 
@@ -1311,6 +1456,76 @@ describe("createOverlay", () => {
     expect(
       overlay.root.querySelector(".rs-skipped-panel__reason")?.textContent,
     ).toBe("Duplicate image");
+  });
+
+  it("shows an unignore action for locally ignored rows in the jump list", () => {
+    const onJumpTo = vi.fn();
+    const onUnignoreAuthor = vi.fn();
+    const overlay = createOverlay({
+      ...noopHandlers(),
+      onJumpTo,
+      onUnignoreAuthor,
+    });
+    overlay.setJumpList(
+      [
+        imageSlide({
+          author: "spez",
+          skipKind: "ignored-author",
+          ignoredAuthorKey: "spez",
+          skipReason: "Ignored u/spez",
+        }),
+      ],
+      0,
+      1,
+    );
+    /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-meta__counter")
+    ).dispatchEvent(new Event("click", { bubbles: true }));
+
+    const action = /** @type {HTMLButtonElement | null} */ (
+      overlay.root.querySelector(".rs-jump-panel__unignore")
+    );
+    expect(action?.textContent).toBe("Unignore");
+    expect(action?.getAttribute("aria-label")).toBe("Unignore u/spez");
+    action?.click();
+
+    expect(onUnignoreAuthor).toHaveBeenCalledWith("spez", expect.any(Event));
+    expect(onJumpTo).not.toHaveBeenCalled();
+  });
+
+  it("shows an unignore action for locally ignored rows in the skipped list", () => {
+    const onOpenOriginal = vi.fn();
+    const onUnignoreAuthor = vi.fn();
+    const overlay = createOverlay({
+      ...noopHandlers(),
+      onOpenOriginal,
+      onUnignoreAuthor,
+    });
+    overlay.setSkipped(
+      [
+        imageSlide({
+          title: "Ignored post",
+          author: "spez",
+          skipKind: "ignored-author",
+          ignoredAuthorKey: "spez",
+          skipReason: "Ignored u/spez",
+        }),
+      ],
+      1,
+    );
+    /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-skipped")
+    ).dispatchEvent(new Event("click", { bubbles: true }));
+
+    const action = /** @type {HTMLButtonElement | null} */ (
+      overlay.root.querySelector(".rs-skipped-panel__unignore")
+    );
+    expect(action?.textContent).toBe("Unignore");
+    expect(action?.getAttribute("aria-label")).toBe("Unignore u/spez");
+    action?.click();
+
+    expect(onUnignoreAuthor).toHaveBeenCalledWith("spez", expect.any(Event));
+    expect(onOpenOriginal).not.toHaveBeenCalled();
   });
 
   it("shows domain + type columns and flags auto-skipped slides in the jump list", () => {
@@ -1786,6 +2001,65 @@ describe("createOverlay", () => {
     expect(overlay.root.querySelectorAll(".rs-slide").length).toBe(1);
   });
 
+  it("ignores decode completion from an image skipped during rapid advances", async () => {
+    vi.useRealTimers();
+    let ready = 0;
+    const overlay = createOverlay({
+      ...noopHandlers(),
+      onMediaReady: () => {
+        ready += 1;
+      },
+    });
+    overlay.show();
+
+    /** @type {(() => void) | undefined} */
+    let resolveB;
+    const ImageElement = window.HTMLImageElement;
+    const originalDecode = ImageElement.prototype.decode;
+    Object.defineProperty(ImageElement.prototype, "decode", {
+      configurable: true,
+      value() {
+        if (this.dataset.slideId === "b") {
+          return new Promise((resolve) => {
+            resolveB = () => resolve(undefined);
+          });
+        }
+        return Promise.resolve();
+      },
+    });
+
+    try {
+      renderImageAt(overlay, "a", 0);
+      await markImageReady(overlay, "a");
+
+      renderImageAt(overlay, "b", 1);
+      imgFor(overlay, "b")?.dispatchEvent(new Event("load"));
+      await Promise.resolve();
+      expect(ready).toBe(1);
+
+      renderImageAt(overlay, "c", 2);
+      resolveB?.();
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(ready).toBe(1);
+      expect(imgFor(overlay, "b")).toBeNull();
+      expect(imgFor(overlay, "c")).toBeTruthy();
+
+      await markImageReady(overlay, "c");
+      expect(ready).toBe(2);
+    } finally {
+      if (originalDecode) {
+        Object.defineProperty(ImageElement.prototype, "decode", {
+          configurable: true,
+          value: originalDecode,
+        });
+      } else {
+        Reflect.deleteProperty(ImageElement.prototype, "decode");
+      }
+    }
+  });
+
   it("tags the incoming frame with the chosen transition and direction", async () => {
     vi.useRealTimers();
     const overlay = createOverlay(noopHandlers());
@@ -2020,12 +2294,13 @@ describe("help panel", () => {
     expect(helpPanel(overlay)?.hidden).toBe(true);
   });
 
-  it("going idle hides the help panel", () => {
+  it("going idle leaves the help panel open", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
     helpBtn(overlay)?.click();
     overlay.root.dispatchEvent(new Event("mouseleave"));
-    expect(helpPanel(overlay)?.hidden).toBe(true);
+    expect(helpPanel(overlay)?.hidden).toBe(false);
+    expect(overlay.root.classList.contains("rs-idle")).toBe(true);
   });
 });
 

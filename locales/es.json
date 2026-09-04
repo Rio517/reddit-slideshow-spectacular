@@ -96,8 +96,8 @@
     "description": "Help-panel shortcut description: download."
   },
   "helpShortcutBlock": {
-    "message": "Bloquear al autor y omitir su publicación",
-    "description": "Help-panel shortcut description: block author."
+    "message": "Ignorar/bloquear al autor y omitir sus publicaciones",
+    "description": "Help-panel shortcut description: ignore/block author."
   },
   "helpShortcutFriend": {
     "message": "Agregar al autor como amigo o seguirlo",
@@ -428,6 +428,11 @@
     "message": "Imagen duplicada",
     "description": "Skip reason: a perceptual-duplicate image was skipped."
   },
+  "skipReasonIgnoredAuthor": {
+    "message": "Ignorado u/$user$",
+    "description": "Skip reason: this slide's author is in the local ignored-author list.",
+    "placeholders": { "user": { "content": "$1" } }
+  },
   "optSubtitle": {
     "message": "La configuración se aplica la próxima vez que inicies un pase de diapositivas.",
     "description": "Options page subtitle under the heading."
@@ -663,6 +668,35 @@
   "uiBlocked": {
     "message": "Bloqueado u/$user$",
     "description": "Toast confirming the author was blocked. $user$ is the username.",
+    "placeholders": { "user": { "content": "$1" } }
+  },
+  "uiIgnoredLocal": {
+    "message": "Ignorado u/$user$ en Slideshow",
+    "description": "Toast confirming the author was added to the local slideshow ignored-author list.",
+    "placeholders": { "user": { "content": "$1" } }
+  },
+  "uiIgnoredAndBlocked": {
+    "message": "Ignorado y bloqueado u/$user$",
+    "description": "Toast confirming the local ignore and Reddit account block both succeeded.",
+    "placeholders": { "user": { "content": "$1" } }
+  },
+  "uiIgnoredBlockFailed": {
+    "message": "Ignorado u/$user$ en Slideshow; falló el bloqueo en Reddit",
+    "description": "Toast confirming the local ignore succeeded but Reddit's block write failed.",
+    "placeholders": { "user": { "content": "$1" } }
+  },
+  "uiUnignore": {
+    "message": "Dejar de ignorar",
+    "description": "Compact button text that removes a local slideshow author ignore."
+  },
+  "uiUnignoreAuthor": {
+    "message": "Dejar de ignorar u/$user$",
+    "description": "Accessible label for a button that removes a local slideshow author ignore.",
+    "placeholders": { "user": { "content": "$1" } }
+  },
+  "uiUnignoredAuthor": {
+    "message": "Ya no se ignora u/$user$ en Slideshow",
+    "description": "Toast confirming the author was removed from the local slideshow ignored-author list.",
     "placeholders": { "user": { "content": "$1" } }
   },
   "uiFriended": {

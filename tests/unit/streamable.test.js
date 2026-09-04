@@ -22,6 +22,11 @@ const VIDEO = {
   },
 };
 
+const providerFetchOptions = {
+  credentials: "omit",
+  referrerPolicy: "no-referrer",
+};
+
 describe("createStreamableResolver", () => {
   it("resolves the mp4 url, dimensions, and duration from the public API", async () => {
     const fetchImpl = vi.fn(async () => jsonResponse(VIDEO));
@@ -37,6 +42,7 @@ describe("createStreamableResolver", () => {
     expect(media.sourceHeight).toBe(720);
     expect(fetchImpl).toHaveBeenCalledWith(
       "https://api.streamable.com/videos/abc123",
+      providerFetchOptions,
     );
   });
 

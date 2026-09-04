@@ -857,7 +857,10 @@ describe("createMessageRouter - block", () => {
         throw new Error("nope");
       },
     });
-    expect(await router(blockMsg("spez"), OWN)).toEqual({ ok: false });
+    expect(await router(blockMsg("spez"), OWN)).toMatchObject({
+      ok: false,
+      error: { message: "nope" },
+    });
   });
 });
 

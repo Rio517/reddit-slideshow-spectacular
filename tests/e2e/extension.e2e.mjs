@@ -21,6 +21,9 @@ const EXT = resolve(process.cwd(), ".output/chrome-mv3");
 const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 const FEED = "https://old.reddit.com/r/slideshowspectacular/#rs-slideshow";
+const LONG_TITLE =
+  "A test sunset with enough extra words to prove the full-title tooltip arrow renders";
+const LONG_TITLE_TRUNCATED = `${LONG_TITLE.slice(0, 50).trimEnd()}…`;
 
 // A fixed two-image listing - the assertions key off these exact values, so the
 // run is independent of whatever real posts the subreddit holds.
@@ -31,7 +34,7 @@ const LISTING = {
     children: [
       post(
         "one",
-        "A test sunset",
+        LONG_TITLE,
         "demo_user",
         "https://i.redd.it/one.jpg",
         1920,
@@ -226,12 +229,55 @@ async function main() {
       assert.equal(slide1.counter, "1 / 3"),
     );
     check("the byline shows author, subreddit, domain, and resolution", () => {
-      assert.equal(slide1.title, "A test sunset");
+      assert.equal(slide1.title, LONG_TITLE_TRUNCATED);
       assert.equal(slide1.author, "/u/demo_user");
       assert.equal(slide1.subreddit, "/r/slideshowspectacular");
       assert.equal(slide1.domain, "i.redd.it");
       assert.equal(slide1.res, "1920×1080");
     });
+    const titlePoint = await page.evaluate(() => {
+      const text = document
+        .querySelector("#reddit-slideshow-host")
+        ?.shadowRoot?.querySelector(".rs-meta__title-text");
+      const rect = text?.getBoundingClientRect();
+      return rect
+        ? {
+            x: rect.left + Math.min(rect.width / 2, rect.width - 2),
+            y: rect.top + rect.height / 2,
+          }
+        : null;
+    });
+    if (titlePoint) await page.mouse.move(titlePoint.x, titlePoint.y);
+    const tooltip = await page
+      .waitForFunction(
+        () => {
+          const tip = /** @type {HTMLElement | null} */ (
+            document
+              .querySelector("#reddit-slideshow-host")
+              ?.shadowRoot?.querySelector(".rs-title-tip")
+          );
+          if (!tip || tip.hidden) return null;
+          const after = window.getComputedStyle(tip, "::after");
+          return {
+            text: tip.textContent,
+            afterContent: after.content,
+            afterBorderTopWidth: after.borderTopWidth,
+            afterBorderTopColor: after.borderTopColor,
+            afterBottom: after.bottom,
+          };
+        },
+        { timeout: 1000 },
+      )
+      .then((handle) => handle.jsonValue())
+      .catch(() => null);
+    check("the long-title tooltip renders with a bottom arrow", () => {
+      assert.equal(tooltip?.text, LONG_TITLE);
+      assert.equal(tooltip?.afterContent, '""');
+      assert.equal(tooltip?.afterBorderTopWidth, "7px");
+      assert.notEqual(tooltip?.afterBorderTopColor, "rgba(0, 0, 0, 0)");
+      assert.match(tooltip?.afterBottom ?? "", /^-7/);
+    });
+    await page.mouse.move(20, 20);
 
     // The counter opens the jump-to-post list.
     await page.evaluate(() =>
@@ -243,6 +289,12 @@ async function main() {
     const jump = await readMeta(page);
     check("the jump-to-post list lists every loaded post", () =>
       assert.equal(jump.jumpItems, 3),
+    );
+    await page.evaluate(() =>
+      document
+        .querySelector("#reddit-slideshow-host")
+        ?.shadowRoot?.querySelector(".rs-meta__counter")
+        ?.dispatchEvent(new Event("click", { bubbles: true })),
     );
 
     // The right arrow advances to the next slide.
@@ -309,20 +361,31 @@ async function main() {
 
     // Regression: a pan-zoomed portrait image must spread into the viewport's
     // side space, not stay clipped to its own fitted column (the .rs-slide
-    // frame). Enable the toggle through the inline settings panel (synchronous
-    // with the overlay's live settings - no storage-propagation race), advance
-    // to the tall slide, seek the animation to mid-pan, and hit-test a point in
-    // what was the side letterbox: the zoomed image must be painted there.
-    await page.evaluate(() => {
-      const sr = document.querySelector("#reddit-slideshow-host")?.shadowRoot;
-      const rows = sr?.querySelectorAll(".rs-set__check") ?? [];
-      for (const row of rows) {
-        if (!row.textContent?.includes("Pan & zoom")) continue;
-        const input = row.querySelector("input");
-        input.checked = true;
-        input.dispatchEvent(new Event("change", { bubbles: true }));
-      }
-    });
+    // frame). Enable the toggle through real input so event.isTrusted hardening
+    // is exercised, advance to the tall slide, seek the animation to mid-pan,
+    // and hit-test a point in what was the side letterbox: the zoomed image must
+    // be painted there.
+    await page.mouse.move(100, 100);
+    await page.waitForFunction(
+      () =>
+        !document
+          .querySelector("#reddit-slideshow-host")
+          ?.shadowRoot?.getElementById("reddit-slideshow-root")
+          ?.classList.contains("rs-idle"),
+      { timeout: 3000 },
+    );
+    await page.getByRole("button", { name: "Settings", exact: true }).click();
+    await page.getByLabel("Pan & zoom large images", { exact: true }).check();
+    await page.keyboard.press("Escape");
+    await page.waitForFunction(
+      () =>
+        Boolean(
+          document
+            .querySelector("#reddit-slideshow-host")
+            ?.shadowRoot?.querySelector(".rs-settings-panel")?.hidden,
+        ),
+      { timeout: 3000 },
+    );
     await page.evaluate(() =>
       document
         .querySelector("#reddit-slideshow-host")

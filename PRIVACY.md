@@ -1,6 +1,6 @@
 # Privacy Policy - Reddit Slideshow Spectacular!
 
-_Last updated: 2026-08-19_
+_Last updated: 2026-09-04_
 
 **Short version: Reddit Slideshow Spectacular! collects nothing, sends nothing to
 the developer, and has no analytics, tracking, ads, or accounts. Everything it
@@ -9,13 +9,13 @@ already viewing into a full-screen media slideshow.
 
 ## What the extension stores
 
-Only your own settings - the per-image timer, slide transition, timer-bar
-mode, autoplay, start-muted, Include-NSFW, the two de-duplication toggles, the
-max-load-wait, the pan & zoom options, your download folder name, and your
-interface language. These are
-saved with the browser's local extension storage (`storage.local`) **on your
-computer**. They are not synced, uploaded, or shared, and contain no personal
-information. Removing the extension removes them.
+Only your own settings and local slideshow ignore list - the per-image timer,
+slide transition, timer-bar mode, autoplay, start-muted, Include-NSFW, the two
+de-duplication toggles, the max-load-wait, the pan & zoom options, your download
+folder name, your interface language, and Reddit usernames you choose to skip.
+These are saved with the browser's local extension storage (`storage.local`)
+**on your computer**. They are not synced, uploaded, or shared. Removing the
+extension removes them.
 
 ## Network requests the extension makes
 
@@ -43,17 +43,18 @@ operated by the developer (there is none):
   cookies to Reddit (and `/api/me.json`, for the required CSRF token) - and to
   Reddit only:
   - **↑/↓** casts an upvote/downvote on the current post (`/api/vote`).
-  - **I** blocks the current post's author (`/api/block_user`), then skips past
-    their post.
+  - **I** adds the author to the local slideshow ignore list, skips their
+    current and future loaded posts, and tries to block them on Reddit
+    (`/api/block_user`) until Reddit reports the account block-list limit.
   - **A** adds the author as a friend, or follows them (`/api/friend`).
 
   These are the **only** actions the extension takes that write to your Reddit
   account, and each happens **only** when you press its key. Nothing is sent
   anywhere but Reddit.
 
-- **Download.** The download control saves the current media to your computer with
-  the browser's downloads API; the file is fetched from its host (without cookies)
-  and saved locally - nothing is uploaded.
+- **Download.** The download control asks the browser's downloads API to save the
+  current media from its host. The browser download stack may send cookies for
+  that file host. Nothing is uploaded.
 - **Provider clips.** For some providers the extension first resolves a directly-
   playable video URL - from the provider's API (`api.redgifs.com`,
   `api.streamable.com`) or by rewriting the link (Imgur, Giphy). Your browser then
@@ -80,7 +81,8 @@ operated by the developer (there is none):
 
 ## Permissions and why they are needed
 
-- **`storage`** - to save your settings locally (above).
+- **`storage`** - to save your settings and local slideshow ignore list locally
+  (above).
 - **Host access to `old.reddit.com`, `www.reddit.com`** - to read the listing
   JSON for the page you are on. (Reddit video on `v.redd.it` and external image
   hosts load directly in the page and need no permission.)

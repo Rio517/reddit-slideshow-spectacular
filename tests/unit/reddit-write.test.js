@@ -95,7 +95,24 @@ describe("createRedditWriter", () => {
     expect(req?.opts?.credentials).toBe("include");
     const params = new URLSearchParams(req?.opts?.body);
     expect(params.get("name")).toBe("spez");
+    expect(params.get("api_type")).toBe("json");
     expect(params.get("uh")).toBe("MH");
+  });
+
+  it("throws when a reddit form response reports JSON errors", async () => {
+    const fetchImpl = vi.fn(async (/** @type {any} */ url) =>
+      String(url).includes("/api/me.json")
+        ? jsonResponse({ data: { modhash: "MH" } })
+        : jsonResponse({
+            json: {
+              errors: [["BLOCK_LIMIT", "You have too many blocked users", ""]],
+            },
+          }),
+    );
+    const { blockUser } = createRedditWriter({
+      fetchImpl: /** @type {any} */ (fetchImpl),
+    });
+    await expect(blockUser("spez")).rejects.toThrow("BLOCK_LIMIT");
   });
 
   it("friends a user: POSTs type=friend + name + uh to /api/friend", async () => {

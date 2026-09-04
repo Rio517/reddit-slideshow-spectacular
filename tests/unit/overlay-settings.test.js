@@ -85,9 +85,12 @@ describe("createSettingsPanel", () => {
     // Move to a stop index; the panel emits that stop's seconds.
     range.value = "10";
     range.dispatchEvent(new Event("change", { bubbles: true }));
-    expect(onChange).toHaveBeenCalledWith({
-      imageTimerSeconds: imageTimerStopSeconds(10),
-    });
+    expect(onChange).toHaveBeenCalledWith(
+      {
+        imageTimerSeconds: imageTimerStopSeconds(10),
+      },
+      expect.any(Event),
+    );
   });
 
   it("reflects and emits the timer-bar radio", () => {
@@ -102,7 +105,10 @@ describe("createSettingsPanel", () => {
     );
     all.checked = true;
     all.dispatchEvent(new Event("change", { bubbles: true }));
-    expect(onChange).toHaveBeenCalledWith({ timerBar: "all" });
+    expect(onChange).toHaveBeenCalledWith(
+      { timerBar: "all" },
+      expect.any(Event),
+    );
   });
 
   it("emits a boolean patch when a checkbox toggles", () => {
@@ -113,7 +119,10 @@ describe("createSettingsPanel", () => {
     );
     autoplay.checked = true;
     autoplay.dispatchEvent(new Event("change", { bubbles: true }));
-    expect(onChange).toHaveBeenCalledWith({ autoplay: true });
+    expect(onChange).toHaveBeenCalledWith(
+      { autoplay: true },
+      expect.any(Event),
+    );
   });
 
   it("reflects alwaysShowCount and emits its patch on toggle", () => {
@@ -131,7 +140,10 @@ describe("createSettingsPanel", () => {
     expect(box.checked).toBe(true);
     box.checked = false;
     box.dispatchEvent(new Event("change", { bubbles: true }));
-    expect(onChange).toHaveBeenCalledWith({ alwaysShowCount: false });
+    expect(onChange).toHaveBeenCalledWith(
+      { alwaysShowCount: false },
+      expect.any(Event),
+    );
   });
 
   it("labels the timer-bar radios as a radiogroup", () => {

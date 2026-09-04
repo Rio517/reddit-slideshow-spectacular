@@ -17,6 +17,11 @@ const GIF = {
   height: 1080,
 };
 
+const providerFetchOptions = {
+  credentials: "omit",
+  referrerPolicy: "no-referrer",
+};
+
 describe("createRedgifsResolver", () => {
   it("resolves an id to the hd mp4 with duration + audio, caching the token", async () => {
     const fetchImpl = vi.fn(async (/** @type {any} */ url) =>
@@ -41,10 +46,15 @@ describe("createRedgifsResolver", () => {
       String(c[0]).includes("/auth/temporary"),
     );
     expect(authCalls.length).toBe(1); // token reused across resolves
+    const authCall = /** @type {any} */ (authCalls[0]);
+    expect(authCall?.[1]).toEqual(providerFetchOptions);
     const gifCall = /** @type {any} */ (
       fetchImpl.mock.calls.find((c) => String(c[0]).includes("/gifs/abc"))
     );
-    expect(gifCall?.[1]?.headers?.Authorization).toBe("Bearer T1");
+    expect(gifCall?.[1]).toEqual({
+      ...providerFetchOptions,
+      headers: { Authorization: "Bearer T1" },
+    });
   });
 
   it("refreshes the token once on a 401", async () => {

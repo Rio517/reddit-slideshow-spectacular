@@ -10,6 +10,11 @@ function jsonResponse(body, { status = 200 } = {}) {
   return { ok: status >= 200 && status < 300, status, json: async () => body };
 }
 
+const providerFetchOptions = {
+  credentials: "omit",
+  referrerPolicy: "no-referrer",
+};
+
 describe("createImgurAlbumResolver", () => {
   it("parses the ajaxalbums fixture into image descriptors", async () => {
     const fetchImpl = vi.fn(async () => jsonResponse(albumFixture));
@@ -39,6 +44,7 @@ describe("createImgurAlbumResolver", () => {
     ]);
     expect(fetchImpl).toHaveBeenCalledWith(
       "https://imgur.com/ajaxalbums/getimages/2orxIa1/hit.json",
+      providerFetchOptions,
     );
   });
 

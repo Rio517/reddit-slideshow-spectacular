@@ -79,6 +79,24 @@ describe("SlideshowController", () => {
     expect(rendered).toEqual(["a", "b"]);
   });
 
+  it("defers a timer advance while auto-advance is held", () => {
+    const { controller, rendered } = makeController();
+    controller.start({
+      slides: [slideWithId("a"), slideWithId("b")],
+      exhausted: true,
+      postsScanned: 2,
+    });
+    controller.setAutoAdvanceHeld(true);
+    controller.markReady();
+    vi.advanceTimersByTime(5000);
+    expect(rendered).toEqual(["a"]);
+    expect(controller.current?.id).toBe("a");
+
+    controller.setAutoAdvanceHeld(false);
+    expect(rendered).toEqual(["a", "b"]);
+    expect(controller.current?.id).toBe("b");
+  });
+
   it("reschedules the current image slide when the dwell changes live", () => {
     const { controller, rendered } = makeController({ imageTimerSeconds: 10 });
     controller.start({
@@ -160,6 +178,45 @@ describe("SlideshowController", () => {
     expect(controller.current?.id).toBe("a");
   });
 
+  it("starts at the first non-skipped slide", () => {
+    const { controller, rendered } = makeController();
+    controller.start({
+      slides: [
+        slideWithId("a", { skipReason: "Ignored u/spez" }),
+        slideWithId("b"),
+      ],
+      after: null,
+      exhausted: true,
+      postsScanned: 2,
+    });
+    expect(rendered).toEqual(["b"]);
+    expect(controller.current?.id).toBe("b");
+  });
+
+  it("keeps paging when the initial page has only skipped slides", () => {
+    const { controller, rendered, requested } = makeController();
+    controller.start({
+      slides: [
+        slideWithId("a", { skipReason: "Ignored u/spez" }),
+        slideWithId("b", { skipReason: "Ignored u/spez" }),
+        slideWithId("c", { skipReason: "Ignored u/spez" }),
+      ],
+      after: "t3_next",
+      exhausted: false,
+      postsScanned: 3,
+    });
+    expect(rendered).toEqual([]);
+    expect(requested).toEqual(["t3_next"]);
+
+    controller.append({
+      slides: [slideWithId("d")],
+      after: null,
+      exhausted: true,
+      postsScanned: 1,
+    });
+    expect(rendered).toEqual(["d"]);
+  });
+
   it("ends when only skipped slides remain ahead in an exhausted queue", () => {
     const { controller, ended } = makeController();
     controller.start({
@@ -194,6 +251,54 @@ describe("SlideshowController", () => {
     vi.advanceTimersByTime(5000); // image timer would have fired here
     expect(rendered).toEqual(["v"]);
     controller.mediaEnded();
+    expect(rendered).toEqual(["v", "b"]);
+  });
+
+  it("cancels the old video safety timer when a clip ends naturally", () => {
+    const { controller, rendered } = makeController();
+    controller.start({
+      slides: [
+        slideWithId("v", {
+          kind: "video",
+          durationMode: "media",
+          durationSeconds: 10,
+        }),
+        slideWithId("b"),
+        slideWithId("c"),
+      ],
+      exhausted: true,
+      postsScanned: 3,
+    });
+    controller.markReady();
+    vi.advanceTimersByTime(5000);
+    controller.mediaEnded();
+    expect(rendered).toEqual(["v", "b"]);
+
+    vi.advanceTimersByTime(7000); // original 12s video safety timer would fire here
+    expect(rendered).toEqual(["v", "b"]);
+    expect(controller.current?.id).toBe("b");
+  });
+
+  it("defers a video-ended transition while auto-advance is held without pausing", () => {
+    const { controller, rendered } = makeController();
+    controller.start({
+      slides: [
+        slideWithId("v", {
+          kind: "video",
+          durationMode: "media",
+          durationSeconds: 10,
+        }),
+        slideWithId("b"),
+      ],
+      exhausted: true,
+      postsScanned: 2,
+    });
+    controller.setAutoAdvanceHeld(true);
+    controller.mediaEnded();
+    expect(rendered).toEqual(["v"]);
+    expect(controller.paused).toBe(false);
+
+    controller.setAutoAdvanceHeld(false);
     expect(rendered).toEqual(["v", "b"]);
   });
 

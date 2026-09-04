@@ -9,6 +9,7 @@ import {
   imageTimerStopSeconds,
   formatImageTimer,
   UI_LOCALES,
+  normalizeAuthorKey,
 } from "../../lib/settings.js";
 
 describe("normalizeSettings", () => {
@@ -55,6 +56,17 @@ describe("normalizeSettings", () => {
   it("defaults contentDedup on (core dedup) and accepts a boolean", () => {
     expect(normalizeSettings({}).contentDedup).toBe(true);
     expect(normalizeSettings({ contentDedup: false }).contentDedup).toBe(false);
+  });
+
+  it("normalizes the hidden ignored-author list to unique lowercase username keys", () => {
+    expect(normalizeAuthorKey(" u/Spez ")).toBe("spez");
+    expect(normalizeAuthorKey("/u/Mario_123")).toBe("mario_123");
+    expect(normalizeAuthorKey("bad name!")).toBe("");
+    expect(
+      normalizeSettings({
+        ignoredAuthors: ["Spez", "u/spez", "MARIO_123", "", 42],
+      }).ignoredAuthors,
+    ).toEqual(["spez", "mario_123"]);
   });
 
   it("defaults maxLoadWaitSeconds to 5 and clamps to 1-30", () => {
@@ -150,6 +162,7 @@ describe("getSettings / saveSettings", () => {
       panZoomMinOversize: 1.5,
       locale: "auto",
       downloadSubfolder: "",
+      ignoredAuthors: [],
     });
   });
 

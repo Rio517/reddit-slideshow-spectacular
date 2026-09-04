@@ -561,6 +561,54 @@ iframe.reddit-slideshow-media {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.rs-title-tip {
+  --rs-title-tip-arrow-left: 22px;
+  position: fixed;
+  z-index: 9;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(10, 12, 18, 0.96);
+  color: var(--rs-fg);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+  font-size: 13px;
+  line-height: 1.35;
+  text-shadow: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+
+.rs-title-tip::before,
+.rs-title-tip::after {
+  content: "";
+  position: absolute;
+  left: var(--rs-title-tip-arrow-left);
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.rs-title-tip::before {
+  bottom: -8px;
+  border-inline: 8px solid transparent;
+  border-top: 8px solid rgba(255, 255, 255, 0.14);
+}
+
+.rs-title-tip::after {
+  bottom: -7px;
+  border-inline: 7px solid transparent;
+  border-top: 7px solid rgba(10, 12, 18, 0.96);
+}
+
+.rs-title-tip[hidden] {
+  display: none;
 }
 
 /* Vote arrow at the head of the title, sized to the text. The state modifier
@@ -745,13 +793,14 @@ iframe.reddit-slideshow-media {
 
 /* "Always show count": the top-left cluster (counter + skipped badge) survives
    the idle fade. "Always show meta": the bottom title/byline bar does. Each is
-   driven by its own setting; both stay non-interactive while idle (cursor is
-   hidden) - a mousemove wakes them. */
+   driven by its own setting. Meta remains interactive so a pinned title can
+   reveal its full-title tooltip without first wiggling the pointer elsewhere. */
 #reddit-slideshow-root.rs-pin-count.rs-idle .rs-topleft {
   opacity: 1;
 }
 #reddit-slideshow-root.rs-pin-meta.rs-idle .rs-meta {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .rs-btn {
@@ -1324,7 +1373,17 @@ iframe.reddit-slideshow-media {
   color: var(--rs-muted);
 }
 
+.rs-skipped-panel__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+}
+
 .rs-skipped-panel__item {
+  min-width: 0;
+  width: 100%;
   display: flex;
   align-items: baseline;
   gap: 8px;
@@ -1355,9 +1414,40 @@ iframe.reddit-slideshow-media {
   opacity: 0.85;
 }
 
-.rs-skipped-panel__item:hover {
+.rs-skipped-panel__item:hover,
+.rs-skipped-panel__row:hover .rs-skipped-panel__item {
   background: rgba(255, 255, 255, 0.1);
   color: var(--rs-accent);
+}
+
+.rs-skipped-panel__unignore {
+  flex: none;
+  height: 28px;
+  padding: 0 8px;
+  font: inherit;
+  font-size: 11px;
+  color: var(--rs-accent);
+  background: rgba(255, 122, 24, 0.1);
+  border: 1px solid rgba(255, 122, 24, 0.28);
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.16s ease,
+    background 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.rs-skipped-panel__row:hover .rs-skipped-panel__unignore,
+.rs-skipped-panel__row:focus-within .rs-skipped-panel__unignore {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.rs-skipped-panel__unignore:hover {
+  background: rgba(255, 122, 24, 0.18);
+  border-color: rgba(255, 122, 24, 0.45);
 }
 
 .rs-skipped-panel__note {
@@ -1661,7 +1751,17 @@ iframe.reddit-slideshow-media {
   color: var(--rs-muted);
 }
 
+.rs-jump-panel__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 4px;
+  border-radius: 7px;
+}
+
 .rs-jump-panel__item {
+  min-width: 0;
+  width: 100%;
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
@@ -1710,7 +1810,8 @@ iframe.reddit-slideshow-media {
   opacity: 0.7;
 }
 
-.rs-jump-panel__item:hover {
+.rs-jump-panel__item:hover,
+.rs-jump-panel__row:hover .rs-jump-panel__item {
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -1758,6 +1859,36 @@ iframe.reddit-slideshow-media {
   color: var(--rs-accent);
 }
 
+.rs-jump-panel__unignore {
+  align-self: center;
+  height: 28px;
+  padding: 0 8px;
+  font: inherit;
+  font-size: 11px;
+  color: var(--rs-accent);
+  background: rgba(255, 122, 24, 0.1);
+  border: 1px solid rgba(255, 122, 24, 0.28);
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.16s ease,
+    background 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.rs-jump-panel__row:hover .rs-jump-panel__unignore,
+.rs-jump-panel__row:focus-within .rs-jump-panel__unignore {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.rs-jump-panel__unignore:hover {
+  background: rgba(255, 122, 24, 0.18);
+  border-color: rgba(255, 122, 24, 0.45);
+}
+
 /* Thin, theme-matched scrollbars for the scrollable panels. */
 .rs-jump-panel,
 .rs-skipped-panel,
@@ -1797,6 +1928,8 @@ iframe.reddit-slideshow-media {
    their own (the .rs-btn / toggle rules above keep theirs). */
 .rs-jump-panel__item:focus-visible,
 .rs-skipped-panel__item:focus-visible,
+.rs-jump-panel__unignore:focus-visible,
+.rs-skipped-panel__unignore:focus-visible,
 .rs-skipped:focus-visible,
 .rs-help-panel__close:focus-visible,
 .rs-settings-panel__close:focus-visible,
