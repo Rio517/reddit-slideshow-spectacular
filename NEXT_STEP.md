@@ -1,7 +1,7 @@
 # NEXT_STEP - Reddit Slideshow Spectacular!
 
-**Branch:** `main` · **Status:** CI-green. v1.4.0 is live on both stores. v1.4.2
-is prepared locally - version and per-locale store copy refreshed, Firefox,
+**Branch:** `main` · **Status:** CI-green. v1.4.2 is live on both stores. v1.4.3
+is prepared locally as a video-preload hotfix - version and per-locale store copy refreshed, Firefox,
 Chrome, and source zips built, promo tiles and the demo reel regenerated, and
 the full unit/browser/package gates passed. The existing hero screenshots are
 intentionally reused for this release. The manual store rollout remains in §1.
@@ -41,10 +41,10 @@ giant commit.
 
 ### Requested, not yet done
 
-- **v1.4.2 store rollout.** Upload
-  `.output/reddit-slideshow-1.4.2-chrome.zip` to the Chrome Web Store and
-  `.output/reddit-slideshow-1.4.2-firefox.zip` plus
-  `.output/reddit-slideshow-1.4.2-sources.zip` (the build minifies) to Firefox
+- **v1.4.3 store rollout.** Upload
+  `.output/reddit-slideshow-1.4.3-chrome.zip` to the Chrome Web Store and
+  `.output/reddit-slideshow-1.4.3-firefox.zip` plus
+  `.output/reddit-slideshow-1.4.3-sources.zip` (the build minifies) to Firefox
   Add-ons. Paste the per-locale listing copy from
   `docs/store-listing/<lang>.md` (its what's-new shows the last two versions).
   The promo tiles and demo reel were regenerated; reuse the existing store hero

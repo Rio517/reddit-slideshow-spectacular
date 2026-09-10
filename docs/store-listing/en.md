@@ -16,10 +16,13 @@ Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard
 
 The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
 
+WHAT'S NEW - V1.4.3
+
+- FIXED: Preloaded videos now keep their buffered data when they appear, preventing duplicate downloads and long pauses between clips
+
 WHAT'S NEW - V1.4.2
 
 - NEW: Ignoring/blocking an author also adds them to a local Slideshow ignore list, so their posts keep being skipped even if Reddit refuses another account block
-- IMPROVED: Preloaded videos hand off more smoothly, reducing pauses between clips
 - FIXED: A timing bug when rapidly moving through photos could make the slide you land on advance too quickly
 - IMPROVED: Long post titles show a clearer 200ms tooltip, and reading it holds the next transition without pausing video playback
 - IMPROVED: Settings, help, jump, and skipped-post panels stay open independently of slide changes

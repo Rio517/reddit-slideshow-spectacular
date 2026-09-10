@@ -16,10 +16,13 @@ Reddit Slideshow Spectacular! trasforma i tuoi feed Reddit in una presentazione 
 
 La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave API, nessun accesso aggiuntivo, nessun account extra. Scorre i post multimediali nell'ordine in cui Reddit li restituisce e sfoglia automaticamente il feed, così la presentazione prosegue oltre la prima pagina.
 
+NOVITÀ - V1.4.3
+
+- CORRETTO: i video precaricati ora conservano i dati già memorizzati nel buffer quando vengono mostrati, evitando download duplicati e lunghe pause tra le clip
+
 NOVITÀ - V1.4.2
 
 - NUOVO: ignorare/bloccare un autore lo aggiunge anche a una lista locale di ignorati della presentazione, così i suoi post continuano a essere saltati anche se Reddit rifiuta un altro blocco dell'account
-- MIGLIORATO: i video precaricati passano più fluidamente, riducendo le pause tra una clip e l'altra
 - CORRETTO: un bug di temporizzazione durante l'avanzamento rapido tra foto poteva far avanzare troppo presto la diapositiva raggiunta
 - MIGLIORATO: i titoli lunghi mostrano un tooltip più chiaro dopo 200 ms, e leggerlo trattiene la transizione successiva senza mettere in pausa il video
 - MIGLIORATO: i pannelli impostazioni, aiuto, salto e post saltati restano aperti indipendentemente dai cambi di diapositiva

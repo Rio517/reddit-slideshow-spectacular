@@ -16,10 +16,13 @@ Reddit Slideshow Spectacular! convierte tus feeds de Reddit en un pase de diapos
 
 El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves de API, sin inicio de sesión adicional y sin cuentas extra. Recorre las publicaciones multimedia en el orden en que Reddit las devuelve y avanza por el feed de forma automática, de modo que el pase de diapositivas continúa más allá de la primera página.
 
+NOVEDADES - V1.4.3
+
+- CORREGIDO: los vídeos precargados conservan ahora sus datos almacenados en búfer al mostrarse, evitando descargas duplicadas y pausas largas entre clips
+
 NOVEDADES - V1.4.2
 
 - NUEVO: ignorar/bloquear a un autor también lo añade a una lista local de ignorados del pase, para que sus publicaciones se sigan omitiendo aunque Reddit rechace otro bloqueo de cuenta
-- MEJORADO: los vídeos precargados pasan de uno a otro con más fluidez, reduciendo las pausas entre clips
 - CORREGIDO: un error de temporización al avanzar rápidamente por fotos podía hacer que la diapositiva alcanzada avanzara demasiado pronto
 - MEJORADO: los títulos largos muestran un tooltip más claro tras 200 ms, y leerlo retrasa la siguiente transición sin pausar el vídeo
 - MEJORADO: los paneles de ajustes, ayuda, salto y publicaciones omitidas permanecen abiertos independientemente de los cambios de diapositiva
