@@ -161,6 +161,28 @@ describe("renderSlide", () => {
     expect(el.style.aspectRatio).toBe("1000 / 500");
   });
 
+  it("reuses a buffered video without assigning its source again", () => {
+    const src = "https://v.redd.it/x/CMAF_720.mp4";
+    const video = document.createElement("video");
+    let sourceAssignments = 0;
+    Object.defineProperty(video, "src", {
+      configurable: true,
+      get: () => src,
+      set: () => {
+        sourceAssignments += 1;
+      },
+    });
+
+    const el = renderSlide(
+      slide({ provider: "reddit-video", kind: "video", mediaUrl: src }),
+      document,
+      video,
+    );
+
+    expect(el).toBe(video);
+    expect(sourceAssignments).toBe(0);
+  });
+
   it("loops GIF-like Reddit video", () => {
     const el = /** @type {HTMLVideoElement} */ (
       renderSlide(slide({ kind: "video", isGif: true }))

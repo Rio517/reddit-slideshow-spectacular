@@ -975,6 +975,48 @@ describe("createOverlay", () => {
     expect(play).toHaveBeenCalledTimes(1);
   });
 
+  it("commits and starts an already-ready preloaded video without waiting for another load event", async () => {
+    const onMediaReady = vi.fn();
+    const overlay = createOverlay({ ...noopHandlers(), onMediaReady });
+    const video = document.createElement("video");
+    video.src = "https://v.redd.it/x/CMAF_720.mp4";
+    Object.defineProperty(video, "readyState", {
+      configurable: true,
+      value: 4,
+    });
+    Object.defineProperty(video, "duration", {
+      configurable: true,
+      value: 1.5,
+    });
+    video.play = vi.fn(() => Promise.resolve());
+
+    overlay.renderCurrent(
+      imageSlide({
+        kind: "video",
+        durationMode: "media",
+        mediaUrl: "https://v.redd.it/x/CMAF_720.mp4",
+      }),
+      {
+        index: 0,
+        total: 1,
+        exhausted: true,
+        effectiveSeconds: 5,
+        playing: true,
+        preloadedMedia: video,
+      },
+    );
+    await Promise.resolve();
+
+    expect(overlay.root.querySelector("video.reddit-slideshow-media")).toBe(
+      video,
+    );
+    expect(video.closest(".rs-slide")?.classList).not.toContain(
+      "rs-slide--pending",
+    );
+    expect(onMediaReady).toHaveBeenCalledTimes(1);
+    expect(video.play).toHaveBeenCalled();
+  });
+
   it("toggles the help panel via the exposed toggleHelp (the ? key path)", () => {
     const overlay = createOverlay(noopHandlers());
     const help = /** @type {HTMLElement | null} */ (

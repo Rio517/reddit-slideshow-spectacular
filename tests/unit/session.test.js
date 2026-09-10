@@ -1137,45 +1137,114 @@ describe("createSlideshowSession", () => {
     expect(videos.every((v) => v.src === "")).toBe(true);
   });
 
-  it("keeps the preloaded direct video alive while that video becomes current", async () => {
-    /** @type {Array<{ src: string, preload?: string }>} */
-    const videos = [];
+  it("sets Redgifs no-referrer policy before assigning the preload source", async () => {
+    /** @type {string[]} */
+    const operations = [];
     const { session } = makeSession({
       pages: [
         {
-          slides: [videoSlide("a"), videoSlide("b"), videoSlide("c")],
+          slides: [
+            imageSlide("a"),
+            videoSlide("b", {
+              provider: "redgifs",
+              mediaUrl: "https://media.redgifs.com/B.mp4",
+            }),
+          ],
           after: null,
           exhausted: true,
-          postsScanned: 3,
+          postsScanned: 2,
         },
       ],
       createVideo: () => {
-        const v = { src: "", preload: "" };
-        videos.push(v);
-        return v;
+        let src = "";
+        return {
+          tagName: "VIDEO",
+          preload: "",
+          muted: false,
+          get src() {
+            return src;
+          },
+          set src(value) {
+            src = value;
+            if (value) operations.push("src");
+          },
+          setAttribute(/** @type {string} */ name) {
+            operations.push(name);
+          },
+        };
       },
     });
 
     await session.start();
-    const preloadedB = videos.find(
-      (v) => v.src === "https://v.redd.it/b/CMAF_720.mp4",
+
+    expect(operations).toEqual(["referrerpolicy", "src"]);
+  });
+
+  it("does not transfer a video preload that already failed", async () => {
+    /** @type {HTMLVideoElement[]} */
+    const videos = [];
+    const { session } = makeSession({
+      pages: [
+        {
+          slides: [videoSlide("a"), videoSlide("b")],
+          after: null,
+          exhausted: true,
+          postsScanned: 2,
+        },
+      ],
+      createVideo: () => {
+        const video = document.createElement("video");
+        videos.push(video);
+        return video;
+      },
+    });
+
+    await session.start();
+    const preloaded = videos.find((video) =>
+      video.src.includes("/b/CMAF_720.mp4"),
     );
+    expect(preloaded).toBeTruthy();
+    Object.defineProperty(preloaded, "error", {
+      configurable: true,
+      value: { code: 4 },
+    });
 
     session.handleKeydown(key("ArrowRight"));
 
-    expect(preloadedB?.src).toBe("https://v.redd.it/b/CMAF_720.mp4");
-    const preloadedC = videos.find(
-      (v) => v.src === "https://v.redd.it/c/CMAF_720.mp4",
+    expect(q("video.reddit-slideshow-media")).not.toBe(preloaded);
+    expect(preloaded?.getAttribute("src")).toBe("");
+  });
+
+  it("hands the preloaded video element to the renderer when it becomes current", async () => {
+    /** @type {HTMLVideoElement[]} */
+    const videos = [];
+    const { session } = makeSession({
+      pages: [
+        {
+          slides: [videoSlide("a"), videoSlide("b")],
+          after: null,
+          exhausted: true,
+          postsScanned: 2,
+        },
+      ],
+      createVideo: () => {
+        const video = document.createElement("video");
+        videos.push(video);
+        return video;
+      },
+    });
+
+    await session.start();
+    const preloaded = videos.find((video) =>
+      video.src.includes("/b/CMAF_720.mp4"),
     );
-    expect(preloadedC).toBeTruthy();
+    expect(preloaded).toBeTruthy();
+    expect(preloaded?.isConnected).toBe(false);
 
     session.handleKeydown(key("ArrowRight"));
 
-    expect(preloadedB?.src).toBe("");
-
-    session.handleKeydown(key("ArrowRight"));
-
-    expect(preloadedC?.src).toBe("");
+    expect(q("video.reddit-slideshow-media")).toBe(preloaded);
+    expect(preloaded?.isConnected).toBe(true);
   });
 
   it("suppresses handled keys but not others", async () => {
