@@ -23,22 +23,10 @@ NOVITÀ - V1.4.3
 NOVITÀ - V1.4.2
 
 - NUOVO: ignorare/bloccare un autore lo aggiunge anche a una lista locale di ignorati della presentazione, così i suoi post continuano a essere saltati anche se Reddit rifiuta un altro blocco dell'account
+- RITIRATO: i video precaricati erano descritti come più fluidi nel passaggio, ma la modifica non ha funzionato come previsto; corretto nella v1.4.3
 - CORRETTO: un bug di temporizzazione durante l'avanzamento rapido tra foto poteva far avanzare troppo presto la diapositiva raggiunta
 - MIGLIORATO: i titoli lunghi mostrano un tooltip più chiaro dopo 200 ms, e leggerlo trattiene la transizione successiva senza mettere in pausa il video
 - MIGLIORATO: i pannelli impostazioni, aiuto, salto e post saltati restano aperti indipendentemente dai cambi di diapositiva
-
-NOVITÀ - V1.4.1
-
-- CORRETTO: le GIF di Reddit vengono riprodotte come video - con barra di conto alla rovescia, e la diapositiva aspetta la fine della clip invece di troncarla
-- CORRETTO: le GIF dentro una galleria non vengono più saltate
-- MIGLIORATO: la barra di controlli e la firma si accordano al resto dell'interfaccia
-
-NOVITÀ - V1.4.0
-
-- NUOVO: ingrandisci qualsiasi diapositiva - scorri o premi + / - per zoomare sul puntatore (la presentazione si mette in pausa da sola), poi trascina per spostarti
-- NUOVO: i file scaricati ricevono nomi puliti e ordinabili
-- MIGLIORATO: la pagina delle impostazioni è organizzata in sezioni
-- Varie ottimizzazioni delle prestazioni e correzioni di bug
 
 Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 

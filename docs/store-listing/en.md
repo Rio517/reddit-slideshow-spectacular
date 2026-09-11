@@ -23,22 +23,10 @@ WHAT'S NEW - V1.4.3
 WHAT'S NEW - V1.4.2
 
 - NEW: Ignoring/blocking an author also adds them to a local Slideshow ignore list, so their posts keep being skipped even if Reddit refuses another account block
+- RETRACTED: Preloaded videos were described as handing off more smoothly, but that change did not work as intended; fixed in v1.4.3
 - FIXED: A timing bug when rapidly moving through photos could make the slide you land on advance too quickly
 - IMPROVED: Long post titles show a clearer 200ms tooltip, and reading it holds the next transition without pausing video playback
 - IMPROVED: Settings, help, jump, and skipped-post panels stay open independently of slide changes
-
-WHAT'S NEW - V1.4.1
-
-- FIXED: Reddit GIFs play as video - they get a countdown bar, and the slide waits for the clip to finish instead of cutting it off
-- FIXED: GIFs inside a gallery are no longer skipped
-- IMPROVED: The control rail and the byline match the rest of the overlay
-
-WHAT'S NEW - V1.4.0
-
-- NEW: Zoom into any slide - scroll or press + / - to zoom at the pointer (the show pauses itself), then drag to pan
-- NEW: Downloaded files get clean, sortable names
-- IMPROVED: The settings page is organized into sections
-- Various performance and bug fixes
 
 Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 

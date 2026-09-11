@@ -23,22 +23,10 @@ NEU IN V1.4.3
 NEU IN V1.4.2
 
 - NEU: Einen Autor zu ignorieren/blockieren fügt ihn auch einer lokalen Ignorierliste der Diashow hinzu, damit seine Beiträge weiter übersprungen werden, selbst wenn Reddit keinen weiteren Kontoblock akzeptiert
+- ZURÜCKGEZOGEN: Vorgeladene Videos wurden als flüssiger wechselnd beschrieben, aber diese Änderung funktionierte nicht wie vorgesehen; behoben in v1.4.3
 - BEHOBEN: Ein Timing-Fehler beim schnellen Wechseln durch Fotos konnte dazu führen, dass die erreichte Folie zu schnell weiterlief
 - VERBESSERT: Lange Beitragstitel zeigen nach 200 ms einen klareren Tooltip, und das Lesen hält den nächsten Übergang auf, ohne die Videowiedergabe zu pausieren
 - VERBESSERT: Einstellungs-, Hilfe-, Sprung- und Übersprungen-Panels bleiben unabhängig von Folienwechseln geöffnet
-
-NEU IN V1.4.1
-
-- BEHOBEN: Reddit-GIFs laufen als Video - mit Fortschrittsleiste, und die Folie wartet, bis der Clip zu Ende ist, statt ihn abzuschneiden
-- BEHOBEN: GIFs in einer Galerie werden nicht mehr übersprungen
-- VERBESSERT: Steuerungsleiste und Infozeile passen zum übrigen Overlay
-
-NEU IN V1.4.0
-
-- NEU: Zoome in jede Folie - scrolle oder drücke + / -, um am Zeiger zu zoomen (die Show pausiert von selbst), und ziehe zum Verschieben
-- NEU: Heruntergeladene Dateien bekommen saubere, sortierbare Namen
-- VERBESSERT: Die Einstellungsseite ist in Abschnitte gegliedert
-- Diverse Performance-Verbesserungen und Fehlerbehebungen
 
 Vollständige Versionshinweise: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 

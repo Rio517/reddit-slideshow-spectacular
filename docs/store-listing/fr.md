@@ -23,22 +23,10 @@ NOUVEAUTÉS — V1.4.3
 NOUVEAUTÉS — V1.4.2
 
 - NOUVEAU : ignorer/bloquer un auteur l'ajoute aussi à une liste d'ignorés locale du diaporama, afin que ses publications continuent d'être sautées même si Reddit refuse un autre blocage de compte
+- RETIRÉ : les vidéos préchargées étaient présentées comme s'enchaînant plus fluidement, mais cette modification n'a pas fonctionné comme prévu ; corrigé dans la v1.4.3
 - CORRIGÉ : un bug de minuterie lors d'avances rapides entre photos pouvait faire passer trop vite la diapositive d'arrivée
 - AMÉLIORÉ : les titres longs affichent une infobulle plus claire après 200 ms, et sa lecture retarde la prochaine transition sans mettre la vidéo en pause
 - AMÉLIORÉ : les panneaux de réglages, d'aide, de saut et de publications ignorées restent ouverts indépendamment des changements de diapositive
-
-NOUVEAUTÉS — V1.4.1
-
-- CORRIGÉ : les GIF de Reddit sont lus comme des vidéos - avec une barre de décompte, et la diapositive attend la fin du clip au lieu de le couper
-- CORRIGÉ : les GIF d'une galerie ne sont plus ignorés
-- AMÉLIORÉ : la barre de commandes et la ligne d'informations s'accordent au reste de l'interface
-
-NOUVEAUTÉS — V1.4.0
-
-- NOUVEAU : zoomez dans n'importe quelle diapositive - faites défiler ou appuyez sur + / - pour zoomer au pointeur (le diaporama se met en pause tout seul), puis faites glisser pour vous déplacer
-- NOUVEAU : les fichiers téléchargés reçoivent des noms propres et triables
-- AMÉLIORÉ : la page de réglages est organisée en sections
-- Diverses améliorations de performances et corrections de bugs
 
 Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
