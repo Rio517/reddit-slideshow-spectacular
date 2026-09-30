@@ -32,7 +32,8 @@ post's score between the arrows and the open/download buttons.
   immediately, moves the shown score by the change in the viewer's own vote, and
   reverts both only if the write fails (e.g. not logged in), flashing an error
   then. An arrow click votes only when the event is trusted, so page script
-  cannot cast one.
+  cannot cast one. While a panel or the close prompt is open, ↑/↓ scroll it and
+  never vote.
 
 No new permission: the existing `old.reddit.com`/`www.reddit.com` host
 permissions already cover the authenticated `me.json`/`vote` requests.

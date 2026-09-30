@@ -629,6 +629,53 @@ describe("createSlideshowSession", () => {
     expect(votes).toEqual([]);
   });
 
+  it("never votes on Up/Down while a panel is open, wherever the key lands", async () => {
+    /** @type {Array<[string, number]>} */
+    const votes = [];
+    const { session } = makeSession({
+      vote: async (id, dir) => {
+        votes.push([id, dir]);
+        return { ok: true };
+      },
+    });
+    await session.start();
+    // As the document sees a key pressed inside the overlay: targeted at the
+    // host, which no panel selector matches.
+    const press = (/** @type {string} */ k) => {
+      const seen = { prevented: false, stopped: false };
+      session.handleKeydown(
+        /** @type {any} */ ({
+          key: k,
+          isTrusted: true,
+          target: document.querySelector("#reddit-slideshow-host"),
+          preventDefault: () => {
+            seen.prevented = true;
+          },
+          stopImmediatePropagation: () => {
+            seen.stopped = true;
+          },
+        }),
+      );
+      return seen;
+    };
+
+    /** @type {HTMLElement} */ (q(".rs-meta__counter")).click(); // jump list
+    // Kept from the page, but not prevented: the list scrolls with the key.
+    expect(press("ArrowDown")).toEqual({ prevented: false, stopped: true });
+    expect(press("ArrowUp")).toEqual({ prevented: false, stopped: true });
+    await flush();
+    expect(votes).toEqual([]);
+    // Left/Right still change slides with the list open.
+    press("ArrowRight");
+    expect(text(".rs-meta__counter")).toBe("2 / 2");
+
+    // Closed again, the keys vote as before.
+    press("Escape");
+    expect(press("ArrowDown")).toEqual({ prevented: true, stopped: true });
+    await flush();
+    expect(votes).toEqual([["b", -1]]);
+  });
+
   it("seeds the vote toggle from the post's existing vote state", async () => {
     /** @type {Array<[string, number]>} */
     const votes = [];

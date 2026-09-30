@@ -2614,6 +2614,37 @@ describe("createOverlay", () => {
     expect(confirm?.hidden).toBe(true);
   });
 
+  it("reports whether a panel or the close prompt is open", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    overlay.renderCurrent(imageSlide(), {
+      index: 24,
+      total: 50,
+      exhausted: false,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    expect(overlay.hasOpenLayer()).toBe(false);
+    for (const open of [
+      () => clickByLabel(overlay.root, "Settings"),
+      () => overlay.toggleHelp(),
+      () =>
+        /** @type {HTMLElement} */ (
+          overlay.root.querySelector(".rs-meta__counter")
+        ).click(),
+      // Past slide 20, a backdrop click raises the close prompt.
+      () =>
+        overlay.root
+          .querySelector(".rs-stage")
+          ?.dispatchEvent(new Event("click", { bubbles: true })),
+    ]) {
+      open();
+      expect(overlay.hasOpenLayer()).toBe(true);
+      overlay.dismissTopLayer();
+      expect(overlay.hasOpenLayer()).toBe(false);
+    }
+  });
+
   it("flashMessage shows a transient toast with the given text", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.flashMessage("Blocked u/spez");
