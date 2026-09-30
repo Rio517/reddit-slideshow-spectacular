@@ -16,17 +16,17 @@ Reddit Slideshow Spectacular! transforme vos fils Reddit en un diaporama multim�
 
 Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API, aucune connexion supplémentaire, aucun compte additionnel. Il parcourt les publications multimédia dans l'ordre où Reddit les renvoie et pagine automatiquement le fil, de sorte que le diaporama se poursuit au-delà de la première page.
 
+NOUVEAUTÉS — V1.5.0
+
+- NOUVEAU : la légende sous chaque diapositive est désormais une bande pleine largeur qui affiche le titre complet de la publication — les longs titres passent sur plusieurs lignes au lieu d'être tronqués
+- NOUVEAU : le nombre de votes de la publication, avec des flèches haut et bas sur lesquelles cliquer pour voter (les touches Up/Down fonctionnent toujours)
+- AMÉLIORÉ : les boutons de vote, d'ouverture de l'original et de téléchargement sont placés dans une colonne fixe, et restent donc au même endroit d'une diapositive à l'autre
+- AMÉLIORÉ : sur une vidéo, la légende se place au-dessus de la barre de commandes propre à la vidéo, si bien que les deux ne se chevauchent jamais
+- CORRIGÉ : rembobiner une vidéo avec ses propres commandes ne laisse plus le diaporama passer à la suite en plein clip — le diaporama attend la fin du clip, et mettre le clip en pause met le diaporama en pause
+
 NOUVEAUTÉS — V1.4.3
 
 - CORRIGÉ : les vidéos préchargées conservent désormais leurs données mises en mémoire tampon lorsqu'elles s'affichent, évitant les téléchargements en double et les longues pauses entre clips
-
-NOUVEAUTÉS — V1.4.2
-
-- NOUVEAU : ignorer/bloquer un auteur l'ajoute aussi à une liste d'ignorés locale du diaporama, afin que ses publications continuent d'être sautées même si Reddit refuse un autre blocage de compte
-- RETIRÉ : les vidéos préchargées étaient présentées comme s'enchaînant plus fluidement, mais cette modification n'a pas fonctionné comme prévu ; corrigé dans la v1.4.3
-- CORRIGÉ : un bug de minuterie lors d'avances rapides entre photos pouvait faire passer trop vite la diapositive d'arrivée
-- AMÉLIORÉ : les titres longs affichent une infobulle plus claire après 200 ms, et sa lecture retarde la prochaine transition sans mettre la vidéo en pause
-- AMÉLIORÉ : les panneaux de réglages, d'aide, de saut et de publications ignorées restent ouverts indépendamment des changements de diapositive
 
 Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
@@ -47,7 +47,7 @@ COMMANDES
 - Clavier : Left/Right pour naviguer (Shift+Right passe à la publication suivante ; Page Up/Page Down sautent 10 positions en arrière/avant), Up/Down pour voter pour ou contre la publication, Space pour lire/mettre en pause, M pour couper le son, F pour le plein écran, D pour télécharger, I pour bloquer l'auteur (et passer sa publication), A pour l'ajouter en ami ou le suivre, Esc pour fermer
 - Faites défiler ou appuyez sur + / - pour zoomer au pointeur (le diaporama se met en pause tout seul et reprend quand vous dézoomez complètement) ; faites glisser la diapositive zoomée pour la déplacer
 - Une barre de commandes à l'écran : précédent, lecture/pause, suivant, sourdine, plein écran, ouvrir dans une fenêtre et paramètres
-- Sous chaque diapositive : une ligne d'informations (auteur, subreddit, source et résolution), avec des boutons pour ouvrir la publication originale ou télécharger le média
+- Sous chaque diapositive : le titre complet de la publication et une ligne d'informations (auteur, subreddit, source et résolution), avec le nombre de votes de la publication, des flèches pour voter et des boutons pour ouvrir la publication originale ou télécharger le média
 - Cliquez sur le compteur de position pour accéder directement à n'importe quelle publication de la file chargée
 - Cliquez sur le fond sombre pour fermer
 - Les images avancent selon un minuteur que vous définissez ; le minuteur continue même après une navigation manuelle, et les vidéos avancent à la fin du clip
@@ -76,6 +76,6 @@ PARAMÈTRES (appliqués en direct, sans rechargement)
 
 CONFIDENTIALITÉ
 
-Aucune analyse d'audience, aucun pistage, aucune publicité, aucun compte et aucun serveur du développeur (il n'en existe pas). L'extension récupère uniquement les médias que vous consultez : le fil et ses médias depuis Reddit, ainsi que les clips des fournisseurs Imgur, Redgifs, Streamable, Giphy et Catbox. Les seules choses qui écrivent dans votre compte Reddit sont le vote (touches haut/bas), le blocage d'un auteur (I) et l'ajout ou le suivi d'un auteur (A), et uniquement lorsque vous appuyez sur la touche correspondante. Vos paramètres sont stockés localement sur votre ordinateur et l'extension ne charge aucun code distant. Politique complète : voir le lien vers la politique de confidentialité.
+Aucune analyse d'audience, aucun pistage, aucune publicité, aucun compte et aucun serveur du développeur (il n'en existe pas). L'extension récupère uniquement les médias que vous consultez : le fil et ses médias depuis Reddit, ainsi que les clips des fournisseurs Imgur, Redgifs, Streamable, Giphy et Catbox. Les seules choses qui écrivent dans votre compte Reddit sont le vote (les touches haut/bas ou les flèches de vote), le blocage d'un auteur (I) et l'ajout ou le suivi d'un auteur (A), et uniquement lorsque vous appuyez sur la touche correspondante ou cliquez sur son bouton. Vos paramètres sont stockés localement sur votre ordinateur et l'extension ne charge aucun code distant. Politique complète : voir le lien vers la politique de confidentialité.
 
 Open source, MIT licensed.

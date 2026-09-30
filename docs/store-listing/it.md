@@ -16,17 +16,17 @@ Reddit Slideshow Spectacular! trasforma i tuoi feed Reddit in una presentazione 
 
 La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave API, nessun accesso aggiuntivo, nessun account extra. Scorre i post multimediali nell'ordine in cui Reddit li restituisce e sfoglia automaticamente il feed, così la presentazione prosegue oltre la prima pagina.
 
+NOVITÀ - V1.5.0
+
+- NUOVO: la didascalia sotto ogni diapositiva è ora una fascia a tutta larghezza che mostra il titolo completo del post — i titoli lunghi vanno a capo su più righe invece di essere tagliati
+- NUOVO: il conteggio dei voti del post, con frecce su e giù su cui fare clic per votare (i tasti Up/Down funzionano ancora)
+- MIGLIORATO: i pulsanti per votare, aprire l'originale e scaricare stanno in una colonna fissa, così restano nello stesso punto da una diapositiva all'altra
+- MIGLIORATO: sopra un video, la didascalia sta sopra la barra dei controlli del video stesso, così i due non si sovrappongono mai
+- CORRETTO: riavvolgere un video con i suoi controlli non fa più passare la presentazione oltre a metà clip — la presentazione aspetta la fine del clip, e mettere in pausa il clip mette in pausa la presentazione
+
 NOVITÀ - V1.4.3
 
 - CORRETTO: i video precaricati ora conservano i dati già memorizzati nel buffer quando vengono mostrati, evitando download duplicati e lunghe pause tra le clip
-
-NOVITÀ - V1.4.2
-
-- NUOVO: ignorare/bloccare un autore lo aggiunge anche a una lista locale di ignorati della presentazione, così i suoi post continuano a essere saltati anche se Reddit rifiuta un altro blocco dell'account
-- RITIRATO: i video precaricati erano descritti come più fluidi nel passaggio, ma la modifica non ha funzionato come previsto; corretto nella v1.4.3
-- CORRETTO: un bug di temporizzazione durante l'avanzamento rapido tra foto poteva far avanzare troppo presto la diapositiva raggiunta
-- MIGLIORATO: i titoli lunghi mostrano un tooltip più chiaro dopo 200 ms, e leggerlo trattiene la transizione successiva senza mettere in pausa il video
-- MIGLIORATO: i pannelli impostazioni, aiuto, salto e post saltati restano aperti indipendentemente dai cambi di diapositiva
 
 Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
@@ -47,7 +47,7 @@ CONTROLLI
 - Tastiera: Left/Right per spostarsi (Shift+Right salta al post successivo; Page Up/Page Down saltano avanti o indietro di 10 post), Up/Down per votare positivamente o negativamente, Space per riprodurre/mettere in pausa, M per silenziare, F per il fullscreen, D per scaricare, I per bloccare l'autore (e saltare il suo post), A per aggiungerlo agli amici o seguirlo, Esc per chiudere
 - Scorri o premi + / - per zoomare sul puntatore (la presentazione si mette in pausa da sola e riprende quando riduci del tutto); trascina la diapositiva ingrandita per spostarla
 - Una barra di controlli a schermo: precedente, riproduci/pausa, successivo, silenzia, schermo intero, apri in finestra e impostazioni
-- Sotto ogni diapositiva: la firma (chi ha pubblicato, in quale subreddit, la fonte e la risoluzione), con pulsanti per aprire il post originale o scaricare il media
+- Sotto ogni diapositiva: il titolo completo del post e la firma (chi ha pubblicato, in quale subreddit, la fonte e la risoluzione), con il conteggio dei voti del post, le frecce per votare e pulsanti per aprire il post originale o scaricare il media
 - Fai clic sul contatore di posizione per passare direttamente a qualsiasi post nella coda caricata
 - Fai clic sullo sfondo scuro per chiudere
 - Le immagini avanzano con un timer che puoi impostare; il timer continua a scorrere anche dopo aver navigato manualmente con i tasti freccia, e i video avanzano al termine del clip
@@ -76,6 +76,6 @@ IMPOSTAZIONI (si applicano in tempo reale, senza ricaricamento)
 
 PRIVACY
 
-Nessuna analisi, nessun tracciamento, nessuna pubblicità, nessun account e nessun server dello sviluppatore (non ne esistono). L'estensione scarica solo i media che stai visualizzando: il feed e i relativi media da Reddit, e i clip dei provider Imgur, Redgifs, Streamable, Giphy e Catbox. Le uniche cose che scrivono sul tuo account Reddit sono il voto (tasti su/giù), il blocco di un autore (I) e l'aggiunta o il follow di un autore (A), e solo quando premi il tasto corrispondente. Le impostazioni sono salvate localmente sul tuo computer e l'estensione non carica codice remoto. Informativa completa: vedi il link alla privacy policy.
+Nessuna analisi, nessun tracciamento, nessuna pubblicità, nessun account e nessun server dello sviluppatore (non ne esistono). L'estensione scarica solo i media che stai visualizzando: il feed e i relativi media da Reddit, e i clip dei provider Imgur, Redgifs, Streamable, Giphy e Catbox. Le uniche cose che scrivono sul tuo account Reddit sono il voto (i tasti su/giù o le frecce di voto), il blocco di un autore (I) e l'aggiunta o il follow di un autore (A), e solo quando premi il tasto corrispondente o fai clic sul suo pulsante. Le impostazioni sono salvate localmente sul tuo computer e l'estensione non carica codice remoto. Informativa completa: vedi il link alla privacy policy.
 
 Open source, MIT licensed.

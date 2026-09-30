@@ -16,17 +16,17 @@ Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard
 
 The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
 
+WHAT'S NEW - V1.5.0
+
+- NEW: The caption under each slide is now a full-width strip that shows the whole post title - long titles wrap onto more lines instead of being cut off
+- NEW: The post's vote count, with up and down arrows you can click to vote (the Up/Down keys still work)
+- IMPROVED: The vote, open-original, and download buttons sit in a fixed column, so they stay in the same place from slide to slide
+- IMPROVED: Over a video, the caption sits above the video's own control bar, so the two never overlap
+- FIXED: Rewinding a video with its own controls no longer lets the slideshow move on mid-clip - the show waits for the clip to finish, and pausing the clip pauses the show
+
 WHAT'S NEW - V1.4.3
 
 - FIXED: Preloaded videos now keep their buffered data when they appear, preventing duplicate downloads and long pauses between clips
-
-WHAT'S NEW - V1.4.2
-
-- NEW: Ignoring/blocking an author also adds them to a local Slideshow ignore list, so their posts keep being skipped even if Reddit refuses another account block
-- RETRACTED: Preloaded videos were described as handing off more smoothly, but that change did not work as intended; fixed in v1.4.3
-- FIXED: A timing bug when rapidly moving through photos could make the slide you land on advance too quickly
-- IMPROVED: Long post titles show a clearer 200ms tooltip, and reading it holds the next transition without pausing video playback
-- IMPROVED: Settings, help, jump, and skipped-post panels stay open independently of slide changes
 
 Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
@@ -47,7 +47,7 @@ CONTROLS
 - Keyboard: Left/Right to move (Shift+Right skips to the next post; Page Up/Page Down jump back/ahead 10), Up/Down to upvote/downvote the post, Space to play/pause, M to mute, F for fullscreen, D to download, I to block the author (and skip their post), A to friend/follow the author, Esc to close
 - Scroll or press + / - to zoom at the pointer (the show pauses itself, and resumes when you zoom back out); drag to pan the zoomed slide
 - An on-screen control rail: previous, play/pause, next, mute, fullscreen, open in a window, and settings
-- Under each slide: a byline (who posted it, to which subreddit, the source and resolution), with buttons to open the original post or download the media
+- Under each slide: the full post title and a byline (who posted it, to which subreddit, the source and resolution), with the post's vote count, up/down arrows to vote, and buttons to open the original post or download the media
 - Click the position counter to jump straight to any post in the loaded queue
 - Click the dark backdrop to close
 - Images advance on a timer you set; the timer keeps running even after you arrow through manually, and videos advance when the clip ends
@@ -76,6 +76,6 @@ SETTINGS (apply live, no reload)
 
 PRIVACY
 
-No analytics, no tracking, no ads, no accounts, and no developer servers (there are none). The extension only fetches the media you're viewing: the feed and its media from Reddit, and provider clips from Imgur, Redgifs, Streamable, Giphy, and Catbox. The only things that write to your Reddit account are voting (up/down keys), blocking an author (I), and friending/following an author (A) - each only when you press its key. Your settings are stored locally on your computer, and it ships no remote code. Full policy: see the privacy policy link.
+No analytics, no tracking, no ads, no accounts, and no developer servers (there are none). The extension only fetches the media you're viewing: the feed and its media from Reddit, and provider clips from Imgur, Redgifs, Streamable, Giphy, and Catbox. The only things that write to your Reddit account are voting (the up/down keys or the vote arrows), blocking an author (I), and friending/following an author (A) - each only when you press its key or click its button. Your settings are stored locally on your computer, and it ships no remote code. Full policy: see the privacy policy link.
 
 Open source, MIT licensed.

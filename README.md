@@ -19,7 +19,7 @@ AirPlay or Chromecast that window to your TV for a hands-off, lean-back feed.
 
 <a href="docs/slideshow-demo.png">
   <img src="docs/slideshow-demo.png" width="820"
-    alt="A full-screen slideshow over r/SlideShowSpectacular showing a golden-retriever puppy bounding through a sunlit meadow: the position counter top-left, the control rail (prev/play/next, mute, fullscreen, open-in-window, help, settings) down the right, and bottom-left the title Spectacular Puppy - with a vote arrow, open-original and download buttons - over a byline reading /u/rio517 to /r/SlideShowSpectacular with the source i.redd.it on its own line">
+    alt="A full-screen slideshow over r/SlideShowSpectacular showing a golden-retriever puppy bounding through a sunlit meadow: the position counter top-left, the control rail (prev/play/next, mute, fullscreen, open-in-window, help, settings) down the right, and along the bottom the caption: up and down vote arrows over the score 12.4K, open-original and download buttons, and beside them the title Spectacular Puppy over a byline reading /u/rio517 to /r/SlideShowSpectacular and the source i.redd.it">
 </a>
 
 ## Features
@@ -34,13 +34,17 @@ AirPlay or Chromecast that window to your TV for a hands-off, lean-back feed.
   **audio** (a companion track synced to the silent fallback clip).
 - Skips duplicates (reposts, crossposts, repeated galleries) and broken media -
   duplicates are filtered before they show.
-- **Upvote/downvote** the current post with the **↑/↓** keys, through your
-  logged-in session - the arrow at the head of the title shows your vote.
+- **Upvote/downvote** the current post with the **↑/↓** keys or the caption's
+  arrows, through your logged-in session - the arrow you cast and the post's
+  score take its color.
 - **Download** the current media, or open the original post, from the overlay.
 - **Block** an author (**I**) or **friend / follow** them (**A**) - through your
   logged-in session.
-- A byline under each slide - `/u/author to /r/subreddit`, with the source
-  (`{domain} • {W}×{H}`) on its own line.
+- A caption under each slide - the post's full title (long ones wrap), its
+  score, and a byline: `/u/author to /r/subreddit`, then the source
+  (`{domain} • {W}×{H}`). Its buttons sit in a fixed column, and over a video it
+  sits above the video's own controls.
+- Rewind or pause a video with its own controls and the show waits for it.
 - Lots to tune from the overlay's gear, applied live with no reload - see
   [Settings](#settings).
 
@@ -151,7 +155,7 @@ npm run format       # Prettier check
 npm run webext:lint  # Mozilla addons-linter on the built (Firefox) output
 npm run locales      # regenerate public/_locales from locales/
 npm run screenshots  # offline docs shots: options page + deterministic slideshow
-npm run heroes       # live store/site hero shots via the built extensions
+npm run heroes       # offline store/site hero shots: real overlay over a mock listing
 npm run promo        # Chrome Web Store promo tiles around the hero
 npm run reel         # re-record + encode the website demo reel (docs/slideshow.webm)
 npm run ship         # store zips + hero shots + promo tiles + demo reel
@@ -182,13 +186,15 @@ Reddit, so prefer the temporary-add-on flow above for real testing.
 > Chromium binary isn't fetched by `npm install`, so run
 > `npx playwright install chromium` once first.
 >
-> `npm run heroes` (part of `npm run ship`) retakes the live hero shots over
-> r/SlideShowSpectacular in both built extensions, using the logged-in session
-> from the local Firefox profile: `docs/screenshots/hero-chrome.jpg` (1280×800
-> JPEG, Chrome Web Store), `docs/screenshots/hero-firefox.png` (1280×800 PNG,
-> Firefox Add-ons), and the website hero `docs/slideshow-demo.png`. It needs
-> geckodriver (`brew install geckodriver`). `SHIP_HERO_TITLE` selects a
-> different post.
+> `npm run heroes` (part of `npm run ship`) retakes the hero shots offline:
+> the real overlay over a hand-made old-Reddit listing
+> (`scripts/slideshow-harness/hero.html`) with the demo media served from a
+> local cache, so no Reddit session or extension install is involved.
+> `docs/screenshots/hero-chrome.jpg` (1280×800 JPEG, Chrome Web Store),
+> `docs/screenshots/hero-firefox.png` (1280×800 PNG, Firefox Add-ons), and the
+> website hero `docs/slideshow-demo.png`. It needs the Playwright Chromium and
+> Firefox binaries (`npx playwright install chromium firefox`).
+> `SHIP_HERO_TITLE` selects a different slide.
 >
 > `npm run reel` (also part of `npm run ship`) re-records the website demo
 > reel `docs/slideshow.webm`: the real overlay over three offline demo
@@ -270,8 +276,9 @@ No analytics, no tracking, no developer servers - the extension fetches only the
 Reddit feed and the media you are viewing (including clips resolved from Redgifs,
 Imgur, Streamable, Giphy, and Catbox), plus, for re-upload detection, the image
 bytes it hashes locally on your computer. The actions that write to your Reddit
-account are voting (**↑/↓**), blocking an author (**I**), and friending/following
-an author (**A**) - each only when you press the key. Your Reddit cookies go to
+account are voting (**↑/↓** or the caption's arrows), blocking an author (**I**),
+and friending/following an author (**A**) - each only when you press the key or
+click the arrow. Your Reddit cookies go to
 Reddit only; every provider request is cookie-less. Settings are stored locally.
 See [PRIVACY.md](PRIVACY.md).
 

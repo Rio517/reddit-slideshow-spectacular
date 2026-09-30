@@ -16,17 +16,17 @@ Reddit Slideshow Spectacular! verwandelt deine Reddit-Feeds in eine bildschirmf�
 
 Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüssel, keine separate Anmeldung, kein zusätzliches Konto. Sie geht die Medienbeiträge in der Reihenfolge durch, in der Reddit sie liefert, und blättert automatisch durch den Feed, sodass die Diashow über die erste Seite hinaus weiterläuft.
 
+NEU IN V1.5.0
+
+- NEU: Die Bildunterschrift unter jeder Folie ist jetzt eine Leiste in voller Breite, die den ganzen Beitragstitel zeigt – lange Titel laufen in weitere Zeilen um, statt abgeschnitten zu werden
+- NEU: Die Stimmenzahl des Beitrags mit Pfeilen nach oben und unten, die du zum Abstimmen anklicken kannst (die Tasten Up/Down funktionieren weiterhin)
+- VERBESSERT: Die Schaltflächen zum Abstimmen, Öffnen des Originals und Herunterladen sitzen in einer festen Spalte und bleiben so von Folie zu Folie an derselben Stelle
+- VERBESSERT: Bei Videos sitzt die Bildunterschrift über der eigenen Steuerleiste des Videos, sodass sich beides nie überlappt
+- BEHOBEN: Wer ein Video mit dessen eigener Steuerung zurückspult, lässt die Diashow nicht mehr mitten im Clip weiterwechseln – die Show wartet, bis der Clip zu Ende ist, und pausiert der Clip, pausiert auch die Show
+
 NEU IN V1.4.3
 
 - BEHOBEN: Vorgeladene Videos behalten beim Anzeigen nun ihre bereits gepufferten Daten, wodurch doppelte Downloads und lange Pausen zwischen Clips vermieden werden
-
-NEU IN V1.4.2
-
-- NEU: Einen Autor zu ignorieren/blockieren fügt ihn auch einer lokalen Ignorierliste der Diashow hinzu, damit seine Beiträge weiter übersprungen werden, selbst wenn Reddit keinen weiteren Kontoblock akzeptiert
-- ZURÜCKGEZOGEN: Vorgeladene Videos wurden als flüssiger wechselnd beschrieben, aber diese Änderung funktionierte nicht wie vorgesehen; behoben in v1.4.3
-- BEHOBEN: Ein Timing-Fehler beim schnellen Wechseln durch Fotos konnte dazu führen, dass die erreichte Folie zu schnell weiterlief
-- VERBESSERT: Lange Beitragstitel zeigen nach 200 ms einen klareren Tooltip, und das Lesen hält den nächsten Übergang auf, ohne die Videowiedergabe zu pausieren
-- VERBESSERT: Einstellungs-, Hilfe-, Sprung- und Übersprungen-Panels bleiben unabhängig von Folienwechseln geöffnet
 
 Vollständige Versionshinweise: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
@@ -47,7 +47,7 @@ STEUERUNG
 - Tastatur: Left/Right zum Navigieren (Shift+Right springt zum nächsten Beitrag; Page Up/Page Down springen 10 Einträge zurück/vor), Up/Down zum Hoch-/Runtervoten, Space zum Abspielen/Pausieren, M zum Stummschalten, F für Vollbild, D zum Herunterladen, I zum Blockieren des Autors (und Überspringen seines Beitrags), A um ihn als Freund hinzuzufügen oder ihm zu folgen, Esc zum Schließen
 - Scrolle oder drücke + / -, um am Zeiger zu zoomen (die Show pausiert von selbst und läuft weiter, wenn du ganz herauszoomst); ziehe die gezoomte Folie zum Verschieben
 - Eine Steuerungsleiste auf dem Bildschirm: zurück, Abspielen/Pausieren, weiter, Stummschalten, Vollbild, in einem Fenster öffnen und Einstellungen
-- Unter jeder Folie: eine Infozeile (wer den Beitrag gepostet hat, in welchem Subreddit, Quelle und Auflösung) sowie Schaltflächen zum Öffnen des Originalbeitrags oder zum Herunterladen des Mediums
+- Unter jeder Folie: der vollständige Beitragstitel und eine Infozeile (wer den Beitrag gepostet hat, in welchem Subreddit, Quelle und Auflösung) sowie die Stimmenzahl des Beitrags, Pfeile zum Hoch-/Runtervoten und Schaltflächen zum Öffnen des Originalbeitrags oder zum Herunterladen des Mediums
 - Klicke auf den Positionszähler, um direkt zu einem beliebigen Beitrag in der geladenen Warteschlange zu springen
 - Klicke auf den dunklen Hintergrund, um die Diashow zu schließen
 - Bilder wechseln nach einem einstellbaren Timer; der Timer läuft auch nach manueller Navigation weiter, und Videos wechseln automatisch am Ende des Clips
@@ -76,6 +76,6 @@ EINSTELLUNGEN (werden sofort übernommen, kein Neuladen erforderlich)
 
 DATENSCHUTZ
 
-Keine Analysedaten, kein Tracking, keine Werbung, keine Konten und keine Entwicklerserver (es gibt keine). Die Erweiterung ruft nur die Medien ab, die du dir ansiehst: den Feed und seine Medien von Reddit sowie Clips der Anbieter Imgur, Redgifs, Streamable, Giphy und Catbox. Das Einzige, was in dein Reddit-Konto schreibt, sind das Abstimmen (Hoch-/Runter-Tasten), das Blockieren eines Autors (I) und das Hinzufügen oder Folgen eines Autors (A) – und nur, wenn du die jeweilige Taste drückst. Deine Einstellungen werden lokal auf deinem Computer gespeichert, und die Erweiterung lädt keinen Remotecode. Vollständige Richtlinie: siehe den Link zur Datenschutzrichtlinie.
+Keine Analysedaten, kein Tracking, keine Werbung, keine Konten und keine Entwicklerserver (es gibt keine). Die Erweiterung ruft nur die Medien ab, die du dir ansiehst: den Feed und seine Medien von Reddit sowie Clips der Anbieter Imgur, Redgifs, Streamable, Giphy und Catbox. Das Einzige, was in dein Reddit-Konto schreibt, sind das Abstimmen (die Hoch-/Runter-Tasten oder die Abstimmungspfeile), das Blockieren eines Autors (I) und das Hinzufügen oder Folgen eines Autors (A) – und nur, wenn du die jeweilige Taste drückst oder die jeweilige Schaltfläche anklickst. Deine Einstellungen werden lokal auf deinem Computer gespeichert, und die Erweiterung lädt keinen Remotecode. Vollständige Richtlinie: siehe den Link zur Datenschutzrichtlinie.
 
 Open source, MIT lizenziert.

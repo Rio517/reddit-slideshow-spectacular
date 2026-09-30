@@ -1,14 +1,14 @@
 # NEXT_STEP - Reddit Slideshow Spectacular!
 
-**Branch:** `main` · **Status:** CI-green. v1.4.2 is live on both stores. v1.4.3
-is prepared locally as a video-preload hotfix - version and per-locale store copy refreshed, Firefox,
-Chrome, and source zips built, promo tiles and the demo reel regenerated, and
-the full unit/browser/package gates passed. The existing hero screenshots are
-intentionally reused for this release. The manual store rollout remains in §1.
+**Branch:** `main` · **Status:** CI-green. v1.4.3 is live on Firefox Add-ons.
+v1.5.0 is prepared locally - version and per-locale store copy refreshed,
+Firefox, Chrome, and source zips built, hero shots, promo tiles and the demo
+reel regenerated, and the full unit/browser/package gates passed. The manual
+store rollout remains in §1.
 
 > **Hard rule:** work directly on `main`. Do not create branches or worktrees unless the user explicitly asks. See `AGENTS.md`.
 
-This is a Firefox-first (also Chrome) WebExtension that turns the current `old.reddit.com` or `www.reddit.com` feed into a keyboard-driven media slideshow. It reuses the logged-in session (no API keys) and resolves images, galleries, gif posts (played as reddit's own mp4 transcode, ADR 0022), v.redd.it video, Redgifs, Imgur `.gifv`, Imgur albums, Streamable, Giphy, Catbox video, and crossposts via the provider dispatch in `lib/slides.js`. The overlay does a gap-free, decode-gated slide swap with six transitions (none/fade/slide/push/zoom/flip), a top-right close + a backdrop close-confirm with countdown, an idle auto-hide that respects focus, a popout/AirPlay window, a jump-to-post list (title + domain/type, auto-skipped slides dimmed and tagged with their reason), a skipped list with a per-item reason, a position counter that pulses on manual nav (with a dim/spinner when the next slide is slow), an end-of-show replay card, and ARIA + a real focus trap. The bottom-left is a bottom-anchored stack: NSFW on top, then the title row (vote arrow + title + open-original + download + loading spinner), then a byline reading `/u/author to /r/subreddit`, with the source (`{domain} • {W}×{H}`) on its own mono line. The ↑/↓ keys upvote/downvote the current post through the session (modhash + `/api/vote`), with a brief toast; the title's vote arrow tints to the current vote and follows the post across a gallery's slides. A paused slide can be inspect-zoomed manually - mouse wheel or +/− at the pointer, drag to pan, Escape resets (ADR 0021). Redgifs resolves lazily on approach; v.redd.it audio plays from a companion `<audio>` synced to the silent fallback video. The overlay mounts inside a shadow root (its CSS injected there, isolated from old.reddit/RES page styles) and makes the page `inert` while open. Settings (per-image timer, transition, top-timer-bar mode, load-wait, autoplay, mute, Include-NSFW, dedup, resolution-aware pan & zoom, Language, a download folder under the browser's Downloads folder, and the launch shortcut) live in an in-overlay gear panel and a light/dark options page (with a Sponsors link), applied live. A DEV-gated logger (`lib/log.js`) aids debugging; CI runs typecheck/lint/format/test + build (both browsers) + web-ext lint; `npm run screenshots` regenerates the options shots and an offline, deterministic slideshow shot (the real overlay + session over fixture slides in `scripts/slideshow-harness/`). old.reddit.com sets no CSP, so injected cross-origin media loads directly; on www.reddit a blocked direct load falls back to the background blob proxy. The image/video sinks are host/HTTPS-gated (`safeMediaUrl`). Content-dedup hashes the preload window so duplicates are filtered before they show.
+This is a Firefox-first (also Chrome) WebExtension that turns the current `old.reddit.com` or `www.reddit.com` feed into a keyboard-driven media slideshow. It reuses the logged-in session (no API keys) and resolves images, galleries, gif posts (played as reddit's own mp4 transcode, ADR 0022), v.redd.it video, Redgifs, Imgur `.gifv`, Imgur albums, Streamable, Giphy, Catbox video, and crossposts via the provider dispatch in `lib/slides.js`. The overlay does a gap-free, decode-gated slide swap with six transitions (none/fade/slide/push/zoom/flip), a top-right close + a backdrop close-confirm with countdown, an idle auto-hide that respects focus, a popout/AirPlay window, a jump-to-post list (title + domain/type, auto-skipped slides dimmed and tagged with their reason), a skipped list with a per-item reason, a position counter that pulses on manual nav (with a dim/spinner when the next slide is slow), an end-of-show replay card, and ARIA + a real focus trap. The bottom caption is a full-width strip over a scrim: a fixed side column (up/down vote arrows, the post's score, open-original + download) and beside it the NSFW tag, the full title (it wraps), and a details line - the byline `/u/author to /r/subreddit`, the source (`{domain} • {W}×{H}`) in mono, and the loading spinner. Only the strip's controls take the pointer, and over a clip the strip sits above the clip's own control bar. The ↑/↓ keys or the caption's arrows upvote/downvote the current post through the session (modhash + `/api/vote`), with a brief toast; the arrow cast and the score tint to the current vote, the score moves with it, and both follow the post across a gallery's slides. A clip's own controls drive the show's clock: a seek re-times the advance and the countdown bar to the time left, and pausing the clip holds the show until it plays again. A paused slide can be inspect-zoomed manually - mouse wheel or +/− at the pointer, drag to pan, Escape resets (ADR 0021). Redgifs resolves lazily on approach; v.redd.it audio plays from a companion `<audio>` synced to the silent fallback video. The overlay mounts inside a shadow root (its CSS injected there, isolated from old.reddit/RES page styles) and makes the page `inert` while open. Settings (per-image timer, transition, top-timer-bar mode, load-wait, autoplay, mute, Include-NSFW, dedup, resolution-aware pan & zoom, Language, a download folder under the browser's Downloads folder, and the launch shortcut) live in an in-overlay gear panel and a light/dark options page (with a Sponsors link), applied live. A DEV-gated logger (`lib/log.js`) aids debugging; CI runs typecheck/lint/format/test + build (both browsers) + web-ext lint; `npm run screenshots` regenerates the options shots and an offline, deterministic slideshow shot (the real overlay + session over fixture slides in `scripts/slideshow-harness/`). old.reddit.com sets no CSP, so injected cross-origin media loads directly; on www.reddit a blocked direct load falls back to the background blob proxy. The image/video sinks are host/HTTPS-gated (`safeMediaUrl`). Content-dedup hashes the preload window so duplicates are filtered before they show.
 
 ---
 
@@ -41,14 +41,20 @@ giant commit.
 
 ### Requested, not yet done
 
-- **v1.4.3 store rollout.** Upload
-  `.output/reddit-slideshow-1.4.3-chrome.zip` to the Chrome Web Store and
-  `.output/reddit-slideshow-1.4.3-firefox.zip` plus
-  `.output/reddit-slideshow-1.4.3-sources.zip` (the build minifies) to Firefox
+- **v1.5.0 store rollout.** Upload
+  `.output/reddit-slideshow-1.5.0-chrome.zip` to the Chrome Web Store and
+  `.output/reddit-slideshow-1.5.0-firefox.zip` plus
+  `.output/reddit-slideshow-1.5.0-sources.zip` (the build minifies) to Firefox
   Add-ons. Paste the per-locale listing copy from
-  `docs/store-listing/<lang>.md` (its what's-new shows the last two versions).
-  The promo tiles and demo reel were regenerated; reuse the existing store hero
-  screenshots for this release.
+  `docs/store-listing/<lang>.md` (its what's-new shows the last two versions),
+  and replace the store screenshots with `docs/screenshots/hero-chrome.jpg`
+  (Chrome) and `docs/screenshots/hero-firefox.png` (Firefox), which show the
+  new caption.
+- **Hand-check in a logged-in Firefox and Chrome before uploading:** vote with
+  a caption arrow (the score moves and the vote lands on Reddit), and scrub a
+  video with its own controls (the show waits for the clip to finish). The
+  offline gates cover the logic and a scripted scrub, not a real account vote
+  or a hand on the scrub bar.
 - Optional: a native-speaker pass on the machine-drafted translations,
   especially Arabic (~25% of installs). English fallback covers any gap, and a
   locale file can be refreshed without code changes.
@@ -156,7 +162,8 @@ Roles:
 - `npm run locales`: regenerate the committed `public/_locales/**` from `locales/`.
 - `npm run screenshots`: offline docs shots (options page + deterministic slideshow).
 - `npm run reel`: re-record + encode the website demo reel `docs/slideshow.webm` (offline; auto-downloads its demo media, needs ffmpeg).
-- `npm run ship`: store zips, live hero shots (`heroes`), promo tiles (`promo`), and the demo reel (`reel`).
+- `npm run heroes`: store/site hero shots, offline - the real overlay over a mock Reddit listing (`scripts/slideshow-harness/hero.html`), in Chromium and Firefox.
+- `npm run ship`: store zips, hero shots (`heroes`), promo tiles (`promo`), and the demo reel (`reel`).
 
 Visual/browser tooling:
 

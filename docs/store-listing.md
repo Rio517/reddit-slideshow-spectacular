@@ -77,9 +77,10 @@ Host permissions (install-time):
 
 - **https://old.reddit.com/\*** - Fetch the listing JSON for the old-Reddit page
   the user is viewing, so the slideshow knows which media to show; also, on a
-  keypress, write to the user's account with the session cookie + modhash:
-  up/down vote on the post (`/api/vote`), block its author (`/api/block_user`),
-  or friend/follow them (`/api/friend`).
+  keypress (or, for a vote, a click on the caption's arrows), write to the
+  user's account with the session cookie + modhash: up/down vote on the post
+  (`/api/vote`), block its author (`/api/block_user`), or friend/follow them
+  (`/api/friend`).
 - **https://www.reddit.com/\*** - Same listing fetch, for new Reddit; the
   slideshow can be launched from either frontend.
 - **https://api.redgifs.com/\* , https://media.redgifs.com/\*** - Resolve a
@@ -168,10 +169,12 @@ The store assets ship in the repo. `npm run ship` regenerates all of them;
 
 **docs/screenshots/hero-chrome.jpg** (1280×800 JPEG, Chrome Web Store) and
 **docs/screenshots/hero-firefox.png** (1280×800 PNG, Firefox Add-ons) - the
-slideshow running full-screen over r/SlideShowSpectacular, captured live in
-each browser: a golden-retriever puppy in a sunlit meadow, the position
-counter top-left, the title row with its vote arrow and buttons above the
-byline, and the control rail down the right edge.
+slideshow running full-screen over an r/SlideShowSpectacular listing, rendered
+offline by `npm run heroes` (the real overlay over a mock listing, in Chromium
+and Firefox): a golden-retriever puppy in a sunlit meadow, the position
+counter top-left, the caption along the bottom (vote arrows, score, and
+buttons in a column beside the title and byline), and the control rail down
+the right edge.
 
 Suggested caption: "Full-screen slideshow over your current feed - keyboard-driven, with a position counter and a minimal control rail."
 
@@ -197,7 +200,7 @@ Reddit Slideshow Spectacular! has one purpose: to turn the Reddit feed the user 
 
 **Host-permissions justification (Chrome's single field - max 1000 chars; paste the line below as-is. `downloads` is a separate per-permission field above):**
 
-All host access serves one purpose: turning the Reddit feed the user is viewing into a media slideshow. old.reddit.com / www.reddit.com - read the page's listing JSON to build and paginate the slide queue, and on a keypress write to the user's account: up/down vote (`/api/vote`), block an author (`/api/block_user`), or friend/follow them (`/api/friend`). api.redgifs.com / media.redgifs.com / i.imgur.com / imgur.com, plus any streamable.com and giphy.com subdomain - resolve and fetch provider clips (Redgifs, Imgur .gifv, Streamable, Giphy) so they play as native video, and expand Imgur albums; all without cookies. v.redd.it - fetch a video's DASH manifest (without cookies) for its separate audio track so the clip plays with sound. i.redd.it / preview.redd.it / external-preview.redd.it - fetch Reddit images/previews (without cookies) to compute a local perceptual hash that skips re-uploaded duplicates (on by default); nothing leaves the device.
+All host access serves one purpose: turning the Reddit feed the user is viewing into a media slideshow. old.reddit.com / www.reddit.com - read the page's listing JSON to build and paginate the slide queue, and on a keypress or vote-arrow click write to the user's account: up/down vote (`/api/vote`), block an author (`/api/block_user`), or friend/follow them (`/api/friend`). api.redgifs.com / media.redgifs.com / i.imgur.com / imgur.com, plus any streamable.com and giphy.com subdomain - resolve and fetch provider clips (Redgifs, Imgur .gifv, Streamable, Giphy) so they play as native video, and expand Imgur albums; all without cookies. v.redd.it - fetch a video's DASH manifest (without cookies) for its separate audio track so the clip plays with sound. i.redd.it / preview.redd.it / external-preview.redd.it - fetch Reddit images/previews (without cookies) to compute a local perceptual hash that skips re-uploaded duplicates (on by default); nothing leaves the device.
 
 (Catbox files.catbox.moe loads directly in the page and needs no host permission, so it's not in the field above.)
 
