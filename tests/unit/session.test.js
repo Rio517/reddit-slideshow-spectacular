@@ -1807,6 +1807,38 @@ describe("createSlideshowSession", () => {
     expect(prevented).toBe(false);
   });
 
+  it("leaves the arrows to a focused slider inside the overlay's shadow root", async () => {
+    const { session } = makeSession();
+    await session.start();
+    const range = /** @type {HTMLInputElement} */ (q(".rs-set__range"));
+    // As the document sees it: targeted at the host, the slider first on the
+    // composed path.
+    const press = (/** @type {string} */ k, /** @type {Element} */ first) => {
+      let prevented = false;
+      session.handleKeydown(
+        /** @type {any} */ ({
+          key: k,
+          isTrusted: true,
+          target: document.querySelector("#reddit-slideshow-host"),
+          composedPath: () => [first],
+          preventDefault: () => {
+            prevented = true;
+          },
+          stopImmediatePropagation: () => {},
+        }),
+      );
+      return prevented;
+    };
+    expect(press("ArrowRight", range)).toBe(false);
+    expect(text(".rs-meta__counter")).toBe("1 / 2");
+    // Escape still closes, and a non-control keeps the shortcuts.
+    expect(press("ArrowRight", /** @type {Element} */ (q(".rs-stage")))).toBe(
+      true,
+    );
+    expect(text(".rs-meta__counter")).toBe("2 / 2");
+    expect(press("Escape", range)).toBe(true);
+  });
+
   it("persists the mute preference when toggled", async () => {
     /** @type {object[]} */
     const saved = [];

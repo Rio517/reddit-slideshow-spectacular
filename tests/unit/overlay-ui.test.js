@@ -428,7 +428,7 @@ describe("createOverlay", () => {
     // an unpinned idle fade switches them off.
     expect(overlayCss).toMatch(/\.rs-meta\s*{[^}]*pointer-events:\s*none;/);
     expect(overlayCss).toMatch(
-      /\.rs-meta__title-text,\s*\.rs-meta a\s*{[^}]*pointer-events:\s*auto;/,
+      /\.rs-meta__title-text,\s*\.rs-meta__scrub,\s*\.rs-meta a\s*{[^}]*pointer-events:\s*auto;/,
     );
     expect(overlayCss).toMatch(
       /#reddit-slideshow-root\.rs-idle:not\(\.rs-pin-meta\)\s+\.rs-meta__title-text\s*{[^}]*pointer-events:\s*none;/,
@@ -563,7 +563,11 @@ describe("createOverlay", () => {
         .../** @type {HTMLElement} */ (overlay.root.querySelector(selector))
           .children,
       ].map((c) => c.className.split(" ")[0]);
-    expect(classes(".rs-meta")).toEqual(["rs-meta__side", "rs-meta__body"]);
+    expect(classes(".rs-meta")).toEqual([
+      "rs-meta__scrubrow",
+      "rs-meta__side",
+      "rs-meta__body",
+    ]);
     expect(classes(".rs-meta__body")).toEqual([
       "rs-meta__nsfw",
       "rs-meta__title",
@@ -716,28 +720,43 @@ describe("createOverlay", () => {
     );
   });
 
-  describe("caption strip over a clip", () => {
-    /** @param {number} bottom The clip's bottom edge, in viewport px. */
-    function renderClipEndingAt(bottom) {
-      vi.spyOn(
-        window.HTMLVideoElement.prototype,
-        "getBoundingClientRect",
-      ).mockReturnValue(/** @type {DOMRect} */ ({ bottom }));
+  describe("caption strip over an embedded player", () => {
+    const INFO = {
+      index: 0,
+      total: 2,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    };
+    /**
+     * @param {"video" | "embed"} kind
+     * @param {number} bottom The media's bottom edge, in viewport px.
+     */
+    function renderEndingAt(kind, bottom) {
+      const proto =
+        kind === "embed"
+          ? window.HTMLIFrameElement.prototype
+          : window.HTMLVideoElement.prototype;
+      vi.spyOn(proto, "getBoundingClientRect").mockReturnValue(
+        /** @type {DOMRect} */ ({ bottom }),
+      );
       const overlay = createOverlay(noopHandlers());
       overlay.show();
       overlay.renderCurrent(
-        imageSlide({
-          kind: "video",
-          durationMode: "media",
-          mediaUrl: "https://v.redd.it/vid.mp4",
-        }),
-        {
-          index: 0,
-          total: 2,
-          exhausted: true,
-          effectiveSeconds: 5,
-          playing: true,
-        },
+        kind === "embed"
+          ? imageSlide({
+              kind: "embed",
+              provider: "redgifs",
+              durationMode: "media",
+              mediaUrl: "https://www.redgifs.com/ifr/abc",
+              embedUrl: "https://www.redgifs.com/ifr/abc",
+            })
+          : imageSlide({
+              kind: "video",
+              durationMode: "media",
+              mediaUrl: "https://v.redd.it/vid.mp4",
+            }),
+        INFO,
       );
       return {
         overlay,
@@ -746,23 +765,30 @@ describe("createOverlay", () => {
         ),
       };
     }
+    const renderClipEndingAt = (/** @type {number} */ bottom) =>
+      renderEndingAt("embed", bottom);
     afterEach(() => vi.restoreAllMocks());
 
-    it("lifts clear of the control bar of a clip that reaches the bottom", () => {
+    it("lifts clear of the control bar of an embed that reaches the bottom", () => {
       const { meta } = renderClipEndingAt(window.innerHeight);
       expect(meta.classList.contains("rs-meta--lifted")).toBe(true);
       expect(meta.style.getPropertyValue("--rs-clip-clear")).toBe("72px");
     });
 
-    it("clears the bar of a clip that ends a little above the bottom", () => {
+    it("clears the bar of an embed that ends a little above the bottom", () => {
       const { meta } = renderClipEndingAt(window.innerHeight - 10);
       expect(meta.style.getPropertyValue("--rs-clip-clear")).toBe("82px");
     });
 
-    it("stays at the bottom under a clip with room beneath it", () => {
+    it("stays at the bottom under an embed with room beneath it", () => {
       const { meta } = renderClipEndingAt(window.innerHeight - 300);
       expect(meta.classList.contains("rs-meta--lifted")).toBe(false);
       expect(meta.style.getPropertyValue("--rs-clip-clear")).toBe("");
+    });
+
+    it("stays at the bottom over a native clip, which has no bar of its own", () => {
+      const { meta } = renderEndingAt("video", window.innerHeight);
+      expect(meta.classList.contains("rs-meta--lifted")).toBe(false);
     });
 
     it("drops back to the bottom for the image that follows", () => {
@@ -2150,9 +2176,11 @@ describe("createOverlay", () => {
         onMediaClock: (/** @type {number} */ s) => clock.push(s),
       });
       video.currentTime = 4;
+      /** @type {any} */ (video).paused = true;
       video.dispatchEvent(new Event("pause"));
       expect(toggles).toHaveBeenCalledTimes(1);
       expect(clock).toEqual([]);
+      /** @type {any} */ (video).paused = false;
       video.dispatchEvent(new Event("play"));
       expect(toggles).toHaveBeenCalledTimes(2);
       expect(paused).toBe(false);
@@ -2165,6 +2193,7 @@ describe("createOverlay", () => {
         isPaused: () => true,
         onTogglePlay: toggles,
       });
+      /** @type {any} */ (video).paused = true;
       video.dispatchEvent(new Event("pause"));
       video.dispatchEvent(new Event("play"));
       expect(toggles).not.toHaveBeenCalled();
@@ -2176,8 +2205,19 @@ describe("createOverlay", () => {
         isPaused: () => false,
         onTogglePlay: toggles,
       });
+      /** @type {any} */ (video).paused = true;
       Object.defineProperty(video, "ended", { value: true, writable: true });
       video.dispatchEvent(new Event("pause"));
+      expect(toggles).not.toHaveBeenCalled();
+    });
+
+    it("ignores a pause that arrives after the clip is playing again", async () => {
+      const toggles = vi.fn();
+      const { video } = await mountClip({
+        isPaused: () => false,
+        onTogglePlay: toggles,
+      });
+      video.dispatchEvent(new Event("pause")); // video.paused is false
       expect(toggles).not.toHaveBeenCalled();
     });
 
@@ -2681,7 +2721,7 @@ describe("help panel", () => {
   });
 });
 
-describe("auto-hide video controls", () => {
+describe("clip seek bar", () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => {
     vi.useRealTimers();
@@ -2710,69 +2750,82 @@ describe("auto-hide video controls", () => {
     );
   }
 
-  it("starts with native controls hidden", () => {
-    const overlay = createOverlay(noopHandlers());
-    overlay.show();
-    expect(renderVideoSlide(overlay).controls).toBe(false);
-  });
+  /**
+   * @param {Overlay} overlay
+   * @param {{ duration?: number, at?: number }} [clip]
+   */
+  function readyClip(overlay, { duration = 10, at = 0 } = {}) {
+    const video = renderVideoSlide(overlay);
+    Object.defineProperty(video, "duration", {
+      value: duration,
+      writable: true,
+    });
+    Object.defineProperty(video, "currentTime", { value: at, writable: true });
+    Object.defineProperty(video, "paused", { value: false, writable: true });
+    video.dispatchEvent(new Event("loadeddata"));
+    video.dispatchEvent(new Event("timeupdate"));
+    const q = (/** @type {string} */ selector) =>
+      /** @type {HTMLElement} */ (overlay.root.querySelector(selector));
+    return {
+      video,
+      row: q(".rs-meta__scrubrow"),
+      scrub: /** @type {HTMLInputElement} */ (q(".rs-meta__scrub")),
+      time: q(".rs-meta__scrub-time"),
+    };
+  }
 
-  it("reveals controls on pointer activity over the video", () => {
+  /** A show whose pause state the overlay toggles, plus what it reported. */
+  function liveShow(paused = false) {
+    /** @type {number[]} */
+    const clock = [];
+    const state = { paused, toggles: 0, clock };
+    const handlers = {
+      ...noopHandlers(),
+      isPaused: () => state.paused,
+      onTogglePlay: () => {
+        state.paused = !state.paused;
+        state.toggles += 1;
+      },
+      onMediaClock: (/** @type {number} */ s) => {
+        clock.push(s);
+      },
+    };
+    return { state, handlers };
+  }
+
+  it("never shows the browser's own controls on a clip", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
     const video = renderVideoSlide(overlay);
     video.dispatchEvent(new Event("pointermove"));
-    expect(video.controls).toBe(true);
-  });
-
-  it("hides controls when the pointer leaves the video", () => {
-    const overlay = createOverlay(noopHandlers());
-    overlay.show();
-    const video = renderVideoSlide(overlay);
-    video.dispatchEvent(new Event("pointerenter"));
-    expect(video.controls).toBe(true);
-    video.dispatchEvent(new Event("pointerleave"));
     expect(video.controls).toBe(false);
   });
 
-  it("re-hides controls after the pointer goes idle", () => {
+  it("shows the seek bar once the clip's length is known", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
-    const video = renderVideoSlide(overlay);
-    video.dispatchEvent(new Event("pointermove"));
-    expect(video.controls).toBe(true);
-    vi.advanceTimersByTime(2000);
-    expect(video.controls).toBe(false);
+    const bare = renderVideoSlide(overlay);
+    const row = /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-meta__scrubrow")
+    );
+    expect(row.hidden).toBe(true);
+    bare.dispatchEvent(new Event("timeupdate")); // no duration yet
+    expect(row.hidden).toBe(true);
+
+    const { scrub, time } = readyClip(overlay, { duration: 75, at: 12 });
+    expect(row.hidden).toBe(false);
+    expect(scrub.max).toBe("75");
+    expect(Number(scrub.value)).toBe(12);
+    expect(time.textContent).toBe("0:12 / 1:15");
+    expect(scrub.getAttribute("aria-valuetext")).toBe("0:12 / 1:15");
+    expect(scrub.style.getPropertyValue("--rs-scrub")).toBe("16%");
   });
 
-  it("re-shows controls on a later pointer move after idle", () => {
+  it("hides the seek bar on a slide that is not a clip", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
-    const video = renderVideoSlide(overlay);
-    video.dispatchEvent(new Event("pointermove"));
-    vi.advanceTimersByTime(2000);
-    expect(video.controls).toBe(false);
-    video.dispatchEvent(new Event("pointermove"));
-    expect(video.controls).toBe(true);
-  });
-
-  it("does not reveal controls at the start or end of the clip", () => {
-    const overlay = createOverlay(noopHandlers());
-    overlay.show();
-    const video = renderVideoSlide(overlay);
-    video.dispatchEvent(new Event("loadeddata")); // playback starts
-    expect(video.controls).toBe(false);
-    video.dispatchEvent(new Event("ended")); // playback ends
-    expect(video.controls).toBe(false);
-  });
-
-  it("tears down the pointer listeners when the frame is retired", () => {
-    const overlay = createOverlay(noopHandlers());
-    overlay.show();
-    const video = renderVideoSlide(overlay);
-    video.dispatchEvent(new Event("pointermove"));
-    expect(video.controls).toBe(true);
-    // A new render aborts the old frame's media listeners, which hides its
-    // controls; further pointer events on the detached video do nothing.
+    const { row } = readyClip(overlay);
+    expect(row.hidden).toBe(false);
     overlay.renderCurrent(
       imageSlide({ id: "later", mediaUrl: "https://i.redd.it/later.jpg" }),
       {
@@ -2783,9 +2836,95 @@ describe("auto-hide video controls", () => {
         playing: true,
       },
     );
-    expect(video.controls).toBe(false);
-    video.dispatchEvent(new Event("pointermove"));
-    expect(video.controls).toBe(false);
+    expect(row.hidden).toBe(true);
+  });
+
+  it("holds a playing show for a drag, then resumes and re-times it", async () => {
+    vi.useRealTimers();
+    const { state, handlers } = liveShow();
+    const overlay = createOverlay(handlers);
+    overlay.show();
+    const { video, scrub } = readyClip(overlay);
+    await Promise.resolve();
+    await Promise.resolve();
+
+    scrub.dispatchEvent(new Event("pointerdown"));
+    expect(state.paused).toBe(true);
+    scrub.value = "4";
+    scrub.dispatchEvent(new Event("input"));
+    expect(video.currentTime).toBe(4);
+    // Mid-drag the show stays held: nothing is re-timed yet.
+    expect(state.clock).toEqual([]);
+
+    scrub.dispatchEvent(new Event("pointerup"));
+    expect(state.paused).toBe(false);
+    expect(state.toggles).toBe(2);
+    expect(state.clock).toEqual([6]);
+  });
+
+  it("leaves a show the viewer paused alone when they drag", async () => {
+    vi.useRealTimers();
+    const { state, handlers } = liveShow(true);
+    const overlay = createOverlay(handlers);
+    overlay.show();
+    const { video, scrub } = readyClip(overlay);
+    await Promise.resolve();
+    await Promise.resolve();
+
+    scrub.dispatchEvent(new Event("pointerdown"));
+    scrub.value = "7";
+    scrub.dispatchEvent(new Event("input"));
+    scrub.dispatchEvent(new Event("pointerup"));
+    expect(video.currentTime).toBe(7);
+    expect(state.toggles).toBe(0);
+    expect(state.paused).toBe(true);
+  });
+
+  it("seeks five seconds on an arrow key and re-times at once", async () => {
+    vi.useRealTimers();
+    const { state, handlers } = liveShow();
+    const overlay = createOverlay(handlers);
+    overlay.show();
+    const { video, scrub } = readyClip(overlay, { duration: 20, at: 8 });
+    await Promise.resolve();
+    await Promise.resolve();
+
+    const press = (/** @type {string} */ key) =>
+      scrub.dispatchEvent(new KeyboardEvent("keydown", { key }));
+    press("ArrowRight");
+    expect(video.currentTime).toBe(13);
+    press("ArrowLeft");
+    press("ArrowLeft");
+    press("ArrowLeft");
+    expect(video.currentTime).toBe(0); // clamped at the start
+    expect(state.toggles).toBe(0);
+    expect(state.clock).toEqual([7, 12, 17, 20]);
+  });
+
+  it("mirrors the arrow keys under a right-to-left locale", () => {
+    setLocale("ar");
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    const { video, scrub } = readyClip(overlay, { duration: 20, at: 8 });
+    scrub.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+    expect(video.currentTime).toBe(13);
+    setLocale("en");
+  });
+
+  it("re-times a looping clip from the seek bar", async () => {
+    vi.useRealTimers();
+    const { state, handlers } = liveShow();
+    const overlay = createOverlay(handlers);
+    overlay.show();
+    const { video, scrub } = readyClip(overlay);
+    await Promise.resolve();
+    await Promise.resolve();
+    video.loop = true;
+    scrub.dispatchEvent(new Event("pointerdown"));
+    scrub.value = "2";
+    scrub.dispatchEvent(new Event("input"));
+    scrub.dispatchEvent(new Event("pointerup"));
+    expect(state.clock).toEqual([8]);
   });
 });
 
@@ -3688,41 +3827,6 @@ describe("manual zoom while paused", () => {
     overlay.manualZoomStep(1);
     window.dispatchEvent(new Event("resize"));
     expect(frame.style.transform).toBe("");
-  });
-
-  it("keeps native video controls hidden while inspect-zoomed", async () => {
-    const overlay = createOverlay(noopHandlers());
-    overlay.show();
-    overlay.setPlaying(false);
-    overlay.renderCurrent(
-      imageSlide({
-        kind: "video",
-        durationMode: "media",
-        mediaUrl: "https://v.redd.it/z/DASH_720.mp4",
-      }),
-      {
-        index: 0,
-        total: 1,
-        exhausted: true,
-        effectiveSeconds: 5,
-        playing: false,
-      },
-    );
-    const video = /** @type {HTMLVideoElement} */ (
-      overlay.root.querySelector("video")
-    );
-    video.dispatchEvent(new Event("loadeddata"));
-    await Promise.resolve();
-    await Promise.resolve();
-    // Hovering reveals the native controls on an unzoomed video.
-    video.dispatchEvent(new Event("pointermove"));
-    expect(video.controls).toBe(true);
-    // Zooming hides them, and hovering can't bring them back while zoomed -
-    // a drag-to-pan must never fight the native scrub bar.
-    overlay.manualZoomStep(1);
-    expect(video.controls).toBe(false);
-    video.dispatchEvent(new Event("pointermove"));
-    expect(video.controls).toBe(false);
   });
 
   it("a new slide render starts unzoomed", async () => {

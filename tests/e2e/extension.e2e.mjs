@@ -528,6 +528,34 @@ async function main() {
     check("the gif's countdown runs the clip, not the flat image dwell", () =>
       assert.equal(gif?.sweep, GIF_CLIP_SECONDS),
     );
+    const seek = await gifPage
+      .waitForFunction(
+        () => {
+          const sr = document.querySelector(
+            "#reddit-slideshow-host",
+          )?.shadowRoot;
+          const row = /** @type {HTMLElement | null | undefined} */ (
+            sr?.querySelector(".rs-meta__scrubrow")
+          );
+          const bar = /** @type {HTMLInputElement | null | undefined} */ (
+            sr?.querySelector(".rs-meta__scrub")
+          );
+          const video = sr?.querySelector("video");
+          if (!row || !bar || !video || row.hidden) return null;
+          return { max: bar.max, nativeControls: video.controls };
+        },
+        { timeout: 5000 },
+      )
+      .then((handle) => handle.jsonValue())
+      .catch(() => null);
+    check(
+      "a clip gets the caption's seek bar, not the browser's controls",
+      () => {
+        assert.ok(seek, "no seek bar appeared for the clip");
+        assert.equal(Number(seek.max), 1.5);
+        assert.equal(seek.nativeControls, false);
+      },
+    );
   } finally {
     await context.close();
     await rm(userDataDir, { recursive: true, force: true });

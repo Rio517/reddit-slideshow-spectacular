@@ -215,6 +215,10 @@
     "message": "تصويت بالسلب (↓)",
     "description": "Control label: downvote the current post (with the Down-arrow shortcut)."
   },
+  "uiSeek": {
+    "message": "التنقل داخل الفيديو",
+    "description": "Accessible name of the seek bar for the current video."
+  },
   "uiNsfw": {
     "message": "غير لائق",
     "description": "Badge marking a not-safe-for-work slide."

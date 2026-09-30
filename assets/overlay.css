@@ -517,7 +517,7 @@ iframe.reddit-slideshow-media {
     rgba(3, 4, 7, 0)
   );
   /* The strip spans the slide, so only its controls take the pointer: the
-     backdrop and a clip's own control bar stay reachable through it. */
+     backdrop and the slide stay reachable through it. */
   pointer-events: none;
   transition:
     opacity 0.35s ease,
@@ -527,13 +527,144 @@ iframe.reddit-slideshow-media {
 
 .rs-meta__side .rs-btn:not(:disabled),
 .rs-meta__title-text,
+.rs-meta__scrub,
 .rs-meta a {
   pointer-events: auto;
 }
 
-/* Over a clip the strip sits above the clip's own control bar (overlay-ui sets
-   --rs-clip-clear), on a band that fades at both edges rather than running to
-   the bottom of the screen. */
+/* Seek bar for a clip: a thin line across the strip's top edge with the
+   position at its end. It runs out to the slide's own margin, past the end
+   padding that holds the title back. */
+.rs-meta__scrubrow {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+  margin-inline-end: calc(26px - min(150px, 12vw));
+}
+
+.rs-meta__scrubrow[hidden] {
+  display: none;
+}
+
+.rs-meta__scrub-time {
+  flex: none;
+  font-family:
+    ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: #ddd;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+/* The native range, restyled: an 18px-tall target around a 3px line that
+   thickens on hover. Chrome has no fill pseudo-element, so its track paints the
+   played part from --rs-scrub (set by overlay-ui); Firefox has one. */
+.rs-meta__scrub {
+  --rs-scrub: 0%;
+  --rs-scrub-line: 3px;
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 1;
+  min-width: 0;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.rs-meta__scrub:hover,
+.rs-meta__scrub:active,
+.rs-meta__scrub:focus-visible {
+  --rs-scrub-line: 5px;
+}
+
+.rs-meta__scrub:focus {
+  outline: none;
+}
+
+.rs-meta__scrub:focus-visible {
+  outline: 2px solid var(--rs-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.rs-meta__scrub::-webkit-slider-runnable-track {
+  height: var(--rs-scrub-line);
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    var(--rs-accent) var(--rs-scrub),
+    rgba(255, 255, 255, 0.3) var(--rs-scrub)
+  );
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  transition: height 0.12s ease;
+}
+
+#reddit-slideshow-root[dir="rtl"]
+  .rs-meta__scrub::-webkit-slider-runnable-track {
+  background: linear-gradient(
+    to left,
+    var(--rs-accent) var(--rs-scrub),
+    rgba(255, 255, 255, 0.3) var(--rs-scrub)
+  );
+}
+
+.rs-meta__scrub::-moz-range-track {
+  height: var(--rs-scrub-line);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.rs-meta__scrub::-moz-range-progress {
+  height: var(--rs-scrub-line);
+  border-radius: 3px;
+  background: var(--rs-accent);
+}
+
+/* The thumb shows only while the bar is in use. */
+.rs-meta__scrub::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px;
+  height: 13px;
+  /* Centered on the line: (line - thumb) / 2. */
+  margin-top: calc((var(--rs-scrub-line) - 13px) / 2);
+  border-radius: 50%;
+  background: var(--rs-fg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.rs-meta__scrub::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--rs-fg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.rs-meta__scrub:hover::-webkit-slider-thumb,
+.rs-meta__scrub:active::-webkit-slider-thumb,
+.rs-meta__scrub:focus-visible::-webkit-slider-thumb {
+  opacity: 1;
+}
+
+.rs-meta__scrub:hover::-moz-range-thumb,
+.rs-meta__scrub:active::-moz-range-thumb,
+.rs-meta__scrub:focus-visible::-moz-range-thumb {
+  opacity: 1;
+}
+
+/* Over an embedded player the strip sits above the player's own control bar
+   (overlay-ui sets --rs-clip-clear), on a band that fades at both edges rather
+   than running to the bottom of the screen. */
 .rs-meta--lifted {
   bottom: var(--rs-clip-clear, 0px);
   padding-block: 36px 18px;
@@ -785,6 +916,7 @@ iframe.reddit-slideshow-media {
    back in to the pointer individually, so the strip's own rule misses them). */
 #reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta .rs-btn,
 #reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta a,
+#reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta__scrub,
 #reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta__title-text {
   pointer-events: none;
 }
