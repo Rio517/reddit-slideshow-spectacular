@@ -134,6 +134,61 @@ describe("SlideshowController", () => {
     expect(rendered).toEqual(["v", "b"]);
   });
 
+  it("re-times a media slide's safety timer to the clip's time left", () => {
+    const { controller, rendered } = makeController();
+    controller.start({
+      slides: [
+        slideWithId("v", {
+          kind: "video",
+          durationMode: "media",
+          durationSeconds: 10,
+        }),
+        slideWithId("b"),
+      ],
+      exhausted: true,
+      postsScanned: 2,
+    });
+    controller.markReady();
+    vi.advanceTimersByTime(6000);
+    controller.markReady(9); // viewer rewound: 9s left + 2s safety
+    vi.advanceTimersByTime(10999);
+    expect(rendered).toEqual(["v"]);
+    vi.advanceTimersByTime(1);
+    expect(rendered).toEqual(["v", "b"]);
+  });
+
+  it("ignores the clip's time left on a timer-mode slide", () => {
+    const { controller, rendered } = makeController();
+    controller.start({
+      slides: [slideWithId("a"), slideWithId("b")],
+      exhausted: true,
+      postsScanned: 2,
+    });
+    controller.markReady(60);
+    vi.advanceTimersByTime(5000);
+    expect(rendered).toEqual(["a", "b"]);
+  });
+
+  it("arms nothing for a clip's time left while paused", () => {
+    const { controller, rendered } = makeController();
+    controller.start({
+      slides: [
+        slideWithId("v", {
+          kind: "video",
+          durationMode: "media",
+          durationSeconds: 10,
+        }),
+        slideWithId("b"),
+      ],
+      exhausted: true,
+      postsScanned: 2,
+    });
+    controller.pause();
+    controller.markReady(3);
+    vi.advanceTimersByTime(60000);
+    expect(rendered).toEqual(["v"]);
+  });
+
   it("keeps the timer running after manual navigation", () => {
     const { controller, rendered } = makeController();
     controller.start({

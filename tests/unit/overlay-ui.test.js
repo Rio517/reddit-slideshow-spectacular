@@ -1861,6 +1861,162 @@ describe("createOverlay", () => {
     ).toContain("12s");
   });
 
+  describe("clip controls move the show's clock", () => {
+    /**
+     * @param {Partial<ReturnType<typeof noopHandlers>> & Record<string, unknown>} [handlers]
+     * @param {boolean} [commit]
+     */
+    async function mountClip(handlers = {}, commit = true) {
+      vi.useRealTimers();
+      const overlay = createOverlay({ ...noopHandlers(), ...handlers });
+      overlay.show();
+      overlay.renderCurrent(
+        imageSlide({
+          id: "vid",
+          kind: "video",
+          durationMode: "media",
+          durationSeconds: 10,
+          mediaUrl: "https://v.redd.it/vid.mp4",
+        }),
+        {
+          index: 0,
+          total: 1,
+          exhausted: true,
+          effectiveSeconds: 10,
+          playing: true,
+        },
+      );
+      const video = /** @type {HTMLVideoElement} */ (
+        overlay.root.querySelector("video")
+      );
+      Object.defineProperty(video, "duration", { value: 10, writable: true });
+      Object.defineProperty(video, "currentTime", { value: 0, writable: true });
+      Object.defineProperty(video, "paused", { value: false, writable: true });
+      if (commit) {
+        video.dispatchEvent(new Event("loadeddata"));
+        await Promise.resolve();
+        await Promise.resolve();
+      }
+      const fill = /** @type {HTMLElement} */ (
+        overlay.root.querySelector(".rs-timer__fill")
+      );
+      return { video, fill };
+    }
+
+    it("re-times the show and the bar to the clip's time left on seek", async () => {
+      /** @type {number[]} */
+      const clock = [];
+      const { video, fill } = await mountClip({
+        isPaused: () => false,
+        onMediaClock: (/** @type {number} */ s) => clock.push(s),
+      });
+      video.currentTime = 4;
+      video.dispatchEvent(new Event("seeked"));
+      expect(clock).toEqual([6]);
+      expect(fill.style.animation).toContain("10s");
+      expect(fill.style.animation).toContain("-4s");
+      expect(fill.style.animationPlayState).toBe("running");
+    });
+
+    it("leaves a looping clip's own wrap-around seek alone", async () => {
+      /** @type {number[]} */
+      const clock = [];
+      const { video } = await mountClip({
+        isPaused: () => false,
+        onMediaClock: (/** @type {number} */ s) => clock.push(s),
+      });
+      video.loop = true;
+      video.dispatchEvent(new Event("seeked"));
+      expect(clock).toEqual([]);
+    });
+
+    it("ignores a seek before the frame commits", async () => {
+      /** @type {number[]} */
+      const clock = [];
+      const { video } = await mountClip(
+        {
+          isPaused: () => false,
+          onMediaClock: (/** @type {number} */ s) => clock.push(s),
+        },
+        false,
+      );
+      video.currentTime = 4;
+      video.dispatchEvent(new Event("seeked"));
+      expect(clock).toEqual([]);
+    });
+
+    it("halves the time left at playback rate 2", async () => {
+      /** @type {number[]} */
+      const clock = [];
+      const { video } = await mountClip({
+        isPaused: () => false,
+        onMediaClock: (/** @type {number} */ s) => clock.push(s),
+      });
+      video.currentTime = 4;
+      video.playbackRate = 2;
+      video.dispatchEvent(new Event("ratechange"));
+      expect(clock).toEqual([3]);
+    });
+
+    it("holds the show on a native pause and resumes it on the next play", async () => {
+      let paused = false;
+      /** @type {number[]} */
+      const clock = [];
+      const toggles = vi.fn(() => {
+        paused = !paused;
+      });
+      const { video } = await mountClip({
+        isPaused: () => paused,
+        onTogglePlay: toggles,
+        onMediaClock: (/** @type {number} */ s) => clock.push(s),
+      });
+      video.currentTime = 4;
+      video.dispatchEvent(new Event("pause"));
+      expect(toggles).toHaveBeenCalledTimes(1);
+      expect(clock).toEqual([]);
+      video.dispatchEvent(new Event("play"));
+      expect(toggles).toHaveBeenCalledTimes(2);
+      expect(paused).toBe(false);
+      expect(clock).toEqual([6]);
+    });
+
+    it("does not toggle the show when it is already paused", async () => {
+      const toggles = vi.fn();
+      const { video } = await mountClip({
+        isPaused: () => true,
+        onTogglePlay: toggles,
+      });
+      video.dispatchEvent(new Event("pause"));
+      video.dispatchEvent(new Event("play"));
+      expect(toggles).not.toHaveBeenCalled();
+    });
+
+    it("does not toggle the show when the clip simply ended", async () => {
+      const toggles = vi.fn();
+      const { video } = await mountClip({
+        isPaused: () => false,
+        onTogglePlay: toggles,
+      });
+      Object.defineProperty(video, "ended", { value: true, writable: true });
+      video.dispatchEvent(new Event("pause"));
+      expect(toggles).not.toHaveBeenCalled();
+    });
+
+    it("neither toggles nor re-times on a play with no clip-initiated pause", async () => {
+      const toggles = vi.fn();
+      /** @type {number[]} */
+      const clock = [];
+      const { video } = await mountClip({
+        isPaused: () => false,
+        onTogglePlay: toggles,
+        onMediaClock: (/** @type {number} */ s) => clock.push(s),
+      });
+      video.dispatchEvent(new Event("play"));
+      expect(toggles).not.toHaveBeenCalled();
+      expect(clock).toEqual([]);
+    });
+  });
+
   it("ignores a clip that reports no usable duration", async () => {
     vi.useRealTimers();
     /** @type {Array<[string, number]>} */
