@@ -18,9 +18,10 @@ const ORIGIN = "https://old.reddit.com";
  * @param {number} width
  * @param {number} height
  * @param {string} mimeType
+ * @param {number} score
  * @returns {import("../../lib/slides.js").Slide}
  */
-function slide(id, title, url, width, height, mimeType) {
+function slide(id, title, url, width, height, mimeType, score) {
   return {
     id: `t3_${id}:0`,
     postId: `t3_${id}`,
@@ -32,6 +33,7 @@ function slide(id, title, url, width, height, mimeType) {
     title,
     author: "rio517",
     subreddit: "SlideShowSpectacular",
+    score,
     over18: false,
     durationMode: "timer",
     audioAvailable: false,
@@ -51,6 +53,7 @@ const slides = [
     1122,
     1402,
     "image/png",
+    12437,
   ),
   slide(
     "cat1",
@@ -59,6 +62,7 @@ const slides = [
     1122,
     1402,
     "image/png",
+    8123,
   ),
   // The Giphy cat is an animated GIF: image/gif gets the --fill treatment, so
   // the reel shows it viewport-fit like the real app instead of sitting tiny.
@@ -69,6 +73,7 @@ const slides = [
     400,
     225,
     "image/gif",
+    3291,
   ),
 ];
 

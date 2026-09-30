@@ -32,7 +32,7 @@ Product, research, and decision docs for the extension, plus the shipped assets:
 - [ADR 0016](adr/0016-redgifs-native-video.md): play Redgifs as native video — API resolve, lazy on-approach upgrade, direct on Firefox (`referrerpolicy=no-referrer`); proxied on Chrome; iframe fallback on resolve failure.
 - [ADR 0017](adr/0017-download-current-media.md): download the current media via the background `downloads` API.
 - [ADR 0018](adr/0018-reddit-video-audio.md): play v.redd.it audio from a companion `<audio>` synced to the silent fallback video.
-- [ADR 0019](adr/0019-post-voting.md): upvote/downvote the current post with the ↑/↓ keys through the logged-in session.
+- [ADR 0019](adr/0019-post-voting.md): upvote/downvote the current post with the ↑/↓ keys or the caption's arrows through the logged-in session.
 - [ADR 0020](adr/0020-download-folder-setting.md): download folder as a subfolder-of-Downloads setting — the platform offers no usable folder picker for extensions.
 - [ADR 0021](adr/0021-manual-inspect-zoom.md): manual inspect-zoom on a paused slide — wheel or +/− at the pointer, drag to pan, on the slide frame so it composes with pan & zoom.
 - [ADR 0022](adr/0022-reddit-gif-native-video.md): play reddit gif posts as native video from reddit's own mp4 transcode (countdown bar, dwell = the clip).

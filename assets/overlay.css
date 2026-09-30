@@ -491,21 +491,101 @@ iframe.reddit-slideshow-media {
   border-radius: 6px;
 }
 
-/* Bottom-left metadata: a stack anchored at the bottom and growing up - NSFW on
-   top, the title row, then the byline at the bottom. */
+/* Bottom caption: a full-width strip over a scrim. A fixed side column (vote
+   arrows, score, open/download) sits at the inline start, so those controls
+   stay put whatever the title's length; the title and post details take the
+   rest of the width. */
 .rs-meta {
   position: absolute;
-  inset-inline-start: 26px;
-  bottom: 30px;
+  inset-inline: 0;
+  bottom: 0;
   z-index: 6;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 16px;
+  align-items: end;
+  padding-block: 64px 20px;
+  /* The end padding keeps a long title clear of the buffering hint. */
+  padding-inline: 26px min(150px, 12vw);
+  background: linear-gradient(
+    to top,
+    rgba(3, 4, 7, 0.9),
+    rgba(3, 4, 7, 0.6) 52%,
+    rgba(3, 4, 7, 0)
+  );
+  /* The strip spans the slide, so only its controls take the pointer: the
+     backdrop and a clip's own control bar stay reachable through it. */
+  pointer-events: none;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    bottom 0.2s ease;
+}
+
+.rs-meta__side .rs-btn:not(:disabled),
+.rs-meta__title-text,
+.rs-meta a {
+  pointer-events: auto;
+}
+
+/* Over a clip the strip sits above the clip's own control bar (overlay-ui sets
+   --rs-clip-clear), on a band that fades at both edges rather than running to
+   the bottom of the screen. */
+.rs-meta--lifted {
+  bottom: var(--rs-clip-clear, 0px);
+  padding-block: 36px 18px;
+  background: linear-gradient(
+    to top,
+    rgba(3, 4, 7, 0),
+    rgba(3, 4, 7, 0.62) 26%,
+    rgba(3, 4, 7, 0.5) 62%,
+    rgba(3, 4, 7, 0)
+  );
+}
+
+.rs-meta__side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Vote block: the two arrows side by side, the score centered beneath. */
+.rs-meta__vote {
+  display: grid;
+  grid-template-columns: repeat(2, 30px);
+  column-gap: 4px;
+  justify-items: center;
+  align-items: center;
+}
+
+.rs-meta__score {
+  grid-column: 1 / -1;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  transition: color 0.18s ease;
+}
+
+.rs-meta__score[hidden] {
+  display: none;
+}
+
+.rs-meta__actions {
+  display: flex;
+  gap: 4px;
+}
+
+.rs-meta__body {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
-  max-width: 64vw;
-  transition:
-    opacity 0.35s ease,
-    transform 0.35s ease;
+  gap: 5px;
+  padding-bottom: 5px;
 }
 
 .rs-meta__counter {
@@ -537,139 +617,48 @@ iframe.reddit-slideshow-media {
   display: none;
 }
 
-/* Title row: the title text (ellipsized), then the open-original + download
-   controls and the loading spinner. */
+/* The title shows in full and wraps; a long one simply takes more lines. */
 .rs-meta__title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  max-width: 64vw;
-  /* Lighter than --rs-muted so the title reads clearly over busy media. */
-  color: #ddd;
-  font-size: 14px;
-  font-weight: 300;
+  max-width: 100%;
+  font-size: 16px;
+  line-height: 1.35;
+  font-weight: 500;
   /* Edge + glow so the text holds up even where the scrim thins out. */
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.8),
     0 0 0.35rem rgba(0, 0, 0, 0.6);
 }
 
-/* Only the title text ellipsizes; the controls beside it are flex:none. */
 .rs-meta__title-text {
-  flex: 0 1 auto;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
   cursor: default;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.rs-title-tip {
-  --rs-title-tip-arrow-left: 22px;
-  position: fixed;
-  z-index: 9;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: rgba(10, 12, 18, 0.96);
-  color: var(--rs-fg);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
-  font-size: 13px;
-  line-height: 1.35;
-  text-shadow: none;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  pointer-events: none;
-}
-
-.rs-title-tip::before,
-.rs-title-tip::after {
-  content: "";
-  position: absolute;
-  left: var(--rs-title-tip-arrow-left);
-  width: 0;
-  height: 0;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-
-.rs-title-tip::before {
-  bottom: -8px;
-  border-inline: 8px solid transparent;
-  border-top: 8px solid rgba(255, 255, 255, 0.14);
-}
-
-.rs-title-tip::after {
-  bottom: -7px;
-  border-inline: 7px solid transparent;
-  border-top: 7px solid rgba(10, 12, 18, 0.96);
-}
-
-.rs-title-tip[hidden] {
-  display: none;
-}
-
-/* Vote arrow at the head of the title, sized to the text. The state modifier
-   tints it (orange up / blue down / soft grey none) and flips it for a
-   downvote; both animate. */
-.rs-meta__vote {
-  flex: none;
-  width: 13px;
-  height: 13px;
-  color: rgba(255, 255, 255, 0.28);
-  transition:
-    color 0.18s ease,
-    transform 0.18s ease;
-}
-
-.rs-meta__vote path {
-  fill: currentColor;
-}
-
-.rs-meta__vote--up {
-  color: var(--rs-accent);
-}
-
-.rs-meta__vote--down {
-  color: var(--rs-downvote);
-  transform: rotate(180deg);
-}
-
-/* Byline: /u/author to /r/subreddit, on one line (domain + size sit below). */
-.rs-meta__byline {
+/* Post details under the title: the byline, then the source, on one line that
+   wraps when the window is narrow. The loading spinner trails them. */
+.rs-meta__details {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 5px;
-  max-width: 64vw;
+  gap: 3px 16px;
+  max-width: 100%;
   font-size: 12px;
-  color: var(--rs-muted);
-  /* Layered, increasingly blurred shadows build a soft dark smudge behind
-     the glyphs (the accent links need more than a thin edge over light
-     media, but a boxed background reads as chrome). */
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.9),
-    0 0 4px rgba(0, 0, 0, 0.85),
-    0 0 9px rgba(0, 0, 0, 0.75),
-    0 0 16px rgba(0, 0, 0, 0.6),
-    0 0 26px rgba(0, 0, 0, 0.45);
-  white-space: nowrap;
-  /* The overflow guard (a long username must not spill across the slide) clips
-     at the box edge, which cropped the smudge into the hard-edged rectangle it
-     exists to avoid. Room for the widest shadow, taken straight back out as
-     margin, so the smudge falls off softly with the layout unmoved. Content-box
-     keeps the truncation point where it was. */
-  padding: 26px;
-  margin: -26px;
-  overflow: hidden;
-  /* The grown box would otherwise swallow backdrop clicks around the byline;
-     only the links themselves are interactive. */
-  pointer-events: none;
+    0 0 4px rgba(0, 0, 0, 0.7);
 }
 
-.rs-meta__byline a {
-  pointer-events: auto;
+/* Byline: /u/author to /r/subreddit. */
+.rs-meta__byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 5px;
+  min-width: 0;
+  color: var(--rs-muted);
 }
 
 .rs-meta__author,
@@ -715,18 +704,15 @@ iframe.reddit-slideshow-media {
   text-overflow: ellipsis;
 }
 
-/* Source line below the byline: "{domain} • {W}×{H}", light, on its own row so
-   the byline stays narrow. The domain truncates first if it overflows. */
+/* Source: "{domain} • {W}×{H}", light. The domain truncates first if it
+   overflows. */
 .rs-meta__source {
   display: flex;
   align-items: baseline;
   gap: 5px;
-  max-width: 64vw;
-  font-size: 12px;
+  min-width: 0;
   color: #ddd;
-  text-shadow: 0 0 0.2rem #000;
   white-space: nowrap;
-  overflow: hidden;
 }
 
 .rs-meta__source[hidden] {
@@ -737,6 +723,7 @@ iframe.reddit-slideshow-media {
    over 200ms via the base transition once the class is removed. */
 .rs-meta__spinner {
   flex: none;
+  align-self: center;
   display: inline-block;
   width: 11px;
   height: 11px;
@@ -791,16 +778,22 @@ iframe.reddit-slideshow-media {
   transform: translateY(-50%) translateX(calc(12px * var(--rs-dir)));
 }
 
+/* The faded caption's controls must not take clicks while invisible (they opt
+   back in to the pointer individually, so the strip's own rule misses them). */
+#reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta .rs-btn,
+#reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta a,
+#reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta__title-text {
+  pointer-events: none;
+}
+
 /* "Always show count": the top-left cluster (counter + skipped badge) survives
-   the idle fade. "Always show meta": the bottom title/byline bar does. Each is
-   driven by its own setting. Meta remains interactive so a pinned title can
-   reveal its full-title tooltip without first wiggling the pointer elsewhere. */
+   the idle fade. "Always show meta": the bottom caption does, and stays
+   interactive. Each is driven by its own setting. */
 #reddit-slideshow-root.rs-pin-count.rs-idle .rs-topleft {
   opacity: 1;
 }
 #reddit-slideshow-root.rs-pin-meta.rs-idle .rs-meta {
   opacity: 1;
-  pointer-events: auto;
 }
 
 .rs-btn {
@@ -1141,6 +1134,8 @@ iframe.reddit-slideshow-media {
   position: absolute;
   inset-inline-end: 24px;
   bottom: 34px;
+  /* Above the caption strip, whose scrim reaches this corner. */
+  z-index: 7;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1699,8 +1694,8 @@ iframe.reddit-slideshow-media {
   animation: rs-counter-pulse 0.4s var(--rs-tx-ease);
 }
 
-/* Open-original and download live in the title row; size them down from the
-   rail buttons. */
+/* The caption's side-column controls; sized down from the rail buttons. */
+.rs-meta__arrow,
 .rs-meta__open,
 .rs-meta__download {
   width: 30px;
@@ -1712,10 +1707,33 @@ iframe.reddit-slideshow-media {
   background: rgba(255, 255, 255, 0.12);
 }
 
+.rs-meta__arrow .rs-icon,
 .rs-meta__open .rs-icon,
 .rs-meta__download .rs-icon {
   width: 18px;
   height: 18px;
+}
+
+/* Vote arrows rest soft; the one the viewer cast takes its color (orange up,
+   blue down) and the score follows it. */
+.rs-meta__arrow {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.rs-meta__vote--up .rs-meta__arrow--up,
+.rs-meta__vote--up .rs-meta__score {
+  color: var(--rs-accent);
+}
+
+.rs-meta__vote--down .rs-meta__arrow--down,
+.rs-meta__vote--down .rs-meta__score {
+  color: var(--rs-downvote);
+}
+
+/* Hovering the down arrow previews its own blue, not the rail's orange. */
+.rs-meta__vote .rs-meta__arrow--down:hover {
+  color: var(--rs-downvote);
+  background: rgba(106, 155, 255, 0.16);
 }
 
 /* Jump-to-post list */

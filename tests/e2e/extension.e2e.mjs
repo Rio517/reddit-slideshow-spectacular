@@ -22,8 +22,7 @@ const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 const FEED = "https://old.reddit.com/r/slideshowspectacular/#rs-slideshow";
 const LONG_TITLE =
-  "A test sunset with enough extra words to prove the full-title tooltip arrow renders";
-const LONG_TITLE_TRUNCATED = `${LONG_TITLE.slice(0, 50).trimEnd()}…`;
+  "A test sunset with enough extra words to prove the caption shows a long title in full";
 
 // A fixed two-image listing - the assertions key off these exact values, so the
 // run is independent of whatever real posts the subreddit holds.
@@ -123,6 +122,7 @@ function post(id, title, author, url, w, h) {
       url,
       post_hint: "image",
       over_18: false,
+      score: 12437,
       preview: { images: [{ source: { url, width: w, height: h } }] },
     },
   };
@@ -149,6 +149,7 @@ function readMeta(page) {
     return {
       counter: q(".rs-meta__counter"),
       title: q(".rs-meta__title-text"),
+      score: q(".rs-meta__score"),
       author: q(".rs-meta__author"),
       subreddit: q(".rs-meta__subreddit"),
       domain: q(".rs-meta__domain"),
@@ -229,55 +230,36 @@ async function main() {
       assert.equal(slide1.counter, "1 / 3"),
     );
     check("the byline shows author, subreddit, domain, and resolution", () => {
-      assert.equal(slide1.title, LONG_TITLE_TRUNCATED);
+      assert.equal(slide1.title, LONG_TITLE);
       assert.equal(slide1.author, "/u/demo_user");
       assert.equal(slide1.subreddit, "/r/slideshowspectacular");
       assert.equal(slide1.domain, "i.redd.it");
       assert.equal(slide1.res, "1920×1080");
     });
-    const titlePoint = await page.evaluate(() => {
-      const text = document
-        .querySelector("#reddit-slideshow-host")
-        ?.shadowRoot?.querySelector(".rs-meta__title-text");
-      const rect = text?.getBoundingClientRect();
-      return rect
-        ? {
-            x: rect.left + Math.min(rect.width / 2, rect.width - 2),
-            y: rect.top + rect.height / 2,
-          }
-        : null;
+    check("the caption shows the post's score", () =>
+      assert.equal(slide1.score, "12.4K"),
+    );
+    // Laid out for real: the title is not clipped, and the side column's
+    // controls sit at the strip's start, clear of the title.
+    const caption = await page.evaluate(() => {
+      const sr = document.querySelector("#reddit-slideshow-host")?.shadowRoot;
+      const text = sr?.querySelector(".rs-meta__title-text");
+      const title = sr?.querySelector(".rs-meta__title");
+      const download = sr?.querySelector(".rs-meta__download");
+      return {
+        titleFits:
+          (title?.scrollWidth ?? 1) <= (title?.clientWidth ?? 0) &&
+          (text?.getBoundingClientRect().right ?? Infinity) <=
+            window.innerWidth,
+        downloadRight: download?.getBoundingClientRect().right ?? null,
+        titleLeft: text?.getBoundingClientRect().left ?? null,
+      };
     });
-    if (titlePoint) await page.mouse.move(titlePoint.x, titlePoint.y);
-    const tooltip = await page
-      .waitForFunction(
-        () => {
-          const tip = /** @type {HTMLElement | null} */ (
-            document
-              .querySelector("#reddit-slideshow-host")
-              ?.shadowRoot?.querySelector(".rs-title-tip")
-          );
-          if (!tip || tip.hidden) return null;
-          const after = window.getComputedStyle(tip, "::after");
-          return {
-            text: tip.textContent,
-            afterContent: after.content,
-            afterBorderTopWidth: after.borderTopWidth,
-            afterBorderTopColor: after.borderTopColor,
-            afterBottom: after.bottom,
-          };
-        },
-        { timeout: 1000 },
-      )
-      .then((handle) => handle.jsonValue())
-      .catch(() => null);
-    check("the long-title tooltip renders with a bottom arrow", () => {
-      assert.equal(tooltip?.text, LONG_TITLE);
-      assert.equal(tooltip?.afterContent, '""');
-      assert.equal(tooltip?.afterBorderTopWidth, "7px");
-      assert.notEqual(tooltip?.afterBorderTopColor, "rgba(0, 0, 0, 0)");
-      assert.match(tooltip?.afterBottom ?? "", /^-7/);
+    check("the full title fits beside a fixed side column", () => {
+      assert.equal(caption.titleFits, true);
+      assert.ok(caption.downloadRight !== null && caption.titleLeft !== null);
+      assert.ok(caption.downloadRight <= caption.titleLeft);
     });
-    await page.mouse.move(20, 20);
 
     // The counter opens the jump-to-post list.
     await page.evaluate(() =>

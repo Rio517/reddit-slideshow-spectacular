@@ -134,7 +134,7 @@ function fakeRequest(pages) {
 }
 
 /**
- * @param {{ pages?: any[], settingsOverrides?: Record<string, unknown>, openUrl?: (url: string) => void, openPopout?: () => void, saveSettings?: (patch: object) => Promise<unknown>, computeImageHash?: (url: string) => Promise<string | null>, createImage?: () => { src: string, decoding?: string }, createVideo?: () => { src: string, preload?: string, muted?: boolean }, resolveMedia?: (url: string) => Promise<string | null>, downloadMedia?: (url: string, filename: string) => void, resolveRedgifs?: (slide: any) => Promise<any>, resolveRedditAudio?: (slide: any) => Promise<string | null>, vote?: (id: string, dir: number) => Promise<any>, block?: (name: string) => Promise<{ ok?: boolean, error?: any }>, friend?: (name: string) => Promise<{ ok?: boolean }>, frontend?: "old" | "new" }} [opts]
+ * @param {{ pages?: any[], settingsOverrides?: Record<string, unknown>, openUrl?: (url: string) => void, openPopout?: () => void, saveSettings?: (patch: object) => Promise<unknown>, computeImageHash?: (url: string) => Promise<string | null>, createImage?: () => { src: string, decoding?: string }, createVideo?: () => { src: string, preload?: string, muted?: boolean }, resolveMedia?: (url: string) => Promise<string | null>, downloadMedia?: (url: string, filename: string) => void, resolveRedgifs?: (slide: any) => Promise<any>, resolveRedditAudio?: (slide: any) => Promise<string | null>, vote?: (id: string, dir: number) => Promise<any>, block?: (name: string) => Promise<{ ok?: boolean, error?: any }>, friend?: (name: string) => Promise<{ ok?: boolean }>, frontend?: "old" | "new", createOverlay?: any }} [opts]
  */
 function makeSession({
   pages,
@@ -153,6 +153,7 @@ function makeSession({
   block,
   friend,
   frontend,
+  createOverlay: createOverlayDep = createOverlay,
 } = {}) {
   const request = fakeRequest(
     pages ?? [
@@ -166,7 +167,7 @@ function makeSession({
   );
   const session = createSlideshowSession({
     doc: document,
-    createOverlay,
+    createOverlay: createOverlayDep,
     getSettings: async () => settings(settingsOverrides),
     saveSettings: saveSettings ?? (async () => {}),
     requestPage: request,
@@ -695,6 +696,102 @@ describe("createSlideshowSession", () => {
     session.handleKeydown(key("ArrowRight"));
     expect(q(".rs-meta__vote--up")).toBeNull();
     expect(q(".rs-meta__vote--none")).toBeTruthy();
+  });
+
+  /** Real overlay plus a `setScore` spy and the handlers the session passed. */
+  function scoreSpyOverlay() {
+    /** @type {Array<[number | undefined, boolean | undefined]>} */
+    const scores = [];
+    /** @type {any} */
+    let handlers;
+    const create = (/** @type {any} */ h) => {
+      handlers = h;
+      const overlay = /** @type {any} */ (createOverlay(h));
+      overlay.setScore = (
+        /** @type {number | undefined} */ score,
+        /** @type {boolean | undefined} */ hidden,
+      ) => scores.push([score, hidden]);
+      return overlay;
+    };
+    return { create, scores, handlers: () => handlers };
+  }
+
+  const galleryPage = (/** @type {any} */ overrides) => [
+    {
+      slides: [
+        imageSlide("t3_g0", { postId: "t3_g", ...overrides }),
+        imageSlide("t3_g1", { postId: "t3_g", ...overrides }),
+      ],
+      after: null,
+      exhausted: true,
+      postsScanned: 1,
+    },
+  ];
+
+  it("moves the post's score with the viewer's vote across every slide", async () => {
+    const spy = scoreSpyOverlay();
+    const { session } = makeSession({
+      vote: async () => ({ ok: true }),
+      createOverlay: spy.create,
+      pages: galleryPage({ score: 10, scoreHidden: true }),
+    });
+    await session.start();
+    session.handleKeydown(key("ArrowUp")); // none -> up
+    expect(spy.scores.at(-1)).toEqual([11, true]);
+    session.handleKeydown(key("ArrowRight"));
+    expect(spy.scores.at(-1)).toEqual([11, true]); // sibling slide moved too
+    session.handleKeydown(key("ArrowDown")); // up -> down
+    expect(spy.scores.at(-1)).toEqual([9, true]);
+    session.handleKeydown(key("ArrowDown")); // down -> none
+    expect(spy.scores.at(-1)).toEqual([10, true]);
+    session.handleKeydown(key("ArrowUp"));
+    session.handleKeydown(key("ArrowUp")); // up -> none
+    expect(spy.scores.at(-1)).toEqual([10, true]);
+  });
+
+  it("restores the score when the vote write is rejected", async () => {
+    const spy = scoreSpyOverlay();
+    const { session } = makeSession({
+      vote: async () => ({ ok: false }),
+      createOverlay: spy.create,
+      pages: galleryPage({ score: 10 }),
+    });
+    await session.start();
+    session.handleKeydown(key("ArrowUp"));
+    expect(spy.scores.at(-1)?.[0]).toBe(11);
+    await flush();
+    expect(spy.scores.at(-1)?.[0]).toBe(10);
+    session.handleKeydown(key("ArrowRight"));
+    expect(spy.scores.at(-1)?.[0]).toBe(10);
+  });
+
+  it("leaves a slide with no score alone when voting", async () => {
+    const spy = scoreSpyOverlay();
+    const { session } = makeSession({
+      vote: async () => ({ ok: true }),
+      createOverlay: spy.create,
+    });
+    await session.start();
+    session.handleKeydown(key("ArrowUp"));
+    expect(spy.scores.at(-1)?.[0]).toBeUndefined();
+  });
+
+  it("casts a vote from the overlay's onVote handler for a trusted event only", async () => {
+    const spy = scoreSpyOverlay();
+    /** @type {Array<[string, number]>} */
+    const votes = [];
+    const { session } = makeSession({
+      vote: async (id, dir) => {
+        votes.push([id, dir]);
+        return { ok: true };
+      },
+      createOverlay: spy.create,
+    });
+    await session.start();
+    spy.handlers().onVote(1, { isTrusted: false });
+    expect(votes).toEqual([]);
+    spy.handlers().onVote(-1, { isTrusted: true });
+    expect(votes).toEqual([["a", -1]]);
   });
 
   it("downloads the current slide's media via the download control", async () => {

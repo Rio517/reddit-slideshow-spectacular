@@ -100,11 +100,11 @@ describe("createOverlay", () => {
     setLocale("en");
   });
 
-  it("builds the chrome with eleven controls, hidden by default", () => {
+  it("builds the chrome with thirteen controls, hidden by default", () => {
     const overlay = createOverlay(noopHandlers());
     expect(overlay.root.querySelector(".rs-stage")).toBeTruthy();
     expect(overlay.root.querySelector(".rs-timer")).toBeTruthy();
-    expect(overlay.root.querySelectorAll(".rs-btn").length).toBe(11);
+    expect(overlay.root.querySelectorAll(".rs-btn").length).toBe(13);
     expect(overlay.isOpen()).toBe(false);
   });
 
@@ -382,7 +382,7 @@ describe("createOverlay", () => {
     ).toBeTruthy();
   });
 
-  it("truncates a long title to 50 chars + ellipsis, keeping the full title for assistive tech", () => {
+  it("shows a long title in full", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
     const full =
@@ -394,67 +394,13 @@ describe("createOverlay", () => {
       effectiveSeconds: 5,
       playing: true,
     });
-    const text = /** @type {HTMLElement | null} */ (
-      overlay.root.querySelector(".rs-meta__title-text")
+    expect(
+      overlay.root.querySelector(".rs-meta__title-text")?.textContent,
+    ).toBe(full);
+    // The title wraps rather than truncating.
+    expect(overlayCss).not.toMatch(
+      /\.rs-meta__title-text\s*{[^}]*text-overflow/,
     );
-    expect(text?.textContent).toBe(`${full.slice(0, 50).trimEnd()}…`);
-    // Truncated visible text is 50 chars of title plus the ellipsis.
-    expect(text?.textContent?.length).toBe(51);
-    expect(text?.getAttribute("aria-label")).toBe(full);
-    expect(text?.hasAttribute("title")).toBe(false);
-  });
-
-  it("shows the full title tooltip after the pointer rests for 200ms", () => {
-    const overlay = createOverlay(noopHandlers());
-    overlay.show();
-    const full =
-      "This is a very long title that goes well beyond fifty characters in length";
-    overlay.renderCurrent(imageSlide({ title: full }), {
-      index: 0,
-      total: 1,
-      exhausted: true,
-      effectiveSeconds: 5,
-      playing: true,
-    });
-    const text = /** @type {HTMLElement | null} */ (
-      overlay.root.querySelector(".rs-meta__title-text")
-    );
-    const tooltip = /** @type {HTMLElement | null} */ (
-      overlay.root.querySelector(".rs-title-tip")
-    );
-
-    text?.dispatchEvent(
-      new MouseEvent("mouseenter", { clientX: 120, clientY: 720 }),
-    );
-    expect(tooltip?.hidden).toBe(true);
-    vi.advanceTimersByTime(199);
-    expect(tooltip?.hidden).toBe(true);
-    vi.advanceTimersByTime(1);
-    expect(tooltip?.hidden).toBe(false);
-    expect(tooltip?.textContent).toBe(full);
-
-    text?.dispatchEvent(new MouseEvent("mouseleave"));
-    expect(tooltip?.hidden).toBe(true);
-
-    text?.dispatchEvent(
-      new MouseEvent("mouseenter", { clientX: 120, clientY: 720 }),
-    );
-    vi.advanceTimersByTime(100);
-    text?.dispatchEvent(
-      new MouseEvent("mousemove", {
-        clientX: 128,
-        clientY: 720,
-        bubbles: true,
-      }),
-    );
-    vi.advanceTimersByTime(199);
-    expect(tooltip?.hidden).toBe(true);
-    vi.advanceTimersByTime(1);
-    expect(tooltip?.hidden).toBe(false);
-    expect(tooltip?.textContent).toBe(full);
-
-    text?.dispatchEvent(new MouseEvent("mouseleave"));
-    expect(tooltip?.hidden).toBe(true);
   });
 
   it("keeps a pinned idle title interactive with a default cursor", () => {
@@ -478,8 +424,14 @@ describe("createOverlay", () => {
 
     expect(overlay.root.classList.contains("rs-pin-meta")).toBe(true);
     expect(overlay.root.classList.contains("rs-idle")).toBe(true);
+    // The strip itself never takes the pointer; its controls opt in, and only
+    // an unpinned idle fade switches them off.
+    expect(overlayCss).toMatch(/\.rs-meta\s*{[^}]*pointer-events:\s*none;/);
     expect(overlayCss).toMatch(
-      /#reddit-slideshow-root\.rs-pin-meta\.rs-idle\s+\.rs-meta\s*{[^}]*pointer-events:\s*auto;/,
+      /\.rs-meta__title-text,\s*\.rs-meta a\s*{[^}]*pointer-events:\s*auto;/,
+    );
+    expect(overlayCss).toMatch(
+      /#reddit-slideshow-root\.rs-idle:not\(\.rs-pin-meta\)\s+\.rs-meta__title-text\s*{[^}]*pointer-events:\s*none;/,
     );
     expect(overlayCss).toMatch(
       /\.rs-meta__title-text\s*{[^}]*cursor:\s*default;/,
@@ -489,12 +441,12 @@ describe("createOverlay", () => {
     );
   });
 
-  it("holds auto-advance while the truncated title tooltip is active", () => {
+  it("holds auto-advance while the pointer rests on a long title", () => {
     /** @type {boolean[]} */
     const holds = [];
     const overlay = createOverlay({
       ...noopHandlers(),
-      onTitleTooltipHoldChange: (active) => holds.push(active),
+      onTitleHoldChange: (/** @type {boolean} */ active) => holds.push(active),
     });
     overlay.show();
     const full =
@@ -512,15 +464,62 @@ describe("createOverlay", () => {
 
     text?.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
     vi.advanceTimersByTime(600);
-    text?.dispatchEvent(
-      new MouseEvent("mousemove", {
-        clientX: 100,
-        clientY: 100,
-        bubbles: true,
-      }),
-    );
-    vi.advanceTimersByTime(600);
     text?.dispatchEvent(new MouseEvent("mouseleave", { bubbles: true }));
+
+    expect(holds).toEqual([true, false]);
+  });
+
+  it("does not hold auto-advance over a short title", () => {
+    /** @type {boolean[]} */
+    const holds = [];
+    const overlay = createOverlay({
+      ...noopHandlers(),
+      onTitleHoldChange: (/** @type {boolean} */ active) => holds.push(active),
+    });
+    overlay.show();
+    overlay.renderCurrent(imageSlide({ title: "Short one" }), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    const text = overlay.root.querySelector(".rs-meta__title-text");
+    text?.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
+    text?.dispatchEvent(new MouseEvent("mouseleave", { bubbles: true }));
+
+    expect(holds).toEqual([]);
+  });
+
+  it("releases a title hold when the slide changes under the pointer", () => {
+    /** @type {boolean[]} */
+    const holds = [];
+    const overlay = createOverlay({
+      ...noopHandlers(),
+      onTitleHoldChange: (/** @type {boolean} */ active) => holds.push(active),
+    });
+    overlay.show();
+    const info = {
+      index: 0,
+      total: 2,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    };
+    overlay.renderCurrent(
+      imageSlide({
+        title:
+          "This is a very long title that goes well beyond fifty characters in length",
+      }),
+      info,
+    );
+    overlay.root
+      .querySelector(".rs-meta__title-text")
+      ?.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
+    overlay.renderCurrent(imageSlide({ id: "t3_y:0", title: "Next" }), {
+      ...info,
+      index: 1,
+    });
 
     expect(holds).toEqual([true, false]);
   });
@@ -549,7 +548,7 @@ describe("createOverlay", () => {
     expect(author?.href).toBe("https://old.reddit.com/user/alice");
   });
 
-  it("stacks the bottom-left meta as nsfw, title, byline, source (bottom)", () => {
+  it("lays the caption out as a side column, then nsfw, title, and details", () => {
     const overlay = createOverlay(noopHandlers());
     overlay.show();
     overlay.renderCurrent(imageSlide({ over18: true }), {
@@ -559,21 +558,66 @@ describe("createOverlay", () => {
       effectiveSeconds: 5,
       playing: true,
     });
-    const meta = /** @type {HTMLElement} */ (
-      overlay.root.querySelector(".rs-meta")
-    );
-    // DOM top→bottom; the column lays the last child at the bottom, anchored.
-    const order = [...meta.children].map((c) => c.className.split(" ")[0]);
-    expect(order).toEqual([
+    const classes = (/** @type {string} */ selector) =>
+      [
+        .../** @type {HTMLElement} */ (overlay.root.querySelector(selector))
+          .children,
+      ].map((c) => c.className.split(" ")[0]);
+    expect(classes(".rs-meta")).toEqual(["rs-meta__side", "rs-meta__body"]);
+    expect(classes(".rs-meta__body")).toEqual([
       "rs-meta__nsfw",
       "rs-meta__title",
+      "rs-meta__details",
+    ]);
+    expect(classes(".rs-meta__details")).toEqual([
       "rs-meta__byline",
       "rs-meta__source",
+      "rs-meta__spinner",
     ]);
   });
 
-  it("orders the title row as vote, title text, open, download, then spinner", () => {
+  it("orders the side column as up, down, score, then open and download", () => {
     const overlay = createOverlay({ ...noopHandlers(), onDownload() {} });
+    overlay.show();
+    overlay.renderCurrent(imageSlide({ score: 12 }), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    const side = /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-meta__side")
+    );
+    const order = [
+      ...side.querySelectorAll(
+        ".rs-meta__arrow, .rs-meta__score, .rs-meta__open, .rs-meta__download",
+      ),
+    ].map((el) =>
+      [...el.classList].filter((c) => c.startsWith("rs-meta__")).pop(),
+    );
+    expect(order).toEqual([
+      "rs-meta__arrow--up",
+      "rs-meta__arrow--down",
+      "rs-meta__score",
+      "rs-meta__open",
+      "rs-meta__download",
+    ]);
+    // The title row holds the title alone, so nothing beside it shifts.
+    expect(
+      overlay.root.querySelector(".rs-meta__title")?.children,
+    ).toHaveLength(1);
+  });
+
+  it("casts a vote from the caption's arrows", () => {
+    /** @type {Array<[number, boolean]>} */
+    const votes = [];
+    const overlay = createOverlay({
+      ...noopHandlers(),
+      onVote: (dir, event) => {
+        votes.push([dir, event instanceof Event]);
+      },
+    });
     overlay.show();
     overlay.renderCurrent(imageSlide(), {
       index: 0,
@@ -582,21 +626,156 @@ describe("createOverlay", () => {
       effectiveSeconds: 5,
       playing: true,
     });
-    const row = /** @type {HTMLElement} */ (
-      overlay.root.querySelector(".rs-meta__title")
-    );
-    const order = [
-      ...row.querySelectorAll(
-        ".rs-meta__vote, .rs-meta__title-text, .rs-meta__open, .rs-meta__download, .rs-meta__spinner",
-      ),
-    ].map((el) => [...el.classList].find((c) => c.startsWith("rs-meta__")));
-    expect(order).toEqual([
-      "rs-meta__vote",
-      "rs-meta__title-text",
-      "rs-meta__open",
-      "rs-meta__download",
-      "rs-meta__spinner",
+    /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-meta__arrow--up")
+    ).click();
+    /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-meta__arrow--down")
+    ).click();
+    expect(votes).toEqual([
+      [1, true],
+      [-1, true],
     ]);
+  });
+
+  it("marks the arrow the viewer cast as pressed", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    overlay.renderCurrent(imageSlide({ likes: true }), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    const pressed = (/** @type {string} */ which) =>
+      overlay.root
+        .querySelector(`.rs-meta__arrow--${which}`)
+        ?.getAttribute("aria-pressed");
+    expect([pressed("up"), pressed("down")]).toEqual(["true", "false"]);
+    overlay.setVote(false);
+    expect([pressed("up"), pressed("down")]).toEqual(["false", "true"]);
+    overlay.setVote(null);
+    expect([pressed("up"), pressed("down")]).toEqual(["false", "false"]);
+  });
+
+  it("shows the post's score shortened, with the exact figure on hover", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    overlay.renderCurrent(imageSlide({ score: 12437 }), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    const score = /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-meta__score")
+    );
+    expect(score.hidden).toBe(false);
+    expect(score.textContent).toBe("12.4K");
+    expect(score.title).toBe("12,437");
+    overlay.setScore(847);
+    expect(score.textContent).toBe("847");
+  });
+
+  it("shows a bullet for a score Reddit is hiding, and nothing for none", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    const info = {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    };
+    overlay.renderCurrent(imageSlide({ score: 3, scoreHidden: true }), info);
+    const score = /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-meta__score")
+    );
+    expect(score.hidden).toBe(false);
+    expect(score.textContent).toBe("•");
+    expect(score.hasAttribute("title")).toBe(false);
+    overlay.renderCurrent(imageSlide(), info);
+    expect(score.hidden).toBe(true);
+  });
+
+  it("keeps the score in Latin digits under an Arabic locale", () => {
+    setLocale("ar");
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    overlay.renderCurrent(imageSlide({ score: 847 }), {
+      index: 0,
+      total: 1,
+      exhausted: true,
+      effectiveSeconds: 5,
+      playing: true,
+    });
+    expect(overlay.root.querySelector(".rs-meta__score")?.textContent).toBe(
+      "847",
+    );
+  });
+
+  describe("caption strip over a clip", () => {
+    /** @param {number} bottom The clip's bottom edge, in viewport px. */
+    function renderClipEndingAt(bottom) {
+      vi.spyOn(
+        window.HTMLVideoElement.prototype,
+        "getBoundingClientRect",
+      ).mockReturnValue(/** @type {DOMRect} */ ({ bottom }));
+      const overlay = createOverlay(noopHandlers());
+      overlay.show();
+      overlay.renderCurrent(
+        imageSlide({
+          kind: "video",
+          durationMode: "media",
+          mediaUrl: "https://v.redd.it/vid.mp4",
+        }),
+        {
+          index: 0,
+          total: 2,
+          exhausted: true,
+          effectiveSeconds: 5,
+          playing: true,
+        },
+      );
+      return {
+        overlay,
+        meta: /** @type {HTMLElement} */ (
+          overlay.root.querySelector(".rs-meta")
+        ),
+      };
+    }
+    afterEach(() => vi.restoreAllMocks());
+
+    it("lifts clear of the control bar of a clip that reaches the bottom", () => {
+      const { meta } = renderClipEndingAt(window.innerHeight);
+      expect(meta.classList.contains("rs-meta--lifted")).toBe(true);
+      expect(meta.style.getPropertyValue("--rs-clip-clear")).toBe("72px");
+    });
+
+    it("clears the bar of a clip that ends a little above the bottom", () => {
+      const { meta } = renderClipEndingAt(window.innerHeight - 10);
+      expect(meta.style.getPropertyValue("--rs-clip-clear")).toBe("82px");
+    });
+
+    it("stays at the bottom under a clip with room beneath it", () => {
+      const { meta } = renderClipEndingAt(window.innerHeight - 300);
+      expect(meta.classList.contains("rs-meta--lifted")).toBe(false);
+      expect(meta.style.getPropertyValue("--rs-clip-clear")).toBe("");
+    });
+
+    it("drops back to the bottom for the image that follows", () => {
+      const { overlay, meta } = renderClipEndingAt(window.innerHeight);
+      overlay.renderCurrent(imageSlide({ id: "t3_y:0" }), {
+        index: 1,
+        total: 2,
+        exhausted: true,
+        effectiveSeconds: 5,
+        playing: true,
+      });
+      expect(meta.classList.contains("rs-meta--lifted")).toBe(false);
+    });
   });
 
   it("keeps author and subreddit on the byline, dropping from/at connectives", () => {

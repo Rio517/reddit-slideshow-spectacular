@@ -24,6 +24,7 @@ const AUTHORS = [
   "two_tabbies",
   "sunbeam_sam",
 ];
+const SCORES = [12437, 8123, 3291, 5290, 847];
 
 /**
  * @param {number} n
@@ -45,6 +46,7 @@ function imageSlide(n, title, width, height) {
     title,
     author: AUTHORS[n - 1] ?? "redditor",
     subreddit: "aww",
+    score: SCORES[n - 1],
     over18: false,
     durationMode: "timer",
     audioAvailable: false,

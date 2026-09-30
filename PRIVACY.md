@@ -38,19 +38,20 @@ operated by the developer (there is none):
   stream, so the background fetches that clip's small DASH manifest from
   `v.redd.it` (**without cookies**) to find the audio track's URL, which your
   browser then plays alongside the silent video.
-- **Account actions (only when you press a key).** A few keys write to your
-  Reddit account through your logged-in session, sending your Reddit session
-  cookies to Reddit (and `/api/me.json`, for the required CSRF token) - and to
-  Reddit only:
-  - **↑/↓** casts an upvote/downvote on the current post (`/api/vote`).
+- **Account actions (only when you ask).** A few keys, and the caption's two
+  vote arrows, write to your Reddit account through your logged-in session,
+  sending your Reddit session cookies to Reddit (and `/api/me.json`, for the
+  required CSRF token) - and to Reddit only:
+  - **↑/↓**, or a click on the caption's up/down arrow, casts an
+    upvote/downvote on the current post (`/api/vote`).
   - **I** adds the author to the local slideshow ignore list, skips their
     current and future loaded posts, and tries to block them on Reddit
     (`/api/block_user`) until Reddit reports the account block-list limit.
   - **A** adds the author as a friend, or follows them (`/api/friend`).
 
   These are the **only** actions the extension takes that write to your Reddit
-  account, and each happens **only** when you press its key. Nothing is sent
-  anywhere but Reddit.
+  account, and each happens **only** when you press its key or click its arrow.
+  Nothing is sent anywhere but Reddit.
 
 - **Download.** The download control asks the browser's downloads API to save the
   current media from its host. The browser download stack may send cookies for

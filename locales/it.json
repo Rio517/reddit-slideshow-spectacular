@@ -207,6 +207,14 @@
     "message": "Scarica (D)",
     "description": "Control label: download the current media (with the D shortcut)."
   },
+  "uiUpvote": {
+    "message": "Voto positivo (↑)",
+    "description": "Control label: upvote the current post (with the Up-arrow shortcut)."
+  },
+  "uiDownvote": {
+    "message": "Voto negativo (↓)",
+    "description": "Control label: downvote the current post (with the Down-arrow shortcut)."
+  },
   "uiNsfw": {
     "message": "NSFW",
     "description": "Badge marking a not-safe-for-work slide."

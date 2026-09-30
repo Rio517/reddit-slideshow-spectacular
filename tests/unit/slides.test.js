@@ -923,3 +923,78 @@ describe("crossposts", () => {
     });
   });
 });
+
+describe("post score", () => {
+  /** @param {any} listing @param {Record<string, unknown>} patch @param {(post: any) => any} [pick] */
+  const withPost = (listing, patch, pick = (post) => post) => ({
+    data: {
+      children: listing.data.children
+        .slice(0, 1)
+        .map((/** @type {any} */ c) => ({
+          ...c,
+          data: { ...pick(c.data), ...patch },
+        })),
+    },
+  });
+
+  it("carries the listing score onto an image slide", () => {
+    const [slide] = slidesFromListing(withPost(fixture, { score: 1234 }));
+    expect(slide.score).toBe(1234);
+    expect(slide.scoreHidden).toBeUndefined();
+  });
+
+  it("puts the score on every slide of a gallery post", () => {
+    const slides = slidesFromListing(withPost(galleryFixture, { score: 42 }));
+    expect(slides).toHaveLength(3);
+    expect(slides.map((s) => s.score)).toEqual([42, 42, 42]);
+  });
+
+  it("takes a crosspost's score from the display post, not the parent", () => {
+    const listing = withPost(crosspostFixture, { score: 7 });
+    listing.data.children[0].data.crosspost_parent_list = [
+      {
+        ...listing.data.children[0].data.crosspost_parent_list[0],
+        score: 9999,
+      },
+    ];
+    expect(slidesFromListing(listing)[0].score).toBe(7);
+  });
+
+  it("flags a hidden score", () => {
+    const [slide] = slidesFromListing(
+      withPost(fixture, { score: 1, hide_score: true }),
+    );
+    expect(slide.scoreHidden).toBe(true);
+  });
+
+  it("leaves score unset when the listing has no numeric score", () => {
+    const [slide] = slidesFromListing(
+      withPost(fixture, { score: undefined, hide_score: false }),
+    );
+    expect(slide.score).toBeUndefined();
+    expect(slide.scoreHidden).toBeUndefined();
+  });
+
+  it("keeps the score, hidden flag, vote and subreddit on an expanded Imgur album", () => {
+    const [placeholder] = slidesFromListing(
+      withPost(imgurAlbumFixture, {
+        score: 55,
+        hide_score: true,
+        likes: true,
+        subreddit: "pics",
+      }),
+    );
+    const slides = buildImgurAlbumImageSlides(placeholder, [
+      { hash: "aaa", ext: ".jpg", width: 10, height: 10 },
+      { hash: "bbb", ext: ".jpg", width: 10, height: 10 },
+    ]);
+    for (const s of slides) {
+      expect(s).toMatchObject({
+        score: 55,
+        scoreHidden: true,
+        likes: true,
+        subreddit: "pics",
+      });
+    }
+  });
+});
