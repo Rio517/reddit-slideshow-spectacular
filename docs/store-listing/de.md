@@ -20,9 +20,9 @@ NEU IN V1.5.0
 
 - NEU: Die Bildunterschrift unter jeder Folie ist jetzt eine Leiste in voller Breite, die den ganzen Beitragstitel zeigt – lange Titel laufen in weitere Zeilen um, statt abgeschnitten zu werden
 - NEU: Die Stimmenzahl des Beitrags mit Pfeilen nach oben und unten, die du zum Abstimmen anklicken kannst (die Tasten Up/Down funktionieren weiterhin)
+- NEU: Videos bekommen eine Fortschrittsleiste am oberen Rand der Bildunterschrift – ziehe sie, um zurück- oder vorzuspulen; sie sieht in jedem Browser gleich aus
 - VERBESSERT: Die Schaltflächen zum Abstimmen, Öffnen des Originals und Herunterladen sitzen in einer festen Spalte und bleiben so von Folie zu Folie an derselben Stelle
-- VERBESSERT: Bei Videos sitzt die Bildunterschrift über der eigenen Steuerleiste des Videos, sodass sich beides nie überlappt
-- BEHOBEN: Wer ein Video mit dessen eigener Steuerung zurückspult, lässt die Diashow nicht mehr mitten im Clip weiterwechseln – die Show wartet, bis der Clip zu Ende ist, und pausiert der Clip, pausiert auch die Show
+- BEHOBEN: Wer ein Video zurückspult, lässt die Diashow nicht mehr mitten im Clip weiterwechseln – die Show wartet, bis der Clip zu Ende ist
 
 NEU IN V1.4.3
 
@@ -48,6 +48,7 @@ STEUERUNG
 - Scrolle oder drücke + / -, um am Zeiger zu zoomen (die Show pausiert von selbst und läuft weiter, wenn du ganz herauszoomst); ziehe die gezoomte Folie zum Verschieben
 - Eine Steuerungsleiste auf dem Bildschirm: zurück, Abspielen/Pausieren, weiter, Stummschalten, Vollbild, in einem Fenster öffnen und Einstellungen
 - Unter jeder Folie: der vollständige Beitragstitel und eine Infozeile (wer den Beitrag gepostet hat, in welchem Subreddit, Quelle und Auflösung) sowie die Stimmenzahl des Beitrags, Pfeile zum Hoch-/Runtervoten und Schaltflächen zum Öffnen des Originalbeitrags oder zum Herunterladen des Mediums
+- Bei Videos eine Fortschrittsleiste über der Bildunterschrift: ziehe sie, um zurück- oder vorzuspulen; die Show wartet, bis der Clip zu Ende ist
 - Klicke auf den Positionszähler, um direkt zu einem beliebigen Beitrag in der geladenen Warteschlange zu springen
 - Klicke auf den dunklen Hintergrund, um die Diashow zu schließen
 - Bilder wechseln nach einem einstellbaren Timer; der Timer läuft auch nach manueller Navigation weiter, und Videos wechseln automatisch am Ende des Clips

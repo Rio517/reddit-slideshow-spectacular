@@ -20,9 +20,9 @@ WHAT'S NEW - V1.5.0
 
 - NEW: The caption under each slide is now a full-width strip that shows the whole post title - long titles wrap onto more lines instead of being cut off
 - NEW: The post's vote count, with up and down arrows you can click to vote (the Up/Down keys still work)
+- NEW: Videos get a seek bar along the top of the caption - drag it to rewind or skip ahead, and it looks the same in every browser
 - IMPROVED: The vote, open-original, and download buttons sit in a fixed column, so they stay in the same place from slide to slide
-- IMPROVED: Over a video, the caption sits above the video's own control bar, so the two never overlap
-- FIXED: Rewinding a video with its own controls no longer lets the slideshow move on mid-clip - the show waits for the clip to finish, and pausing the clip pauses the show
+- FIXED: Rewinding a video no longer lets the slideshow move on mid-clip - the show waits for the clip to finish
 
 WHAT'S NEW - V1.4.3
 
@@ -48,6 +48,7 @@ CONTROLS
 - Scroll or press + / - to zoom at the pointer (the show pauses itself, and resumes when you zoom back out); drag to pan the zoomed slide
 - An on-screen control rail: previous, play/pause, next, mute, fullscreen, open in a window, and settings
 - Under each slide: the full post title and a byline (who posted it, to which subreddit, the source and resolution), with the post's vote count, up/down arrows to vote, and buttons to open the original post or download the media
+- On video slides, a seek bar above the caption: drag it to rewind or skip ahead, and the show waits for the clip to finish
 - Click the position counter to jump straight to any post in the loaded queue
 - Click the dark backdrop to close
 - Images advance on a timer you set; the timer keeps running even after you arrow through manually, and videos advance when the clip ends

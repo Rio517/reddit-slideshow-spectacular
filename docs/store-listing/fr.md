@@ -20,9 +20,9 @@ NOUVEAUTÉS — V1.5.0
 
 - NOUVEAU : la légende sous chaque diapositive est désormais une bande pleine largeur qui affiche le titre complet de la publication — les longs titres passent sur plusieurs lignes au lieu d'être tronqués
 - NOUVEAU : le nombre de votes de la publication, avec des flèches haut et bas sur lesquelles cliquer pour voter (les touches Up/Down fonctionnent toujours)
+- NOUVEAU : les vidéos ont une barre de progression en haut de la légende — faites-la glisser pour rembobiner ou avancer, et elle s'affiche de la même façon dans tous les navigateurs
 - AMÉLIORÉ : les boutons de vote, d'ouverture de l'original et de téléchargement sont placés dans une colonne fixe, et restent donc au même endroit d'une diapositive à l'autre
-- AMÉLIORÉ : sur une vidéo, la légende se place au-dessus de la barre de commandes propre à la vidéo, si bien que les deux ne se chevauchent jamais
-- CORRIGÉ : rembobiner une vidéo avec ses propres commandes ne laisse plus le diaporama passer à la suite en plein clip — le diaporama attend la fin du clip, et mettre le clip en pause met le diaporama en pause
+- CORRIGÉ : rembobiner une vidéo ne laisse plus le diaporama passer à la suite en plein clip — le diaporama attend la fin du clip
 
 NOUVEAUTÉS — V1.4.3
 
@@ -48,6 +48,7 @@ COMMANDES
 - Faites défiler ou appuyez sur + / - pour zoomer au pointeur (le diaporama se met en pause tout seul et reprend quand vous dézoomez complètement) ; faites glisser la diapositive zoomée pour la déplacer
 - Une barre de commandes à l'écran : précédent, lecture/pause, suivant, sourdine, plein écran, ouvrir dans une fenêtre et paramètres
 - Sous chaque diapositive : le titre complet de la publication et une ligne d'informations (auteur, subreddit, source et résolution), avec le nombre de votes de la publication, des flèches pour voter et des boutons pour ouvrir la publication originale ou télécharger le média
+- Sur les diapositives vidéo, une barre de progression au-dessus de la légende : faites-la glisser pour rembobiner ou avancer, et le diaporama attend la fin du clip
 - Cliquez sur le compteur de position pour accéder directement à n'importe quelle publication de la file chargée
 - Cliquez sur le fond sombre pour fermer
 - Les images avancent selon un minuteur que vous définissez ; le minuteur continue même après une navigation manuelle, et les vidéos avancent à la fin du clip

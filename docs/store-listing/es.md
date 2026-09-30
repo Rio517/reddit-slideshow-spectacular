@@ -20,9 +20,9 @@ NOVEDADES - V1.5.0
 
 - NUEVO: el pie de cada diapositiva es ahora una franja de ancho completo que muestra el título completo de la publicación; los títulos largos pasan a más líneas en lugar de cortarse
 - NUEVO: el recuento de votos de la publicación, con flechas arriba y abajo en las que puedes hacer clic para votar (las teclas Up/Down siguen funcionando)
+- NUEVO: los vídeos tienen una barra de progreso en la parte superior del pie: arrástrala para rebobinar o avanzar, y se ve igual en todos los navegadores
 - MEJORADO: los botones de voto, abrir original y descarga están en una columna fija, así que se quedan en el mismo sitio de una diapositiva a otra
-- MEJORADO: sobre un vídeo, el pie queda por encima de la barra de controles propia del vídeo, así que nunca se solapan
-- CORREGIDO: al rebobinar un vídeo con sus propios controles, el pase de diapositivas ya no avanza a mitad del clip: espera a que el clip termine, y si pausas el clip, se pausa el pase
+- CORREGIDO: al rebobinar un vídeo, el pase de diapositivas ya no avanza a mitad del clip: espera a que el clip termine
 
 NOVEDADES - V1.4.3
 
@@ -48,6 +48,7 @@ CONTROLES
 - Desplázate o pulsa + / - para hacer zoom en el puntero (el pase se pausa solo y se reanuda al alejar del todo); arrastra la diapositiva ampliada para moverla
 - Una barra de controles en pantalla: anterior, reproducir/pausar, siguiente, silenciar, pantalla completa, abrir en ventana y ajustes
 - Bajo cada diapositiva: el título completo de la publicación y una línea de créditos (quién la publicó, en qué subreddit, la fuente y la resolución), con el recuento de votos de la publicación, flechas para votar y botones para abrir la publicación original o descargar el contenido
+- En las diapositivas de vídeo, una barra de progreso sobre el pie: arrástrala para rebobinar o avanzar, y el pase espera a que el clip termine
 - Haz clic en el contador de posición para ir directamente a cualquier publicación de la cola cargada
 - Haz clic en el fondo oscuro para cerrar
 - Las imágenes avanzan con un temporizador que tú ajustas; el temporizador sigue corriendo aunque avances manualmente con las flechas, y los vídeos avanzan al terminar el clip

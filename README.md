@@ -42,9 +42,9 @@ AirPlay or Chromecast that window to your TV for a hands-off, lean-back feed.
   logged-in session.
 - A caption under each slide - the post's full title (long ones wrap), its
   score, and a byline: `/u/author to /r/subreddit`, then the source
-  (`{domain} • {W}×{H}`). Its buttons sit in a fixed column, and over a video it
-  sits above the video's own controls.
-- Rewind or pause a video with its own controls and the show waits for it.
+  (`{domain} • {W}×{H}`). Its buttons sit in a fixed column.
+- A seek bar along the top of the caption on video slides, the same in every
+  browser: drag it to rewind or skip ahead, and the show waits for the clip.
 - Lots to tune from the overlay's gear, applied live with no reload - see
   [Settings](#settings).
 

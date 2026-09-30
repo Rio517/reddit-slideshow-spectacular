@@ -20,9 +20,9 @@ NOVITÀ - V1.5.0
 
 - NUOVO: la didascalia sotto ogni diapositiva è ora una fascia a tutta larghezza che mostra il titolo completo del post — i titoli lunghi vanno a capo su più righe invece di essere tagliati
 - NUOVO: il conteggio dei voti del post, con frecce su e giù su cui fare clic per votare (i tasti Up/Down funzionano ancora)
+- NUOVO: i video hanno una barra di avanzamento lungo la parte alta della didascalia — trascinala per riavvolgere o andare avanti, e ha lo stesso aspetto in ogni browser
 - MIGLIORATO: i pulsanti per votare, aprire l'originale e scaricare stanno in una colonna fissa, così restano nello stesso punto da una diapositiva all'altra
-- MIGLIORATO: sopra un video, la didascalia sta sopra la barra dei controlli del video stesso, così i due non si sovrappongono mai
-- CORRETTO: riavvolgere un video con i suoi controlli non fa più passare la presentazione oltre a metà clip — la presentazione aspetta la fine del clip, e mettere in pausa il clip mette in pausa la presentazione
+- CORRETTO: riavvolgere un video non fa più passare la presentazione oltre a metà clip — la presentazione aspetta la fine del clip
 
 NOVITÀ - V1.4.3
 
@@ -48,6 +48,7 @@ CONTROLLI
 - Scorri o premi + / - per zoomare sul puntatore (la presentazione si mette in pausa da sola e riprende quando riduci del tutto); trascina la diapositiva ingrandita per spostarla
 - Una barra di controlli a schermo: precedente, riproduci/pausa, successivo, silenzia, schermo intero, apri in finestra e impostazioni
 - Sotto ogni diapositiva: il titolo completo del post e la firma (chi ha pubblicato, in quale subreddit, la fonte e la risoluzione), con il conteggio dei voti del post, le frecce per votare e pulsanti per aprire il post originale o scaricare il media
+- Sulle diapositive video, una barra di avanzamento sopra la didascalia: trascinala per riavvolgere o andare avanti, e la presentazione aspetta la fine del clip
 - Fai clic sul contatore di posizione per passare direttamente a qualsiasi post nella coda caricata
 - Fai clic sullo sfondo scuro per chiudere
 - Le immagini avanzano con un timer che puoi impostare; il timer continua a scorrere anche dopo aver navigato manualmente con i tasti freccia, e i video avanzano al termine del clip
