@@ -504,13 +504,16 @@ iframe.reddit-slideshow-media {
   grid-template-columns: auto minmax(0, 1fr);
   column-gap: 16px;
   align-items: end;
-  padding-block: 64px 20px;
+  padding-block: 96px 20px;
   /* The end padding keeps a long title clear of the buffering hint. */
   padding-inline: 26px min(150px, 12vw);
+  /* Eased stops: a straight ramp shows its top edge over a light image. */
   background: linear-gradient(
     to top,
     rgba(3, 4, 7, 0.9),
-    rgba(3, 4, 7, 0.6) 52%,
+    rgba(3, 4, 7, 0.62) 40%,
+    rgba(3, 4, 7, 0.22) 72%,
+    rgba(3, 4, 7, 0.06) 90%,
     rgba(3, 4, 7, 0)
   );
   /* The strip spans the slide, so only its controls take the pointer: the
