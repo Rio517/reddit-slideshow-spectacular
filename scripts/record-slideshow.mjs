@@ -4,22 +4,13 @@
 // crossfades shot1/2/3 (+ a wrap back to shot1) into the looping
 // docs/slideshow.webm.
 //
-// Media files are fulfilled locally (the page never hits i.redd.it): puppy.png,
-// cat1.png, cat2.gif live in RS_MEDIA (default /tmp/rs-media) and are
-// downloaded from their public sources when absent. Needs ffmpeg
+// Media files are fulfilled locally (the page never hits i.redd.it) from
+// RS_MEDIA (see demo-media.mjs). Needs ffmpeg
 // (brew install ffmpeg) and the Playwright Chromium binary
 // (npx playwright install chromium).
 
 import { createServer } from "node:http";
-import {
-  access,
-  cp,
-  mkdir,
-  mkdtemp,
-  rm,
-  readFile,
-  writeFile,
-} from "node:fs/promises";
+import { cp, mkdtemp, rm } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { createReadStream } from "node:fs";
 import { tmpdir } from "node:os";
@@ -28,10 +19,10 @@ import { fileURLToPath } from "node:url";
 import process from "node:process";
 import { build } from "esbuild";
 import { chromium } from "playwright";
+import { ensureMedia, fulfilRedditMedia, mediaDir } from "./demo-media.mjs";
 
 const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const harnessSrc = join(root, "scripts", "slideshow-harness");
-const mediaDir = process.env.RS_MEDIA ?? "/tmp/rs-media";
 const outDir = process.env.RS_OUT ?? mediaDir;
 
 const MIME = {
@@ -39,42 +30,6 @@ const MIME = {
   ".js": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
 };
-
-// i.redd.it path -> [local file, content type].
-const FILES = {
-  "/cpkr7nfk7j4h1.png": ["puppy.png", "image/png"],
-  "/6pazgvbx5j4h1.png": ["cat1.png", "image/png"],
-  "/rs-catgif.gif": ["cat2.gif", "image/gif"],
-};
-
-// Public sources for the demo media, fetched into RS_MEDIA when absent. The
-// stills are the real r/SlideShowSpectacular posts; the cat gif uses Giphy's
-// canonical media URL (the media<n>.giphy.com form Reddit serves carries an
-// expiring token).
-const SOURCES = {
-  "puppy.png": "https://i.redd.it/cpkr7nfk7j4h1.png",
-  "cat1.png": "https://i.redd.it/6pazgvbx5j4h1.png",
-  "cat2.gif": "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif",
-};
-
-const UA =
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0";
-
-async function ensureMedia() {
-  await mkdir(mediaDir, { recursive: true });
-  for (const [name, url] of Object.entries(SOURCES)) {
-    const dest = join(mediaDir, name);
-    const cached = await access(dest).then(
-      () => true,
-      () => false,
-    );
-    if (cached) continue;
-    const res = await fetch(url, { headers: { "user-agent": UA } });
-    if (!res.ok) throw new Error(`GET ${url} -> HTTP ${res.status}`);
-    await writeFile(dest, Buffer.from(await res.arrayBuffer()));
-    console.log(`fetched ${name}`);
-  }
-}
 
 // Reel timing: each slide dwells DWELL seconds with FADE-second crossfades,
 // and the cut lands one frame past the wrap fade so the loop closes on a
@@ -172,15 +127,7 @@ async function main() {
     const page = await browser.newPage({
       viewport: { width: 1280, height: 800 },
     });
-    await page.route("https://i.redd.it/**", async (route) => {
-      const { pathname } = new URL(route.request().url());
-      const entry = FILES[pathname];
-      if (!entry) return route.fulfill({ status: 404, body: "" });
-      return route.fulfill({
-        contentType: entry[1],
-        body: await readFile(join(mediaDir, entry[0])),
-      });
-    });
+    await page.route("https://i.redd.it/**", fulfilRedditMedia);
     await page.goto(`http://127.0.0.1:${port}/index.html`, {
       waitUntil: "domcontentloaded",
     });

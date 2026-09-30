@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SlideShowSpectacular - hero backdrop</title>
+    <style>
+      /* A hand-made stand-in for an old-style subreddit listing: the real
+         overlay sits on top of it for the store hero shots. No external assets. */
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #f0f3fc;
+        color: #222;
+        font:
+          normal 13px/1.25 Verdana,
+          Arial,
+          Helvetica,
+          sans-serif;
+      }
+      a {
+        color: #369;
+        text-decoration: none;
+      }
+      #srbar {
+        height: 18px;
+        background: #f0f0f0;
+        border-bottom: 1px solid #5f99cf;
+        display: flex;
+        align-items: center;
+        padding: 0 6px;
+        font-size: 10px;
+        text-transform: uppercase;
+        color: #369;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      #srbar b {
+        font-weight: normal;
+        padding: 0 4px;
+      }
+      #srbar i {
+        font-style: normal;
+        color: #999;
+        margin: 0 2px;
+      }
+      #header {
+        height: 68px;
+        background: #eff7ff;
+        border-bottom: 1px solid #5f99cf;
+        position: relative;
+        padding: 4px 6px 0;
+      }
+      #logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        vertical-align: top;
+        margin-top: 2px;
+      }
+      #logo span {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ff4500;
+        color: #fff;
+        font:
+          bold 22px/40px Arial,
+          sans-serif;
+        text-align: center;
+      }
+      #logo em {
+        font:
+          normal bold 30px/1 Arial,
+          sans-serif;
+        color: #444;
+        letter-spacing: -1px;
+      }
+      #srname {
+        display: inline-block;
+        margin: 8px 0 0 14px;
+        font:
+          bold 20px/1 Arial,
+          sans-serif;
+        font-variant: small-caps;
+        color: #222;
+      }
+      #tabs {
+        position: absolute;
+        left: 6px;
+        bottom: 0;
+        display: flex;
+        font-size: 11px;
+        text-transform: lowercase;
+      }
+      #tabs a {
+        display: block;
+        padding: 2px 7px 3px;
+        margin-right: 3px;
+        color: #369;
+        background: #fff;
+        border: 1px solid #b5c9de;
+        border-bottom: 0;
+        border-radius: 3px 3px 0 0;
+      }
+      #tabs a.sel {
+        color: #ff4500;
+        font-weight: bold;
+        border-color: #5f99cf;
+        background: #fff;
+      }
+      #user {
+        position: absolute;
+        right: 8px;
+        top: 4px;
+        font-size: 10px;
+        color: #888;
+      }
+      #main {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 7px 0 60px 5px;
+      }
+      #listing {
+        flex: 1;
+        min-width: 0;
+        margin-right: 20px;
+      }
+      #notice {
+        margin: 0 0 8px 34px;
+        padding: 5px 8px;
+        background: #fffbd4;
+        border: 1px solid #e3d98a;
+        font-size: 11px;
+        color: #555;
+      }
+      .thing {
+        display: flex;
+        margin: 0 0 8px;
+        padding: 0 0 0 0;
+      }
+      .rank {
+        width: 27px;
+        margin: 0 4px 0 0;
+        padding-top: 14px;
+        text-align: right;
+        font-size: 16px;
+        color: #c6c6c6;
+      }
+      .vote {
+        width: 34px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 3px;
+      }
+      .arr {
+        width: 0;
+        height: 0;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        margin: 2px 0;
+      }
+      .arr.up {
+        border-bottom: 10px solid #c6c6c6;
+      }
+      .arr.down {
+        border-top: 10px solid #c6c6c6;
+      }
+      .score {
+        font-size: 12px;
+        font-weight: bold;
+        color: #c6c6c6;
+        line-height: 1.2;
+      }
+      .score.hot {
+        color: #ff8b60;
+      }
+      .thumb {
+        width: 70px;
+        height: 52px;
+        margin: 3px 5px 0 0;
+        border: 1px solid #ddd;
+        flex: none;
+        background: #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font:
+          bold 18px Arial,
+          sans-serif;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .entry {
+        min-width: 0;
+        padding-top: 1px;
+      }
+      .title {
+        font-size: 15px;
+        font-weight: normal;
+        color: #0000ff;
+      }
+      .title small {
+        font-size: 10px;
+        color: #888;
+        margin-left: 4px;
+      }
+      .tag {
+        margin: 2px 0 0;
+        font-size: 10px;
+        color: #888;
+      }
+      .tag a {
+        color: #369;
+      }
+      .tag .flair {
+        display: inline-block;
+        padding: 0 4px;
+        margin-right: 3px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        color: #555;
+      }
+      .links {
+        margin: 3px 0 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        gap: 8px;
+        font-size: 10px;
+        font-weight: bold;
+        color: #888;
+      }
+      .links li:first-child {
+        color: #888;
+      }
+      #side {
+        width: 300px;
+        flex: none;
+        margin-right: 6px;
+      }
+      .search {
+        display: flex;
+        border: 1px solid #a6a6a6;
+        background: #fff;
+        margin: 0 0 8px;
+        height: 24px;
+        font-size: 11px;
+        color: #999;
+        align-items: center;
+        padding: 0 6px;
+      }
+      .spacer {
+        margin: 0 0 10px;
+        padding: 4px 8px;
+        border: 1px solid #c8d4e3;
+        background: #fafafa;
+        font-size: 11px;
+        color: #666;
+      }
+      .side-title {
+        font:
+          bold 15px Arial,
+          sans-serif;
+        margin: 6px 0 5px;
+        color: #222;
+      }
+      .subscribe {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 8px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 3px 12px;
+        background: #f6f6f6;
+        border: 1px solid #a5a5a5;
+        border-radius: 3px;
+        font:
+          bold 11px Arial,
+          sans-serif;
+        text-transform: uppercase;
+        color: #444;
+      }
+      .btn.sub {
+        background: #369;
+        border-color: #369;
+        color: #fff;
+      }
+      .readers {
+        font-size: 10px;
+        color: #888;
+        line-height: 1.4;
+      }
+      .readers b {
+        color: #444;
+        font-size: 12px;
+      }
+      .box {
+        margin: 0 0 10px;
+        padding: 8px;
+        border: 1px solid #d5e0ee;
+        background: #fff;
+        font-size: 11px;
+        line-height: 1.5;
+        color: #444;
+      }
+      .box h4 {
+        margin: 0 0 4px;
+        font:
+          bold 11px Arial,
+          sans-serif;
+        text-transform: uppercase;
+        color: #888;
+      }
+      .box p {
+        margin: 0 0 6px;
+      }
+      .box ul {
+        margin: 0 0 6px;
+        padding-left: 16px;
+      }
+      .mods h4 {
+        background: #eef3fa;
+        margin: -8px -8px 6px;
+        padding: 4px 8px;
+        border-bottom: 1px solid #d5e0ee;
+      }
+      .mods .btn {
+        display: block;
+        text-align: center;
+        margin: 0 0 6px;
+        background: #eef3fa;
+      }
+      .foot {
+        text-align: center;
+        font-size: 10px;
+        color: #888;
+        padding: 6px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="srbar">
+      <b>my subreddits</b><i>|</i><b>front</b><i>-</i><b>all</b><i>-</i
+      ><b>random</b><i>|</i><b>slideshowspectacular</b><i>-</i><b>pics</b
+      ><i>-</i><b>aww</b><i>-</i><b>earthporn</b><i>-</i><b>itookapicture</b
+      ><i>-</i><b>oldschoolcool</b><i>-</i><b>mapporn</b><i>-</i
+      ><b>cozyplaces</b><i>-</i><b>gifs</b><i>-</i><b>art</b><i>-</i
+      ><b>catpictures</b><i>-</i><b>dogpictures</b><i>-</i><b>wallpapers</b
+      ><i>-</i><b>photography</b><i>-</i><b>space</b><i>-</i><b>food</b><i>-</i
+      ><b>videos</b><i>-</i><b>more &raquo;</b>
+    </div>
+
+    <div id="header">
+      <span id="logo"><span>S</span><em>reddit</em></span>
+      <span id="srname">SlideShowSpectacular</span>
+      <span id="user"
+        ><a href="#">rio517</a> (1) | <a href="#">preferences</a> |
+        <a href="#">log out</a></span
+      >
+      <div id="tabs">
+        <a class="sel" href="#">hot</a><a href="#">new</a><a href="#">rising</a
+        ><a href="#">controversial</a><a href="#">top</a><a href="#">gilded</a
+        ><a href="#">wiki</a>
+      </div>
+    </div>
+
+    <div id="main">
+      <div id="listing">
+        <div id="notice">
+          Submissions restricted: only approved users may post in this
+          community.
+        </div>
+
+        <div class="thing">
+          <div class="rank">1</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score hot">8123</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #e6a04a, #7a4a2b)"
+          >
+            CAT
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit">Spectacular Cat</a>
+              <small>(i.redd.it)</small>
+            </div>
+            <div class="tag">
+              submitted 3 hours ago by <a href="#">marbled_fox</a>
+            </div>
+            <ul class="links">
+              <li>214 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">2</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score hot">5290</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #d9c9a0, #8a7a55)"
+          >
+            MAP
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit">Antique map of the world</a>
+              <small>(i.redd.it)</small>
+            </div>
+            <div class="tag">
+              submitted 5 hours ago by <a href="#">quillandink</a>
+            </div>
+            <ul class="links">
+              <li>96 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">3</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">3841</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #3a4a63, #16202e)"
+          >
+            &#9654;
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit">Streamable Content</a>
+              <small>(streamable.com)</small>
+            </div>
+            <div class="tag">
+              submitted 7 hours ago by <a href="#">lumen_park</a>
+            </div>
+            <ul class="links">
+              <li>41 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">4</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">2716</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #4c8f6b, #1f4d3a)"
+          >
+            9
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit">Imgur Album - 9 images</a>
+              <small>(imgur.com)</small>
+            </div>
+            <div class="tag">
+              submitted 9 hours ago by <a href="#">tidepool_tom</a>
+            </div>
+            <ul class="links">
+              <li>58 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">5</div>
+          <div class="vote">
+            <div class="arr up" style="border-bottom-color: #ff8b60"></div>
+            <div class="score hot">12437</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #f0b04a, #b5651d)"
+          >
+            DOG
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit">Spectacular Puppy</a>
+              <small>(i.redd.it)</small>
+            </div>
+            <div class="tag">
+              submitted 11 hours ago by <a href="#">rio517</a>
+            </div>
+            <ul class="links">
+              <li>402 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">6</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">9034</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #8aa6c9, #3e5675)"
+          >
+            DOG
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit"
+                >Cute Dog - Imgur, single image</a
+              >
+              <small>(i.imgur.com)</small>
+            </div>
+            <div class="tag">
+              submitted 13 hours ago by <a href="#">pixel_harbor</a>
+            </div>
+            <ul class="links">
+              <li>127 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">7</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">1985</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #b8598a, #4d2340)"
+          >
+            GIF
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit">Amateur GIF by nightowl_gif</a>
+              <small>(giphy.com)</small>
+            </div>
+            <div class="tag">
+              submitted 15 hours ago by <a href="#">nightowl_gif</a>
+            </div>
+            <ul class="links">
+              <li>33 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">8</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">6472</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #e8b86a, #9c5a2a)"
+          >
+            CAT
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit"
+                >Cross post - Kittens at golden hour</a
+              >
+              <small>(i.redd.it)</small>
+            </div>
+            <div class="tag">
+              submitted 17 hours ago by <a href="#">velvetmoss</a>
+            </div>
+            <ul class="links">
+              <li>171 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">9</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">1207</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #5a3d7a, #221433)"
+          >
+            &#9654;
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit">SWF post from Redgifs</a>
+              <small>(redgifs.com)</small>
+            </div>
+            <div class="tag">
+              <span class="flair">video</span>submitted 19 hours ago by
+              <a href="#">copper_kettle</a>
+            </div>
+            <ul class="links">
+              <li>19 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">10</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">4358</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #e07a5f, #6b2d1f)"
+          >
+            CAT
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit"
+                >Spectacular Cat from a rooftop</a
+              >
+              <small>(i.redd.it)</small>
+            </div>
+            <div class="tag">
+              submitted 21 hours ago by <a href="#">saltandsage</a>
+            </div>
+            <ul class="links">
+              <li>88 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">11</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">7629</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #7fa7c9, #2c4a6b)"
+          >
+            4K
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit">Mountain sunrise, 4K</a>
+              <small>(i.redd.it)</small>
+            </div>
+            <div class="tag">
+              submitted 22 hours ago by <a href="#">driftwood_dan</a>
+            </div>
+            <ul class="links">
+              <li>140 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">12</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">2503</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #444, #111)"
+          >
+            &#9654;
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit"
+                >Slideshow Spectacular demo reel</a
+              >
+              <small>(i.redd.it)</small>
+            </div>
+            <div class="tag">submitted 1 day ago by <a href="#">rio517</a></div>
+            <ul class="links">
+              <li>67 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">13</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">1644</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #6fb59a, #245846)"
+          >
+            PIC
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit">Lighthouse at dusk</a>
+              <small>(i.redd.it)</small>
+            </div>
+            <div class="tag">
+              submitted 1 day ago by <a href="#">tidepool_tom</a>
+            </div>
+            <ul class="links">
+              <li>29 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="thing">
+          <div class="rank">14</div>
+          <div class="vote">
+            <div class="arr up"></div>
+            <div class="score">982</div>
+            <div class="arr down"></div>
+          </div>
+          <div
+            class="thumb"
+            style="background: linear-gradient(135deg, #c9a0dc, #5c3a73)"
+          >
+            PIC
+          </div>
+          <div class="entry">
+            <div class="title">
+              <a href="#" style="color: inherit"
+                >Lavender field, early morning</a
+              >
+              <small>(i.redd.it)</small>
+            </div>
+            <div class="tag">
+              submitted 1 day ago by <a href="#">velvetmoss</a>
+            </div>
+            <ul class="links">
+              <li>17 comments</li>
+              <li>share</li>
+              <li>save</li>
+              <li>hide</li>
+              <li>report</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="side">
+        <div class="search">search r/SlideShowSpectacular</div>
+        <div class="spacer">
+          Submissions restricted<br />Only approved users may post in this
+          community.
+        </div>
+        <div class="side-title">SlideShowSpectacular</div>
+        <div class="subscribe">
+          <span class="btn sub">subscribe</span>
+          <span class="readers"
+            ><b>3,816</b> readers<br /><b>41</b> users here now</span
+          >
+        </div>
+        <div class="box">
+          <p>
+            A place to share pictures, GIFs and clips worth watching one after
+            another. Everything here plays nicely in a full-screen slideshow.
+          </p>
+          <h4>Rules</h4>
+          <ul>
+            <li>Post only images, GIFs and short clips.</li>
+            <li>Give credit when you know the source.</li>
+            <li>Be kind in the comments.</li>
+          </ul>
+          <p>Press the slideshow button and sit back.</p>
+        </div>
+        <div class="box mods">
+          <h4>Moderators</h4>
+          <span class="btn">message the mods</span>
+          <p><a href="#">rio517</a></p>
+          <p style="text-align: right; color: #888">and 2 more &raquo;</p>
+        </div>
+        <div class="foot">
+          about &middot; help &middot; rules &middot; privacy
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="harness.js"></script>
+  </body>
+</html>
