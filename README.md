@@ -45,6 +45,7 @@ AirPlay or Chromecast that window to your TV for a hands-off, lean-back feed.
   (`{domain} • {W}×{H}`). Its buttons sit in a fixed column.
 - A seek bar along the top of the caption on video slides, the same in every
   browser: drag it to rewind or skip ahead, and the show waits for the clip.
+  It shows when you move the mouse and fades when you stop.
 - Lots to tune from the overlay's gear, applied live with no reload - see
   [Settings](#settings).
 

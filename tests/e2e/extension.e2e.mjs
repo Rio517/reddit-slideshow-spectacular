@@ -556,6 +556,41 @@ async function main() {
         assert.equal(seek.nativeControls, false);
       },
     );
+
+    // The seek bar comes and goes with the pointer while the pinned caption
+    // stays; computed opacity needs a real browser.
+    const seekOpacity = (/** @type {string} */ want) =>
+      gifPage
+        .waitForFunction(
+          (opacity) => {
+            const sr = document.querySelector(
+              "#reddit-slideshow-host",
+            )?.shadowRoot;
+            const row = sr?.querySelector(".rs-meta__scrubrow");
+            const caption = sr?.querySelector(".rs-meta");
+            return Boolean(
+              row &&
+              caption &&
+              window.getComputedStyle(row).opacity === opacity &&
+              window.getComputedStyle(caption).opacity === "1",
+            );
+          },
+          want,
+          { timeout: 6000 },
+        )
+        .then(() => true)
+        .catch(() => false);
+    await gifPage.mouse.move(640, 300);
+    await gifPage.mouse.move(660, 320);
+    const seekShown = await seekOpacity("1");
+    const seekFaded = await seekOpacity("0");
+    check(
+      "the seek bar shows on pointer movement and fades when it rests",
+      () => {
+        assert.equal(seekShown, true, "the seek bar did not show");
+        assert.equal(seekFaded, true, "the seek bar did not fade");
+      },
+    );
   } finally {
     await context.close();
     await rm(userDataDir, { recursive: true, force: true });

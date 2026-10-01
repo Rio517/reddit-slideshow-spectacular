@@ -542,6 +542,7 @@ iframe.reddit-slideshow-media {
   gap: 12px;
   margin-bottom: 4px;
   margin-inline-end: calc(26px - min(150px, 12vw));
+  transition: opacity 0.35s ease;
 }
 
 .rs-meta__scrubrow[hidden] {
@@ -916,8 +917,8 @@ iframe.reddit-slideshow-media {
    back in to the pointer individually, so the strip's own rule misses them). */
 #reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta .rs-btn,
 #reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta a,
-#reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta__scrub,
-#reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta__title-text {
+#reddit-slideshow-root.rs-idle:not(.rs-pin-meta) .rs-meta__title-text,
+#reddit-slideshow-root.rs-idle .rs-meta__scrub {
   pointer-events: none;
 }
 
@@ -929,6 +930,11 @@ iframe.reddit-slideshow-media {
 }
 #reddit-slideshow-root.rs-pin-meta.rs-idle .rs-meta {
   opacity: 1;
+}
+
+/* The seek bar leaves with the pointer even on a pinned caption. */
+#reddit-slideshow-root.rs-idle .rs-meta__scrubrow {
+  opacity: 0;
 }
 
 .rs-btn {

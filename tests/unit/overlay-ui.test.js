@@ -431,7 +431,7 @@ describe("createOverlay", () => {
       /\.rs-meta__title-text,\s*\.rs-meta__scrub,\s*\.rs-meta a\s*{[^}]*pointer-events:\s*auto;/,
     );
     expect(overlayCss).toMatch(
-      /#reddit-slideshow-root\.rs-idle:not\(\.rs-pin-meta\)\s+\.rs-meta__title-text\s*{[^}]*pointer-events:\s*none;/,
+      /#reddit-slideshow-root\.rs-idle:not\(\.rs-pin-meta\)\s+\.rs-meta__title-text,[^{]*{[^}]*pointer-events:\s*none;/,
     );
     expect(overlayCss).toMatch(
       /\.rs-meta__title-text\s*{[^}]*cursor:\s*default;/,
@@ -2956,6 +2956,31 @@ describe("clip seek bar", () => {
     scrub.dispatchEvent(new Event("input"));
     scrub.dispatchEvent(new Event("pointerup"));
     expect(state.clock).toEqual([8]);
+  });
+
+  it("fades with the pointer even on a pinned caption", () => {
+    expect(overlayCss).toMatch(
+      /#reddit-slideshow-root\.rs-idle \.rs-meta__scrubrow\s*{[^}]*opacity:\s*0;/,
+    );
+    // Invisible, it must not take a click meant for the slide behind it.
+    expect(overlayCss).toMatch(
+      /#reddit-slideshow-root\.rs-idle \.rs-meta__scrub\s*{[^}]*pointer-events:\s*none;/,
+    );
+  });
+
+  it("stays up through a drag, then fades with the pointer again", () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    const { scrub } = readyClip(overlay);
+    const idle = () => overlay.root.classList.contains("rs-idle");
+
+    scrub.dispatchEvent(new Event("pointerdown"));
+    overlay.root.dispatchEvent(new Event("mouseleave"));
+    expect(idle()).toBe(false);
+
+    scrub.dispatchEvent(new Event("pointerup"));
+    vi.advanceTimersByTime(3000);
+    expect(idle()).toBe(true);
   });
 });
 
