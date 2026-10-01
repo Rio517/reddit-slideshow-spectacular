@@ -16,6 +16,10 @@ Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard
 
 The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
 
+WHAT'S NEW - V1.5.1
+
+- IMPROVED: The video seek bar now shows when you move the mouse and fades when you stop, instead of staying on screen for the whole clip
+
 WHAT'S NEW - V1.5.0
 
 - NEW: The caption under each slide is now a full-width strip that shows the whole post title - long titles wrap onto more lines instead of being cut off
@@ -23,10 +27,6 @@ WHAT'S NEW - V1.5.0
 - NEW: Videos get a seek bar along the top of the caption - drag it to rewind or skip ahead, and it looks the same in every browser
 - IMPROVED: The vote, open-original, and download buttons sit in a fixed column, so they stay in the same place from slide to slide
 - FIXED: Rewinding a video no longer lets the slideshow move on mid-clip - the show waits for the clip to finish
-
-WHAT'S NEW - V1.4.3
-
-- FIXED: Preloaded videos now keep their buffered data when they appear, preventing duplicate downloads and long pauses between clips
 
 Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 

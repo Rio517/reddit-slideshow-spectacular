@@ -1,10 +1,10 @@
 # NEXT_STEP - Reddit Slideshow Spectacular!
 
-**Branch:** `main` · **Status:** CI-green. v1.4.3 is live on Firefox Add-ons.
-v1.5.0 is prepared locally - version and per-locale store copy refreshed,
-Firefox, Chrome, and source zips built, hero shots, promo tiles and the demo
-reel regenerated, and the full unit/browser/package gates passed. The manual
-store rollout remains in §1.
+**Branch:** `main` · **Status:** CI-green. v1.5.0 is submitted to the Chrome
+Web Store and Firefox Add-ons. v1.5.1 (the seek bar fades when the pointer
+rests) is prepared locally - version and per-locale store copy refreshed,
+Firefox, Chrome, and source zips built, and the full unit/browser/package
+gates passed. The manual store rollout remains in §1.
 
 > **Hard rule:** work directly on `main`. Do not create branches or worktrees unless the user explicitly asks. See `AGENTS.md`.
 
@@ -41,20 +41,19 @@ giant commit.
 
 ### Requested, not yet done
 
-- **v1.5.0 store rollout.** Upload
-  `.output/reddit-slideshow-1.5.0-chrome.zip` to the Chrome Web Store and
-  `.output/reddit-slideshow-1.5.0-firefox.zip` plus
-  `.output/reddit-slideshow-1.5.0-sources.zip` (the build minifies) to Firefox
+- **v1.5.1 store rollout.** Upload
+  `.output/reddit-slideshow-1.5.1-chrome.zip` to the Chrome Web Store and
+  `.output/reddit-slideshow-1.5.1-firefox.zip` plus
+  `.output/reddit-slideshow-1.5.1-sources.zip` (the build minifies) to Firefox
   Add-ons. Paste the per-locale listing copy from
-  `docs/store-listing/<lang>.md` (its what's-new shows the last two versions),
-  and replace the store screenshots with `docs/screenshots/hero-chrome.jpg`
-  (Chrome) and `docs/screenshots/hero-firefox.png` (Firefox), which show the
-  new caption.
-- **Hand-check in a logged-in Firefox and Chrome before uploading:** vote with
-  a caption arrow (the score moves and the vote lands on Reddit), and drag the
-  seek bar on a real Reddit video and a Redgifs clip (the show waits for the
-  clip to finish). The offline gates cover the logic and a scripted mouse drag
-  on a local clip, not a real account vote or a provider's video.
+  `docs/store-listing/<lang>.md` (its what's-new shows the last two versions).
+  The store screenshots and promo tiles are the same as v1.5.0's.
+- **Hand-check in a logged-in Firefox and Chrome:** vote with a caption arrow
+  (the score moves and the vote lands on Reddit), and drag the seek bar on a
+  real Reddit video and a Redgifs clip (the show waits for the clip to finish;
+  the bar fades when the pointer rests). The offline gates cover the logic and
+  a scripted mouse drag on a local clip, not a real account vote or a
+  provider's video.
 - Optional: a native-speaker pass on the machine-drafted translations,
   especially Arabic (~25% of installs). English fallback covers any gap, and a
   locale file can be refreshed without code changes.
