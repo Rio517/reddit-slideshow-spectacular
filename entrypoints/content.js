@@ -5,7 +5,7 @@ import { createOverlay } from "@/lib/overlay-ui.js";
 import { getSettings, saveSettings } from "@/lib/settings.js";
 import { createSlideshowSession } from "@/lib/session.js";
 import { base64ToBlob } from "@/lib/bytes-base64.js";
-import { redgifsVideoSlide } from "@/lib/redgifs.js";
+import { resolveRedgifsSlide } from "@/lib/redgifs.js";
 import { redgifsId } from "@/lib/slides.js";
 import { createLogger } from "@/lib/log.js";
 import { setLocale, resolveLocale } from "@/lib/i18n.js";
@@ -110,25 +110,26 @@ export default defineContentScript({
       },
       // Lazy redgifs: resolve one embed's native mp4 on approach and return the
       // upgraded video slide (proxied on Chrome, where referrerpolicy is a no-op
-      // on <video>). Null keeps the iframe embed.
-      resolveRedgifs: async (slide) => {
-        const id = redgifsId(slide.sourceUrl ?? slide.embedUrl);
-        if (!id) return null;
-        let res;
-        try {
-          res = await browser.runtime.sendMessage({
-            type: "slideshow.resolveRedgifs",
-            payload: { id },
-          });
-        } catch (err) {
-          log.warn("resolveRedgifs message failed", id, err);
-          return null;
-        }
-        if (!res?.ok || !res.media) return null;
-        return redgifsVideoSlide(slide, res.media, {
+      // on <video>), falling back to the poster slug, then reddit's v.redd.it
+      // transcode. Null keeps the iframe embed.
+      resolveRedgifs: (slide) =>
+        resolveRedgifsSlide(slide, {
+          id: redgifsId(slide.sourceUrl ?? slide.embedUrl),
           proxied: import.meta.env.CHROME,
-        });
-      },
+          requestMedia: async (id) => {
+            let res;
+            try {
+              res = await browser.runtime.sendMessage({
+                type: "slideshow.resolveRedgifs",
+                payload: { id },
+              });
+            } catch (err) {
+              log.warn("resolveRedgifs message failed", id, err);
+              return null;
+            }
+            return res?.ok && res.media ? res.media : null;
+          },
+        }),
       // v.redd.it audio: ask the background to read the separate audio track
       // URL from the DASH manifest. Null keeps the clip silent (today's
       // behavior).

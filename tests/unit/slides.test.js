@@ -10,6 +10,7 @@ import animatedGalleryFixture from "../fixtures/reddit-json/gallery-animated.jso
 import videoFixture from "../fixtures/reddit-json/reddit-video.json";
 import gifFixture from "../fixtures/reddit-json/reddit-gif.json";
 import redgifsFixture from "../fixtures/reddit-json/redgifs.json";
+import redgifsNumericFixture from "../fixtures/reddit-json/redgifs-numeric.json";
 import imgurGifvFixture from "../fixtures/reddit-json/imgur-gifv.json";
 import catboxVideoFixture from "../fixtures/reddit-json/catbox-video.json";
 import streamableFixture from "../fixtures/reddit-json/streamable.json";
@@ -645,6 +646,38 @@ describe("Redgifs posts", () => {
       sourceWidth: 1080,
       sourceHeight: 1920,
     });
+    expect(slides[0]).not.toHaveProperty("fallbackVideo");
+  });
+
+  it("carries the poster slug and reddit's v.redd.it transcode for numeric ids", () => {
+    const slides = slidesFromListing(
+      /** @type {any} */ (redgifsNumericFixture),
+    );
+    expect(slides[0]).toMatchObject({
+      provider: "redgifs",
+      kind: "embed",
+      embedUrl: "https://www.redgifs.com/ifr/891945574847888981",
+      redgifsAltId: "fakeslugwords",
+      fallbackVideo: {
+        mediaUrl: "https://v.redd.it/fakevid123/CMAF_1080.mp4",
+        durationSeconds: 10,
+        hasAudio: false,
+        sourceWidth: 1080,
+        sourceHeight: 1920,
+      },
+    });
+  });
+
+  it("ignores a transcode or poster on an untrusted host", () => {
+    const listing = JSON.parse(JSON.stringify(redgifsNumericFixture));
+    const post = /** @type {any} */ (listing.data.children[0]?.data);
+    post.preview.reddit_video_preview.fallback_url =
+      "https://evil.example/x.mp4";
+    post.secure_media.oembed.thumbnail_url =
+      "https://evil.example/Abc-poster.jpg";
+    const [slide] = slidesFromListing(/** @type {any} */ (listing));
+    expect(slide).not.toHaveProperty("fallbackVideo");
+    expect(slide).not.toHaveProperty("redgifsAltId");
   });
 });
 
