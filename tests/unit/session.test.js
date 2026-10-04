@@ -1408,6 +1408,50 @@ describe("createSlideshowSession", () => {
     );
   });
 
+  it("plays reddit's own copy when a Redgifs video and its proxy both fail", async () => {
+    /** @type {any} */
+    const redgifs = {
+      id: "rg",
+      postId: "rg",
+      provider: "redgifs",
+      kind: "video",
+      mediaUrl: "https://media.redgifs.com/X.mp4",
+      sourceUrl: "https://www.redgifs.com/watch/123",
+      permalink: "https://old.reddit.com/r/x/comments/x/x/",
+      title: "rg",
+      over18: false,
+      durationMode: "media",
+      audioAvailable: true,
+      quality: "original",
+      filenameHint: "x.mp4",
+      fallbackVideo: {
+        mediaUrl: "https://v.redd.it/abc/CMAF_1080.mp4",
+        durationSeconds: 10,
+        hasAudio: false,
+      },
+    };
+    const { session } = makeSession({
+      resolveMedia: async () => null, // the blob proxy fails too (CDN 403)
+      pages: [
+        { slides: [redgifs], after: null, exhausted: true, postsScanned: 1 },
+      ],
+    });
+    await session.start();
+    q("video.reddit-slideshow-media")?.dispatchEvent(new Event("error"));
+    await flush();
+    await flush();
+    const video = q("video.reddit-slideshow-media");
+    expect(video?.getAttribute("src")).toBe(
+      "https://v.redd.it/abc/CMAF_1080.mp4",
+    );
+    expect(text(".rs-skipped")).not.toBe("1 skipped");
+
+    // Reddit's copy failing as well finally skips the slide.
+    video?.dispatchEvent(new Event("error"));
+    await flush();
+    expect(redgifs.skipReason).toBeTruthy();
+  });
+
   it("steps back over a skipped slide without re-skipping it", async () => {
     const { session } = makeSession({
       pages: [

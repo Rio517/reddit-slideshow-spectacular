@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { createRedgifsResolver, redgifsVideoSlide } from "../../lib/redgifs.js";
+import {
+  createRedgifsResolver,
+  redgifsVideoSlide,
+  resolveRedgifsSlide,
+} from "../../lib/redgifs.js";
 
 /** @param {any} body @param {{ status?: number }} [opts] */
 function jsonResponse(body, { status = 200 } = {}) {
@@ -174,5 +178,90 @@ describe("redgifsVideoSlide", () => {
     );
     expect(video.kind).toBe("video");
     expect(video.proxied).toBe(true); // blob proxy path (background, no Referer)
+  });
+});
+
+describe("resolveRedgifsSlide", () => {
+  const MEDIA = {
+    mediaUrl: "https://media.redgifs.com/X.mp4",
+    durationSeconds: 12,
+    hasAudio: true,
+  };
+  const FALLBACK = {
+    mediaUrl: "https://v.redd.it/abc/CMAF_1080.mp4",
+    durationSeconds: 10,
+    hasAudio: false,
+    sourceWidth: 1080,
+    sourceHeight: 1920,
+  };
+  /** @param {any} [extra] */
+  const embed = (extra = {}) =>
+    /** @type {any} */ ({
+      id: "t3_x:0",
+      provider: "redgifs",
+      kind: "embed",
+      mediaUrl: "https://www.redgifs.com/ifr/123",
+      embedUrl: "https://www.redgifs.com/ifr/123",
+      durationMode: "timer",
+      audioAvailable: false,
+      ...extra,
+    });
+
+  it("uses the watch-url id when the API resolves it", async () => {
+    const requestMedia = vi.fn(async () => MEDIA);
+    const out = await resolveRedgifsSlide(embed({ redgifsAltId: "slug" }), {
+      id: "123",
+      requestMedia,
+      proxied: true,
+    });
+    expect(requestMedia).toHaveBeenCalledTimes(1);
+    expect(out).toMatchObject({
+      kind: "video",
+      mediaUrl: MEDIA.mediaUrl,
+      proxied: true,
+      audioAvailable: true,
+    });
+  });
+
+  it("retries with the poster slug when the numeric id fails", async () => {
+    const requestMedia = vi.fn(async (/** @type {string} */ id) =>
+      id === "slug" ? MEDIA : null,
+    );
+    const out = await resolveRedgifsSlide(embed({ redgifsAltId: "slug" }), {
+      id: "123",
+      requestMedia,
+    });
+    expect(requestMedia.mock.calls.map((c) => c[0])).toEqual(["123", "slug"]);
+    expect(out?.mediaUrl).toBe(MEDIA.mediaUrl);
+  });
+
+  it("falls back to reddit's v.redd.it transcode, played directly", async () => {
+    const out = await resolveRedgifsSlide(
+      embed({ redgifsAltId: "slug", fallbackVideo: FALLBACK }),
+      {
+        id: "123",
+        requestMedia: async () => {
+          throw new Error("down");
+        },
+        proxied: true,
+      },
+    );
+    expect(out).toMatchObject({
+      kind: "video",
+      mediaUrl: FALLBACK.mediaUrl,
+      durationMode: "media",
+      durationSeconds: 10,
+      audioAvailable: false,
+    });
+    expect(out).not.toHaveProperty("proxied");
+  });
+
+  it("returns null (keep the iframe) when nothing resolves", async () => {
+    expect(
+      await resolveRedgifsSlide(embed(), {
+        id: "123",
+        requestMedia: async () => null,
+      }),
+    ).toBeNull();
   });
 });

@@ -1,0 +1,44 @@
+{
+  "kind": "Listing",
+  "data": {
+    "children": [
+      {
+        "kind": "t3",
+        "data": {
+          "name": "t3_rg2",
+          "title": "Redgifs numeric id clip",
+          "permalink": "/r/example/comments/rg2/redgifs_numeric_id_clip/",
+          "over_18": true,
+          "domain": "redgifs.com",
+          "post_hint": "rich:video",
+          "is_video": false,
+          "url": "https://www.redgifs.com/watch/891945574847888981",
+          "url_overridden_by_dest": "https://www.redgifs.com/watch/891945574847888981",
+          "secure_media": {
+            "type": "redgifs.com",
+            "oembed": {
+              "provider_name": "RedGIFs",
+              "type": "video",
+              "width": 1080,
+              "height": 1920,
+              "thumbnail_url": "https://media.redgifs.com/FakeSlugWords-poster.jpg"
+            }
+          },
+          "preview": {
+            "images": [],
+            "reddit_video_preview": {
+              "fallback_url": "https://v.redd.it/fakevid123/CMAF_1080.mp4",
+              "dash_url": "https://v.redd.it/fakevid123/DASHPlaylist.mpd",
+              "duration": 10,
+              "has_audio": false,
+              "is_gif": true,
+              "width": 1080,
+              "height": 1920
+            },
+            "enabled": false
+          }
+        }
+      }
+    ]
+  }
+}
