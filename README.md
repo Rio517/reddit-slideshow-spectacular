@@ -260,7 +260,7 @@ The core logic in `lib/` is DOM/extension-agnostic and unit-tested; the
 - Architecture decisions: `docs/adr/` (see `docs/README.md` for the index).
 - Product spec and research: `docs/product/`, `docs/research/`.
 - Store listing & release-notes copy: `docs/store-listing/` (one file per locale).
-- Current status and next steps: `NEXT_STEP.md`.
+- Current status and next steps: `BACKLOG.md`.
 
 ## Status
 

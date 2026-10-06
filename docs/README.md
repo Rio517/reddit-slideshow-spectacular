@@ -40,4 +40,4 @@ Product, research, and decision docs for the extension, plus the shipped assets:
 
 ## Status
 
-These are living docs capturing current research and decisions. The extension is published on both stores; `NEXT_STEP.md` at the repo root tracks release status and open work.
+These are living docs capturing current research and decisions. The extension is published on both stores; `BACKLOG.md` at the repo root tracks release status and open work.

@@ -1,4 +1,4 @@
-# NEXT_STEP - Reddit Slideshow Spectacular!
+# Backlog: session handoff - Reddit Slideshow Spectacular!
 
 **Branch:** `main` · **Status:** CI-green. v1.5.0 is submitted to the Chrome
 Web Store and Firefox Add-ons. v1.5.1 (the seek bar fades when the pointer
