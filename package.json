@@ -28,7 +28,8 @@
     "reel": "node scripts/record-slideshow.mjs",
     "ship": "npm run zip && npm run heroes && npm run promo && npm run reel",
     "promo": "node scripts/promo-tiles.mjs",
-    "locales": "node scripts/build-locales.mjs"
+    "locales": "node scripts/build-locales.mjs",
+    "listing:chrome": "node scripts/chrome-listing.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
