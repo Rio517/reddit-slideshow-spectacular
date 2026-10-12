@@ -16,17 +16,13 @@ Reddit Slideshow Spectacular! verwandelt deine Reddit-Feeds in eine bildschirmf�
 
 Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüssel, keine separate Anmeldung, kein zusätzliches Konto. Sie geht die Medienbeiträge in der Reihenfolge durch, in der Reddit sie liefert, und blättert automatisch durch den Feed, sodass die Diashow über die erste Seite hinaus weiterläuft.
 
+NEU IN V1.5.2
+
+- BEHOBEN: In Firefox starten Redgifs-Clips sofort und werden vorgeladen, statt vor dem Abspielen komplett heruntergeladen zu werden
+
 NEU IN V1.5.1
 
 - VERBESSERT: Die Fortschrittsleiste bei Videos erscheint jetzt, wenn du die Maus bewegst, und blendet sich aus, wenn du aufhörst – statt den ganzen Clip über sichtbar zu bleiben
-
-NEU IN V1.5.0
-
-- NEU: Die Bildunterschrift unter jeder Folie ist jetzt eine Leiste in voller Breite, die den ganzen Beitragstitel zeigt – lange Titel laufen in weitere Zeilen um, statt abgeschnitten zu werden
-- NEU: Die Stimmenzahl des Beitrags mit Pfeilen nach oben und unten, die du zum Abstimmen anklicken kannst (die Tasten Up/Down funktionieren weiterhin)
-- NEU: Videos bekommen eine Fortschrittsleiste am oberen Rand der Bildunterschrift – ziehe sie, um zurück- oder vorzuspulen; sie sieht in jedem Browser gleich aus
-- VERBESSERT: Die Schaltflächen zum Abstimmen, Öffnen des Originals und Herunterladen sitzen in einer festen Spalte und bleiben so von Folie zu Folie an derselben Stelle
-- BEHOBEN: Wer ein Video zurückspult, lässt die Diashow nicht mehr mitten im Clip weiterwechseln – die Show wartet, bis der Clip zu Ende ist
 
 Vollständige Versionshinweise: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 

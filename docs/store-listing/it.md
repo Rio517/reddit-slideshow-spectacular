@@ -16,17 +16,13 @@ Reddit Slideshow Spectacular! trasforma i tuoi feed Reddit in una presentazione 
 
 La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave API, nessun accesso aggiuntivo, nessun account extra. Scorre i post multimediali nell'ordine in cui Reddit li restituisce e sfoglia automaticamente il feed, così la presentazione prosegue oltre la prima pagina.
 
+NOVITÀ - V1.5.2
+
+- CORRETTO: su Firefox, le clip di Redgifs partono subito e vengono precaricate, invece di essere scaricate per intero prima della riproduzione
+
 NOVITÀ - V1.5.1
 
 - MIGLIORATO: la barra di avanzamento dei video ora compare quando muovi il mouse e svanisce quando ti fermi, invece di restare sullo schermo per tutto il clip
-
-NOVITÀ - V1.5.0
-
-- NUOVO: la didascalia sotto ogni diapositiva è ora una fascia a tutta larghezza che mostra il titolo completo del post — i titoli lunghi vanno a capo su più righe invece di essere tagliati
-- NUOVO: il conteggio dei voti del post, con frecce su e giù su cui fare clic per votare (i tasti Up/Down funzionano ancora)
-- NUOVO: i video hanno una barra di avanzamento lungo la parte alta della didascalia — trascinala per riavvolgere o andare avanti, e ha lo stesso aspetto in ogni browser
-- MIGLIORATO: i pulsanti per votare, aprire l'originale e scaricare stanno in una colonna fissa, così restano nello stesso punto da una diapositiva all'altra
-- CORRETTO: riavvolgere un video non fa più passare la presentazione oltre a metà clip — la presentazione aspetta la fine del clip
 
 Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 

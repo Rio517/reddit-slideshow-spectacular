@@ -1,10 +1,12 @@
 # Backlog: session handoff - Reddit Slideshow Spectacular!
 
-**Branch:** `main` · **Status:** CI-green. v1.5.0 is submitted to the Chrome
-Web Store and Firefox Add-ons. v1.5.1 (the seek bar fades when the pointer
-rests) is prepared locally - version and per-locale store copy refreshed,
-Firefox, Chrome, and source zips built, and the full unit/browser/package
-gates passed. The manual store rollout remains in §1.
+**Branch:** `main` · **Status:** CI-green. v1.5.0 is live on Firefox Add-ons;
+the Chrome Web Store rejected its listing for keyword stuffing. v1.5.2 is
+prepared locally: it carries v1.5.1 (the seek bar fades when the pointer
+rests, never uploaded) plus the Firefox Redgifs fix (ADR 0023). Version and
+per-locale store copy are refreshed, the Firefox, Chrome, and source zips are
+built, and the full unit/build/package gate passed. The manual store rollout
+remains in §1.
 
 > **Hard rule:** work directly on `main`. Do not create branches or worktrees unless the user explicitly asks. See `AGENTS.md`.
 
@@ -54,14 +56,17 @@ giant commit.
   the full host list, and has no what's-new block. Regenerate it with
   `npm run listing:chrome` after editing a main listing; Firefox keeps
   `docs/store-listing/<lang>.md`.
-- **v1.5.1 store rollout.** Upload
-  `.output/reddit-slideshow-1.5.1-chrome.zip` to the Chrome Web Store and
-  `.output/reddit-slideshow-1.5.1-firefox.zip` plus
-  `.output/reddit-slideshow-1.5.1-sources.zip` (the build minifies) to Firefox
-  Add-ons. Paste the per-locale listing copy from
+- **v1.5.2 store rollout.** Upload
+  `.output/reddit-slideshow-1.5.2-firefox.zip` plus
+  `.output/reddit-slideshow-1.5.2-sources.zip` (the build minifies) to Firefox
+  Add-ons, and `.output/reddit-slideshow-1.5.2-chrome.zip` to the Chrome Web
+  Store. Paste the per-locale listing copy from
   `docs/store-listing/<lang>.md` for Firefox (its what's-new shows the last two
-  versions) and from `docs/store-listing/chrome/<lang>.md` for Chrome.
-  The store screenshots and promo tiles are the same as v1.5.0's.
+  versions) and from `docs/store-listing/chrome/<lang>.md` for Chrome. The
+  Firefox build adds the `declarativeNetRequestWithHostAccess` permission; its
+  one-line justification is in `docs/store-listing.md` §5. The Chrome build's
+  permissions are unchanged. The store screenshots and promo tiles are the same
+  as v1.5.0's.
 - **Hand-check in a logged-in Firefox and Chrome:** vote with a caption arrow
   (the score moves and the vote lands on Reddit), and drag the seek bar on a
   real Reddit video and a Redgifs clip (the show waits for the clip to finish;
