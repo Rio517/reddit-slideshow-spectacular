@@ -15,7 +15,7 @@ page. WXT generates the right `background` key per browser from one
 `defineBackground`, so no code change is needed. The background is stateless
 message handlers + `fetch`, which run fine in a service worker.
 
-## Differences that needed handling
+## Browser differences handled
 
 - **Icons:** Chrome does **not** accept an SVG manifest icon (Firefox does). The
   manifest references rasterized PNGs (16/32/48/96/128) generated from
@@ -34,7 +34,7 @@ message handlers + `fetch`, which run fine in a service worker.
   `fetch(..., { credentials: "include" })` with `host_permissions` sends the
   user's Reddit cookies, same as Firefox. **Verified in real Chrome** (see below).
 
-## Verified
+## Verified behavior
 
 `npm run build:chrome` emits `.output/chrome-mv3/` with `manifest_version: 3`, a
 `service_worker` background, PNG icons, and **no** `browser_specific_settings`.
@@ -56,7 +56,7 @@ already verified separately (curl with a logged-in session).
 Chrome Web Store, a separate listing and review from AMO. `npm run zip:chrome`
 produces the upload artifact.
 
-## Remaining
+## Remaining work
 
 - Smoke-test the service-worker background in real Chrome: the toolbar/launch
   message round-trip, the listing fetch, and the Layer 2 image fetch.

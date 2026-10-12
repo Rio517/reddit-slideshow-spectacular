@@ -15,7 +15,7 @@ browser app locale). An in-app override therefore requires the UI to read
 strings from **bundled catalogs** keyed to a chosen locale, instead of from
 `browser.i18n`.
 
-## Approach
+## Bundled catalogs and locale resolution
 
 Bundle all six catalogs and resolve the active locale from a setting.
 
@@ -41,7 +41,7 @@ Bundle all six catalogs and resolve the active locale from a setting.
 This also makes Arabic (and any locale) verifiable in-app by simply selecting it
 — no `--lang` headless workarounds.
 
-## The setting
+## Language setting
 
 In `lib/settings.js`:
 
@@ -54,7 +54,7 @@ In `lib/settings.js`:
 Stored in `browser.storage.local` like every other setting; no new storage
 mechanism.
 
-## The UI
+## Language picker UI
 
 A **Language** row in the full options page (`entrypoints/options/`), **not** the
 in-overlay gear panel — language is a set-once, app-level choice, and the gear

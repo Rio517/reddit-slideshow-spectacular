@@ -36,7 +36,7 @@ This carries modest but real ToS/AMO risk, so the extension adopts and documents
 - Stores nothing server-side; no bulk collection, no redistribution, no analytics.
 - Degrades on `403`/`429` (and `X-Ratelimit-*` headers when present - note they are often **absent** on the cookie-session website path, so `403`/`429` must also drive backoff).
 - Keeps the listing transport swappable (the ADR 0002 resolver layer) so optional per-user OAuth is an escape hatch if the cookie path is ever blocked. The extension must **not** ship app OAuth client credentials.
-- Always sends `raw_json=1` (load-bearing invariant): without it, `preview` and `media_metadata` URLs are HTML-entity-encoded.
+- Always sends `raw_json=1` (required): without it, `preview` and `media_metadata` URLs are HTML-entity-encoded.
 
 This posture reduces real risk, but it does not remove the need to validate Reddit's current behavior and AMO review expectations with a working prototype.
 

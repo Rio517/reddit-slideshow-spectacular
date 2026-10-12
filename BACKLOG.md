@@ -224,7 +224,7 @@ Before calling provider/media work done:
 
 ---
 
-## 7. Things Not To Do Yet
+## 7. Standing prohibitions
 
 - Do not add all-URLs host permissions (each new provider host is scoped + ADR'd).
 - Do not add analytics.

@@ -18,7 +18,7 @@ Reddit Slideshow Spectacular! verwandelt deine Reddit-Feeds in eine bildschirmf�
 
 Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüssel, keine separate Anmeldung, kein zusätzliches Konto. Sie geht die Medienbeiträge in der Reihenfolge durch, in der Reddit sie liefert, und blättert automatisch durch den Feed, sodass die Diashow über die erste Seite hinaus weiterläuft.
 
-WAS ABGESPIELT WIRD
+UNTERSTÜTZTE MEDIEN
 
 - Direkte Reddit-Bilder (in voller Auflösung, sofern verfügbar)
 - Reddit-Galerien, aufgeteilt in je eine Folie pro Bild

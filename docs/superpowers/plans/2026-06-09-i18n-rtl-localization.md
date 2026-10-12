@@ -43,7 +43,7 @@ extraction task ends by running the full unit suite.
 
 ### Task 1: Verify the build wiring (spike)
 
-Confirm the two load-bearing assumptions before building on them: (a) a JSON file
+Confirm the two assumptions the plan depends on before building on them: (a) a JSON file
 under `locales/` is importable in Vitest via the `@/` alias, and (b) `wxt build`
 copies `public/_locales/**` to the output root. Runtime `browser.i18n`
 resolution needs a real browser and is flagged for manual verification, not
@@ -1009,7 +1009,7 @@ git commit -m "feat(i18n): es/fr/de/it/ar translations (machine-drafted, pending
 
 - [ ] **Step 1: Write `docs/store-listing/en.md`** verbatim from the live public
       Firefox Add-ons listing — name, summary, and the full description
-      (intro, WHAT IT PLAYS, CONTROLS, NICE TOUCHES, SETTINGS, PRIVACY) as
+      (intro, SUPPORTED MEDIA, CONTROLS, NICE TOUCHES, SETTINGS, PRIVACY) as
       captured in the design spec.
 
 - [ ] **Step 2: Translate into `es/fr/de/it/ar`** — one file each, same section

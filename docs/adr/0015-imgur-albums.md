@@ -16,7 +16,7 @@ A bare Imgur album link carries no direct media, so the generic image path (whic
 rejects a non-image URL) yields no slides; an album needs explicit member
 expansion to contribute its multiple images.
 
-### Why not the official API
+### Official API: rejected
 
 The documented way to expand an album is `GET api.imgur.com/3/album/<id>`, which
 requires an `Authorization: Client-ID <key>` header. We do **not** use it:
@@ -34,7 +34,7 @@ requires an `Authorization: Client-ID <key>` header. We do **not** use it:
   like RES have hotlinked Imgur for years without owning an app quota. Each
   user's browser makes its own requests from its own IP.
 
-### The keyless endpoint
+### Keyless endpoint
 
 Imgur's own album page fetches its images from an unauthenticated front-end
 endpoint that needs no key and no special header:
@@ -100,7 +100,7 @@ but as a **1 → N expansion** rather than a 1 → 1 upgrade.
   host permission - it does not go through the proxy-fetch byte allowlist, since
   the images load directly in an `<img>`.
 
-### Fail-soft
+### Fail-soft behavior
 
 A placeholder whose album resolves to **zero images** (empty array) or whose
 lookup **fails** (network, timeout, malformed JSON) is **dropped** - the post

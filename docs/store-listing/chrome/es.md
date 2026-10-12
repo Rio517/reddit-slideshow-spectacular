@@ -18,7 +18,7 @@ Reddit Slideshow Spectacular! convierte tus feeds de Reddit en un pase de diapos
 
 El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves de API, sin inicio de sesión adicional y sin cuentas extra. Recorre las publicaciones multimedia en el orden en que Reddit las devuelve y avanza por el feed de forma automática, de modo que el pase de diapositivas continúa más allá de la primera página.
 
-QUÉ REPRODUCE
+MEDIOS COMPATIBLES
 
 - Imágenes directas de Reddit (resolución completa cuando está disponible)
 - Galerías de Reddit, desplegadas en una diapositiva por imagen

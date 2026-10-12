@@ -1,9 +1,9 @@
-# Research: streaming the proxy fallback (and why it needs a remuxer)
+# Research: streaming the proxy fallback needs a remuxer
 
 Status: investigated, not implemented (June 2026). Captured here so the decision
 isn't re-litigated from scratch.
 
-## The idea
+## Proposed streaming path
 
 On the **blob-proxy** playback path the background fetches the whole mp4, hands
 the bytes to the content script, which plays them as a single `blob:` URL - so a
@@ -18,7 +18,7 @@ Firefox direct play already streams the mp4 natively, so this only affects the
 Chrome-proxied and www.reddit-CSP-fallback cases; the primary (Firefox) target
 gains nothing.
 
-## The blocker: MediaSource needs fragmented mp4; the clips are progressive
+## Blocker: MediaSource needs fragmented mp4, the clips are progressive
 
 A Playwright/Chromium probe settled it. Two clips built with ffmpeg (same codecs,
 H.264 Constrained Baseline + AAC-LC) were appended to a real `SourceBuffer`:
@@ -37,7 +37,7 @@ Streaming them therefore needs an in-browser **remuxer** (mp4box.js / mux.js, a
 few hundred KB) to convert progressive→fragmented on the fly before feeding
 MediaSource.
 
-## A second, subtler integration hazard
+## Integration hazard: `sourceopen` fires only after attach
 
 A MediaSource only fires `sourceopen` once its object URL is attached to the
 `<video>` `src` - so you can't probe "will this stream?" without committing the
@@ -47,7 +47,7 @@ whole-blob fallback can run. A safe stream-or-blob fallback therefore requires
 restructuring the proxied branch in `lib/overlay-ui.js` so the `error` /
 `loadeddata` listeners attach only **after** the strategy commits.
 
-## Verdict
+## Verdict: not worth it for now
 
 Not worth it for now: a few-hundred-KB third-party remuxer (multiplying the
 content-script bundle) plus a delicate playback-path restructure, for a narrow

@@ -18,7 +18,7 @@ Reddit Slideshow Spectacular! trasforma i tuoi feed Reddit in una presentazione 
 
 La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave API, nessun accesso aggiuntivo, nessun account extra. Scorre i post multimediali nell'ordine in cui Reddit li restituisce e sfoglia automaticamente il feed, così la presentazione prosegue oltre la prima pagina.
 
-COSA RIPRODUCE
+MEDIA SUPPORTATI
 
 - Immagini dirette di Reddit (risoluzione originale, dove disponibile)
 - Gallerie di Reddit, espanse in una diapositiva per immagine

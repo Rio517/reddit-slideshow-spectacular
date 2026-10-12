@@ -7,7 +7,7 @@ the developer, and has no analytics, tracking, ads, or accounts. Everything it
 does happens locally in your browser.** The extension turns a Reddit feed you are
 already viewing into a full-screen media slideshow.
 
-## What the extension stores
+## Stored data
 
 Only your own settings and local slideshow ignore list - the per-image timer,
 slide transition, timer-bar mode, autoplay, start-muted, Include-NSFW, the two
@@ -17,7 +17,7 @@ These are saved with the browser's local extension storage (`storage.local`)
 **on your computer**. They are not synced, uploaded, or shared. Removing the
 extension removes them.
 
-## Network requests the extension makes
+## Network requests
 
 Requests go only to Reddit, Reddit's own media servers, and the content providers
 a post links to (Imgur, Redgifs, Streamable, Giphy, Catbox). Never to any server
@@ -80,7 +80,7 @@ operated by the developer (there is none):
   entirely in your browser, and no image or hash leaves your computer. You can turn
   this off with the "Also skip re-uploaded images" setting.
 
-## Permissions and why they are needed
+## Permissions
 
 - **`storage`** - to save your settings and local slideshow ignore list locally
   (above).
@@ -110,7 +110,7 @@ operated by the developer (there is none):
 The extension requests no other permissions: no browsing history, no bookmarks,
 no access to other sites, and no remote code.
 
-## What the extension does NOT do
+## No tracking, ads, servers or accounts
 
 - No analytics, telemetry, crash reporting, or usage tracking.
 - No advertising and no selling or sharing of data.
@@ -122,7 +122,7 @@ no access to other sites, and no remote code.
 Questions about this policy: **mario@knyflores.com**, or open an issue at
 <https://github.com/Rio517/reddit-slideshow-spectacular/issues>.
 
-## Changes
+## Policy changes
 
 If this policy changes, the "Last updated" date above will change and the new
 version will be committed to this repository.

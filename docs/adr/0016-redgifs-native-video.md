@@ -78,7 +78,7 @@ Costs / limits:
 
 - Two Redgifs host permissions (`api.` + `media.`). Justified in the store
   listing's permission rationale.
-- The Referer rule (ADR 0023) is load-bearing for the Firefox direct path; it is
+- The Firefox direct path depends on the Referer rule (ADR 0023). The rule is
   scoped to video requests for the Redgifs media host so it can't silently
   change other providers' behavior. Chrome has no rule, which is why Chrome
   proxies instead.
@@ -88,7 +88,7 @@ Costs / limits:
 
 - Re-validate the API-returned mp4 host (`media.redgifs.com`) before trusting it;
   fall back to the iframe embed on any resolve failure rather than a broken slide.
-- Keep the no-referrer scoped to the Redgifs media host at the playback sink; it
-  is load-bearing on Firefox only (Chrome proxies instead).
+- Keep the Referer rule scoped to the Redgifs media host; only the Firefox
+  build needs it (Chrome proxies instead).
 - Cache the anonymous token and refresh it once on a 401; the background holds no
   other Redgifs state (so a suspended Chrome service worker just re-fetches it).

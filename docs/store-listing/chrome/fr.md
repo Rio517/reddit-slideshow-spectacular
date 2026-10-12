@@ -18,7 +18,7 @@ Reddit Slideshow Spectacular! transforme vos fils Reddit en un diaporama multim�
 
 Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API, aucune connexion supplémentaire, aucun compte additionnel. Il parcourt les publications multimédia dans l'ordre où Reddit les renvoie et pagine automatiquement le fil, de sorte que le diaporama se poursuit au-delà de la première page.
 
-CE QU'IL DIFFUSE
+MÉDIAS PRIS EN CHARGE
 
 - Images Reddit directes (pleine résolution lorsque disponible)
 - Galeries Reddit, développées en une diapositive par image

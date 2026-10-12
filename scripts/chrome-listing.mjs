@@ -189,7 +189,7 @@ const NOTE =
 
 /**
  * Cut the what's-new block: from the first heading that ends in a version
- * (`WHAT'S NEW - V1.5.1`) through the release-notes link and its blank line.
+ * (`NEW IN V1.5.1`) through the release-notes link and its blank line.
  * @param {string[]} lines
  * @param {string} lang
  */

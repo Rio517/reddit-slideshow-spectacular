@@ -5,7 +5,7 @@ not Chrome, and what options exist. Measurements come from
 `scripts/zoom-jank-experiment.mjs` (real Firefox/Chromium over the real
 overlay, longest rAF gap per wheel-zoom step).
 
-## The behavior
+## Raster behavior per engine
 
 Zooming an image via a CSS `transform: scale()` makes the browser rasterize
 the element at its effective scale. On a scale _change_, the two engines
@@ -33,7 +33,7 @@ transition. This is engine scheduling, not something a style hint changes.
 The same trade-off (Firefox re-rasters and janks, Chrome locks resolution
 and eats memory) is a known pain point for map/design-tool style zooming.
 
-## Options
+## Fix options
 
 1. **Canvas level-of-detail layer** (recommended). While a very large image
    is manually zoomed, render it into a viewport-sized `<canvas>` instead of

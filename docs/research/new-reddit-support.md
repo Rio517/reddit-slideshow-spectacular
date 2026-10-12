@@ -73,7 +73,7 @@ Organic `shreddit-post` elements carry no `promoted` attribute; the
 RES is old-Reddit-only, so the RES coexistence concern does not apply on new
 Reddit (other extensions and Reddit's own SPA still do).
 
-## Implemented
+## Implemented scope
 
 - `www.reddit.com` added to content-script `matches` and `host_permissions`.
 - `toListingJsonUrl` accepts the www host; a www page fetches `www.reddit.com/.json`.

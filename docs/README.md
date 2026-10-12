@@ -38,6 +38,6 @@ Product, research, and decision docs for the extension, plus the shipped assets:
 - [ADR 0022](adr/0022-reddit-gif-native-video.md): play reddit gif posts as native video from reddit's own mp4 transcode (countdown bar, dwell = the clip).
 - [Foundation plan](superpowers/plans/2026-05-29-foundation-wxt-mv3.md): task-by-task plan for the WXT/MV3 scaffold, shared core, and offline fixtures.
 
-## Status
+## Documentation status
 
 These are living docs capturing current research and decisions. The extension is published on both stores; `BACKLOG.md` at the repo root tracks release status and open work.

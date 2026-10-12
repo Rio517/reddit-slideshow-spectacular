@@ -28,7 +28,7 @@ pipeline, so the same type decisions are not re-derived each time.
 - `noUncheckedIndexedAccess`:
   https://www.typescriptlang.org/tsconfig/noUncheckedIndexedAccess.html
 
-## Baseline (what we already do well)
+## Existing strengths
 
 - `tsconfig.json` sets `checkJs`, `allowJs`, `noEmit`, and **`strict: true`**;
   the WXT base (`.wxt/tsconfig.json`) also sets `strict` + `skipLibCheck`. So
@@ -51,7 +51,7 @@ signatures** in `session.js`. The **Reddit listing JSON** is typed via
 The media resolvers in `lib/slides.js` are the part most likely to break
 silently when Reddit changes its JSON shape, so the listing shapes are typed.
 
-### Where the types live
+### Type file locations
 
 Listing types live in a **types-only module `lib/reddit-types.js`** - a `.js`
 file containing only `@typedef`s plus a trailing `export {};` so it stays an ES
@@ -66,7 +66,7 @@ Consume them with the TS 5.5 `@import` tag rather than inline `import("...")`:
 
 These tags affect type-checking only; they emit nothing at runtime.
 
-### How to model the shape
+### Listing shape model
 
 Model **everything as optional** and narrow at the use site. The resolvers
 already probe defensively (`post.crosspost_parent_list?.[0] ?? post`,
@@ -135,7 +135,7 @@ full Reddit schema. The shape below is grounded in
 export {};
 ```
 
-### Threading it through
+### Type flow through the code
 
 - `slidesFromListing` → `@param {RedditListing} listing`.
 - `slidesFromPost` → `@param {RedditPost | undefined} post`.

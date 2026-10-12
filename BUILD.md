@@ -47,7 +47,7 @@ npm run build:firefox
 # then about:debugging → Load Temporary Add-on → .output/firefox-mv3/manifest.json
 ```
 
-## Notes
+## Notes for reviewers
 
 - `postinstall` runs `wxt prepare`, which only generates local TypeScript types
   under `.wxt/` — no network access and nothing that ships in the add-on.

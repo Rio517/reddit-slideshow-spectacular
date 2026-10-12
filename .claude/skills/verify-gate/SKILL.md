@@ -23,7 +23,7 @@ so the build steps must run before it.
 5. `npm run build` - builds BOTH targets (Firefox MV3 → `.output/firefox-mv3/`, then Chrome MV3 → `.output/chrome-mv3/`). `npm run build:firefox` / `build:chrome` build one.
 6. `npm run webext:lint` - Mozilla addons-linter on the built Firefox output. Expect `0 errors, 0 notices, 0 warnings`.
 
-## What "green" means
+## Passing criteria
 
 - typecheck / lint / format: no error output, exit 0.
 - tests: every test passes (no `failed`).

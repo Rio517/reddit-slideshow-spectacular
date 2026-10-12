@@ -18,7 +18,7 @@ Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard
 
 The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
 
-WHAT IT PLAYS
+SUPPORTED MEDIA
 
 - Direct Reddit images (full resolution where available)
 - Reddit galleries, expanded into one slide per image

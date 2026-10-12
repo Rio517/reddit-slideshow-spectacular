@@ -30,7 +30,7 @@ NOVITÀ - V1.5.0
 
 Note di rilascio complete: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
-COSA RIPRODUCE
+MEDIA SUPPORTATI
 
 - Immagini dirette di Reddit (risoluzione originale da i.redd.it, dove disponibile)
 - Gallerie di Reddit, espanse in una diapositiva per immagine

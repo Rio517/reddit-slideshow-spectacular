@@ -123,7 +123,7 @@ Unlike a Firefox temporary add-on, a Chrome unpacked extension stays installed
 across restarts (Chrome shows a "disable developer-mode extensions" prompt on
 startup that you can dismiss).
 
-## Use
+## Usage
 
 - New here? Open **[r/slideshowspectacular](https://old.reddit.com/r/slideshowspectacular)** -
   a small demo feed (and where new releases are announced) - and launch the
@@ -255,14 +255,14 @@ docs/             product spec, research, and ADRs
 The core logic in `lib/` is DOM/extension-agnostic and unit-tested; the
 `entrypoints/` are thin bindings to the browser.
 
-## Docs
+## Documentation
 
 - Architecture decisions: `docs/adr/` (see `docs/README.md` for the index).
 - Product spec and research: `docs/product/`, `docs/research/`.
 - Store listing & release-notes copy: `docs/store-listing/` (one file per locale).
 - Current status and next steps: `BACKLOG.md`.
 
-## Status
+## Project status
 
 Published on both the
 [Chrome Web Store](https://chromewebstore.google.com/detail/reddit-slideshow-spectacu/pcfajhfnnkkpadnfedkgjfgclffeoenp)

@@ -132,7 +132,7 @@ categories present) so a locale can't silently drift.
 `docs/store-listing/` holds one Markdown file per locale:
 
 - `en.md` — canonical, synced from the **live public Firefox Add-ons listing**
-  (name, summary, full description: WHAT IT PLAYS / CONTROLS / NICE TOUCHES /
+  (name, summary, full description: SUPPORTED MEDIA / CONTROLS / NICE TOUCHES /
   SETTINGS / PRIVACY). Captured below.
 - `{es,fr,de,it,ar}.md` — the English listing translated into each locale,
   ready to paste into the Firefox Add-ons and Chrome per-locale listing fields.
@@ -146,7 +146,7 @@ manually in each dashboard.
 - **Name:** Reddit Slideshow Spectacular!
 - **Summary:** Turn your old or new Reddit feeds into a full-screen,
   keyboard-driven media slideshow. Free, Private, Local, No Tracking.
-- **Description:** the published sections — intro, WHAT IT PLAYS, CONTROLS, NICE
+- **Description:** the published sections — intro, SUPPORTED MEDIA, CONTROLS, NICE
   TOUCHES, SETTINGS, PRIVACY — copied verbatim into `en.md` during build.
 
 ## Testing

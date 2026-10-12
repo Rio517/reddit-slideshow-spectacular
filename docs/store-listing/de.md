@@ -30,7 +30,7 @@ NEU IN V1.5.0
 
 Vollständige Versionshinweise: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
-WAS ABGESPIELT WIRD
+UNTERSTÜTZTE MEDIEN
 
 - Direkte Reddit-Bilder (i.redd.it in voller Auflösung, sofern verfügbar)
 - Reddit-Galerien, aufgeteilt in je eine Folie pro Bild
