@@ -154,13 +154,13 @@ describe("redgifsVideoSlide", () => {
     expect(video.durationMode).toBe("media");
     expect(video.durationSeconds).toBe(9);
     expect(video.audioAvailable).toBe(true);
-    expect(video.proxied).toBeUndefined(); // direct play (no Referer via the sink)
+    expect(video.proxied).toBeUndefined(); // direct play (the Referer rule)
     // Display context is preserved.
     expect(video.title).toBe("t");
     expect(video.over18).toBe(true);
   });
 
-  it("marks the slide proxied when asked (Chrome: referrerpolicy is a no-op)", () => {
+  it("marks the slide proxied when asked (Chrome: no Referer rule)", () => {
     const embed = /** @type {any} */ ({
       provider: "redgifs",
       kind: "embed",

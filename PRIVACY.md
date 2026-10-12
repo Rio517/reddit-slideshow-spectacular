@@ -1,6 +1,6 @@
 # Privacy Policy - Reddit Slideshow Spectacular!
 
-_Last updated: 2026-09-04_
+_Last updated: 2026-10-12_
 
 **Short version: Reddit Slideshow Spectacular! collects nothing, sends nothing to
 the developer, and has no analytics, tracking, ads, or accounts. Everything it
@@ -101,6 +101,11 @@ operated by the developer (there is none):
   keyless album endpoint. These fetches are made without cookies.
 - **`downloads`** - so the download control can save the media you are viewing to
   your computer, with a sensible filename.
+- **`declarativeNetRequestWithHostAccess`** (Firefox only) - one fixed rule
+  removes the `Referer` header from video requests to `media.redgifs.com`, so a
+  Redgifs clip streams straight from Redgifs (which rejects requests that say
+  they came from Reddit). The rule blocks and redirects nothing, applies to no
+  other site, and means Redgifs is not told you came from Reddit.
 
 The extension requests no other permissions: no browsing history, no bookmarks,
 no access to other sites, and no remote code.

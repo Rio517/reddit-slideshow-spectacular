@@ -109,8 +109,8 @@ export default defineContentScript({
         return base64ToBlob(res.b64, type);
       },
       // Lazy redgifs: resolve one embed's native mp4 on approach and return the
-      // upgraded video slide (proxied on Chrome, where referrerpolicy is a no-op
-      // on <video>). Null keeps the iframe embed.
+      // upgraded video slide (proxied on Chrome, which ships no Referer
+      // rule). Null keeps the iframe embed.
       resolveRedgifs: async (slide) => {
         const id = redgifsId(slide.sourceUrl ?? slide.embedUrl);
         if (!id) return null;

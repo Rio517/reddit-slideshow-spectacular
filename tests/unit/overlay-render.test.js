@@ -324,7 +324,7 @@ describe("renderSlide", () => {
     ).toBe(false);
   });
 
-  it("suppresses the Referer for Redgifs direct video only", () => {
+  it("plays a Redgifs clip from its direct src", () => {
     const redgifs = renderSlide(
       slide({
         provider: "redgifs",
@@ -333,16 +333,9 @@ describe("renderSlide", () => {
       }),
     );
     expect(redgifs.getAttribute("src")).toBe("https://media.redgifs.com/X.mp4");
-    expect(redgifs.getAttribute("referrerpolicy")).toBe("no-referrer");
-    // v.redd.it doesn't need it - keep its Referer.
-    const vreddit = renderSlide(
-      slide({
-        provider: "reddit-video",
-        kind: "video",
-        mediaUrl: "https://v.redd.it/x/CMAF_720.mp4",
-      }),
-    );
-    expect(vreddit.getAttribute("referrerpolicy")).toBeNull();
+    // The Referer is dropped by the network rule (referer-rules.js), not by
+    // an attribute no browser reads on a <video>.
+    expect(redgifs.getAttribute("referrerpolicy")).toBeNull();
   });
 
   it("treats an embed as unsafe when its embedUrl is rejected (off-host/empty)", () => {

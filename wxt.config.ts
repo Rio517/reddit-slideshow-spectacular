@@ -1,4 +1,9 @@
 import { defineConfig } from "wxt";
+import {
+  REFERER_RULES,
+  REFERER_RULES_PATH,
+  REFERER_RULESET_ID,
+} from "./lib/referer-rules.js";
 
 export default defineConfig({
   manifestVersion: 3,
@@ -9,7 +14,14 @@ export default defineConfig({
     homepage_url: "https://rio517.github.io/reddit-slideshow-spectacular/",
     // "downloads": save the displayed media to the user's downloads on demand
     // (the in-overlay download control), driven from the background.
-    permissions: ["storage", "downloads"],
+    permissions: [
+      "storage",
+      "downloads",
+      // Firefox-only: drop the Referer on Redgifs video requests so the clip
+      // streams directly (ADR 0023). It acts only on hosts already granted
+      // below and adds no install prompt.
+      ...(browser === "firefox" ? ["declarativeNetRequestWithHostAccess"] : []),
+    ],
     host_permissions: [
       // Listing JSON is fetched (with the session cookie) from these two.
       "https://old.reddit.com/*",
@@ -71,10 +83,19 @@ export default defineConfig({
         description: "__MSG_actionTitle__",
       },
     },
-    // Firefox-only: gecko id + data-collection declaration. Omitted on Chrome,
-    // which would warn on an unrecognized key.
+    // Firefox-only: the Referer ruleset, plus the gecko id + data-collection
+    // declaration (Chrome would warn on that unrecognized key).
     ...(browser === "firefox"
       ? {
+          declarative_net_request: {
+            rule_resources: [
+              {
+                id: REFERER_RULESET_ID,
+                enabled: true,
+                path: REFERER_RULES_PATH,
+              },
+            ],
+          },
           browser_specific_settings: {
             gecko: {
               id: "reddit-slideshow@knyflores.com",
@@ -86,4 +107,15 @@ export default defineConfig({
         }
       : {}),
   }),
+  hooks: {
+    // The ruleset file is generated from lib/referer-rules.js, so the rule and
+    // the host allowlist cannot drift. Firefox-only, like the manifest key.
+    "build:publicAssets": (wxt, files) => {
+      if (wxt.config.browser !== "firefox") return;
+      files.push({
+        relativeDest: REFERER_RULES_PATH,
+        contents: `${JSON.stringify(REFERER_RULES, null, 2)}\n`,
+      });
+    },
+  },
 });

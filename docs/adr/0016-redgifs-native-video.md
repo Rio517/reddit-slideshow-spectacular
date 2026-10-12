@@ -41,12 +41,13 @@ until (or unless) its resolve lands.
   page build - their `resolveNativeSlides` batch is concurrency-limited and timed
   out via `lib/async-pool.js`.)
 - **Play (per-browser).** Firefox plays the clip directly as a native `<video>`
-  whose `src` is the `media.redgifs.com` mp4: the element carries
-  `referrerpolicy="no-referrer"` (set as an attribute), which Firefox honors on a
-  `<video>` to dodge the CDN's reddit-`Referer` 403. Chrome does **not** honor
-  `referrerpolicy` on a media element (the attribute is a no-op there), so the
-  Chrome build marks every Redgifs slide `proxied` and plays it through the blob
-  proxy below. This is the **only** host that needs the no-referrer treatment.
+  whose `src` is the `media.redgifs.com` mp4. The CDN 403s a reddit `Referer`,
+  and a `<video>` cannot drop it (`referrerpolicy` is a no-op on media elements
+  in both browsers), so the Firefox build removes the header with a
+  declarativeNetRequest rule - see **ADR 0023**, which replaces the attribute
+  this ADR first relied on. The Chrome build ships no such rule, so it marks
+  every Redgifs slide `proxied` and plays it through the blob proxy below. This
+  is the **only** host that needs the no-referrer treatment.
 - **Blob proxy.** A `proxied` slide is fetched by the background (no `Referer`,
   no cookies, byte-capped) and the content script plays the bytes as a `blob:`
   URL. This serves the entire Chrome path **and** the `www.reddit` CSP fallback:
@@ -77,9 +78,9 @@ Costs / limits:
 
 - Two Redgifs host permissions (`api.` + `media.`). Justified in the store
   listing's permission rationale.
-- The `referrerpolicy="no-referrer"` is load-bearing for the Firefox direct path;
-  it is scoped to the Redgifs media host so it can't silently change other
-  providers' behavior. Chrome ignores it on media elements, which is why Chrome
+- The Referer rule (ADR 0023) is load-bearing for the Firefox direct path; it is
+  scoped to video requests for the Redgifs media host so it can't silently
+  change other providers' behavior. Chrome has no rule, which is why Chrome
   proxies instead.
 - True audio is deferred: v1 plays the clip muted like all video.
 

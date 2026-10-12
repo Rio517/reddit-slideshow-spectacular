@@ -1281,9 +1281,9 @@ describe("createSlideshowSession", () => {
     expect(videos.every((v) => v.src === "")).toBe(true);
   });
 
-  it("sets Redgifs no-referrer policy before assigning the preload source", async () => {
-    /** @type {string[]} */
-    const operations = [];
+  it("preloads an upcoming Redgifs clip from its direct src", async () => {
+    /** @type {{ src: string, preload: string }[]} */
+    const videos = [];
     const { session } = makeSession({
       pages: [
         {
@@ -1300,28 +1300,19 @@ describe("createSlideshowSession", () => {
         },
       ],
       createVideo: () => {
-        let src = "";
-        return {
-          tagName: "VIDEO",
-          preload: "",
-          muted: false,
-          get src() {
-            return src;
-          },
-          set src(value) {
-            src = value;
-            if (value) operations.push("src");
-          },
-          setAttribute(/** @type {string} */ name) {
-            operations.push(name);
-          },
-        };
+        const v = { src: "", preload: "" };
+        videos.push(v);
+        return v;
       },
     });
 
     await session.start();
 
-    expect(operations).toEqual(["referrerpolicy", "src"]);
+    // No per-element Referer handling: the network rule covers the preload
+    // and the visible player alike.
+    expect(videos.map((v) => v.src)).toEqual([
+      "https://media.redgifs.com/B.mp4",
+    ]);
   });
 
   it("does not transfer a video preload that already failed", async () => {

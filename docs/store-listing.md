@@ -72,6 +72,11 @@ API permissions:
   computer. Nothing is synced or uploaded.
 - **downloads** - Save the media the user is currently viewing to their computer,
   with a sensible filename, when they use the in-overlay download control.
+- **declarativeNetRequestWithHostAccess** (Firefox build only) - One static
+  rule removes the `Referer` header from video requests to `media.redgifs.com`,
+  so a Redgifs clip streams directly instead of being downloaded whole first
+  (the CDN rejects a Reddit referrer). It blocks nothing, redirects nothing, and
+  touches no other host.
 
 Host permissions (install-time):
 
