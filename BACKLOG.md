@@ -41,12 +41,26 @@ giant commit.
 
 ### Requested, not yet done
 
+- **Hand-check the Redgifs fix in a logged-in Firefox on old.reddit.com.** Load
+  `.output/firefox-mv3/manifest.json` at `about:debugging` > This Firefox >
+  Load Temporary Add-on, open a feed with Redgifs posts, and step through them:
+  each clip should start within a second, and the Network panel should show
+  `media.redgifs.com/….mp4` answering 200 or 206 (not 403 followed by a large
+  `data:` request). The rule itself is verified in stock Firefox 157 against the real
+  CDN (ADR 0023); the logged-in slideshow path is not.
+- **Chrome Web Store resubmission (keyword-stuffing rejection).** Paste the
+  per-locale copy from `docs/store-listing/chrome/<lang>.md` into every locale
+  of the Chrome listing. It names three platforms (the limit is five), links to
+  the full host list, and has no what's-new block. Regenerate it with
+  `npm run listing:chrome` after editing a main listing; Firefox keeps
+  `docs/store-listing/<lang>.md`.
 - **v1.5.1 store rollout.** Upload
   `.output/reddit-slideshow-1.5.1-chrome.zip` to the Chrome Web Store and
   `.output/reddit-slideshow-1.5.1-firefox.zip` plus
   `.output/reddit-slideshow-1.5.1-sources.zip` (the build minifies) to Firefox
   Add-ons. Paste the per-locale listing copy from
-  `docs/store-listing/<lang>.md` (its what's-new shows the last two versions).
+  `docs/store-listing/<lang>.md` for Firefox (its what's-new shows the last two
+  versions) and from `docs/store-listing/chrome/<lang>.md` for Chrome.
   The store screenshots and promo tiles are the same as v1.5.0's.
 - **Hand-check in a logged-in Firefox and Chrome:** vote with a caption arrow
   (the score moves and the vote lands on Reddit), and drag the seek bar on a
@@ -57,6 +71,16 @@ giant commit.
 - Optional: a native-speaker pass on the machine-drafted translations,
   especially Arabic (~25% of installs). English fallback covers any gap, and a
   locale file can be refreshed without code changes.
+
+- **Later: direct Redgifs play on Chrome.** The Firefox Referer rule (ADR 0023)
+  also works in Chromium 148. Adding `declarativeNetRequestWithHostAccess` to
+  the Chrome build and dropping `proxied: import.meta.env.CHROME` in
+  `entrypoints/content.js` would let Chrome stream Redgifs clips instead of
+  downloading each one whole. Held until the Chrome listing is approved, so
+  that review sees no permission change.
+- **Known slow path: www.reddit.com.** Its CSP allows only `*.redd.it` media, so
+  Redgifs, Imgur, Streamable, Giphy and Catbox clips are downloaded whole
+  through the blob proxy there, in both browsers. No header rule fixes that.
 
 > **Not planned:** streaming the proxy fallback (MediaSource) was investigated
 > and parked - it needs a few-hundred-KB in-browser remuxer for a narrow
@@ -70,8 +94,8 @@ dispatch, a background resolver (`lib/redgifs.js` / `lib/streamable.js`-style)
 where a network resolve is needed, then play the mp4 in a `<video>` or render as
 images. Direct play uses the provider CDN; the background blob proxy is the
 per-slide fallback for pages whose CSP blocks cross-origin media (www.reddit) and
-the primary path for Redgifs on Chrome (where `referrerpolicy` is a no-op on
-`<video>`). Every new fetch host needs a scoped `host_permission` + an ADR, plus a
+the primary path for Redgifs on Chrome (which ships no Referer rule; Firefox
+removes the reddit Referer with one, ADR 0023). Every new fetch host needs a scoped `host_permission` + an ADR, plus a
 fixture and a resolver/detection test. Providers whose media is on varying CDN
 subdomains use the dot-prefixed domain-suffix rule in `lib/provider-hosts.js`.
 
@@ -159,6 +183,7 @@ Roles:
 - `npm run webext:lint`: Mozilla extension lint against built output.
 - `npm run dev`: WXT dev runner for Firefox (DEV logger on).
 - `npm run locales`: regenerate the committed `public/_locales/**` from `locales/`.
+- `npm run listing:chrome`: regenerate the committed `docs/store-listing/chrome/**` (the Chrome Web Store copy) from `docs/store-listing/<lang>.md`.
 - `npm run screenshots`: offline docs shots (options page + deterministic slideshow).
 - `npm run reel`: re-record + encode the website demo reel `docs/slideshow.webm` (offline; auto-downloads its demo media, needs ffmpeg).
 - `npm run heroes`: store/site hero shots, offline - the real overlay over a mock Reddit listing (`scripts/slideshow-harness/hero.html`), in Chromium and Firefox.
