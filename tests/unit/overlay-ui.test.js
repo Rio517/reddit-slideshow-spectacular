@@ -2958,6 +2958,62 @@ describe("clip seek bar", () => {
     expect(state.clock).toEqual([8]);
   });
 
+  /** Play the clip on to `at` and report where the bar shows it. */
+  function playTo(
+    /** @type {HTMLVideoElement} */ video,
+    /** @type {HTMLInputElement} */ scrub,
+    /** @type {number} */ at,
+  ) {
+    video.currentTime = at;
+    video.dispatchEvent(new Event("timeupdate"));
+    return Number(scrub.value);
+  }
+
+  it("ignores a right-click on the seek bar", () => {
+    const { state, handlers } = liveShow();
+    const overlay = createOverlay(handlers);
+    overlay.show();
+    const { video, scrub } = readyClip(overlay);
+    scrub.dispatchEvent(new MouseEvent("pointerdown", { button: 2 }));
+    expect(state.toggles).toBe(0);
+    expect(playTo(video, scrub, 3)).toBe(3);
+  });
+
+  it("ends a drag whose pointer capture is lost", () => {
+    const { state, handlers } = liveShow();
+    const overlay = createOverlay(handlers);
+    overlay.show();
+    const { video, scrub } = readyClip(overlay);
+    scrub.dispatchEvent(new Event("pointerdown"));
+    expect(playTo(video, scrub, 3)).toBe(0); // the drag owns the thumb
+    scrub.dispatchEvent(new Event("lostpointercapture"));
+    expect(state.paused).toBe(false);
+    expect(playTo(video, scrub, 4)).toBe(4);
+  });
+
+  it("ends a drag the slide change cuts short", () => {
+    const { state, handlers } = liveShow();
+    const overlay = createOverlay(handlers);
+    overlay.show();
+    const first = readyClip(overlay);
+    first.scrub.dispatchEvent(new Event("pointerdown"));
+    expect(state.paused).toBe(true);
+    overlay.renderCurrent(
+      imageSlide({ id: "later", mediaUrl: "https://i.redd.it/later.jpg" }),
+      {
+        index: 1,
+        total: 2,
+        exhausted: true,
+        effectiveSeconds: 5,
+        playing: true,
+      },
+    );
+    expect(state.paused).toBe(false);
+    vi.runAllTimers(); // the clip's frame finishes leaving
+    const { video, scrub } = readyClip(overlay, { duration: 20, at: 2 });
+    expect(playTo(video, scrub, 5)).toBe(5);
+  });
+
   it("fades with the pointer even on a pinned caption", () => {
     expect(overlayCss).toMatch(
       /#reddit-slideshow-root\.rs-idle \.rs-meta__scrubrow\s*{[^}]*opacity:\s*0;/,

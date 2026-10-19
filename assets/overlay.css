@@ -435,7 +435,6 @@
   .rs-slide--exit {
     animation: rs-exit-fade var(--rs-tx-dur) var(--rs-tx-ease) both !important;
   }
-  .rs-logo__mark,
   .rs-buffering__dot,
   .rs-meta__counter--pulse {
     animation: none !important;
@@ -491,7 +490,8 @@ iframe.reddit-slideshow-media {
   border-radius: 6px;
 }
 
-/* Bottom caption: a full-width strip over a scrim. A fixed side column (vote
+/* Bottom caption: a full-width strip straight over the slide, with no scrim
+   to darken it; text and icon shadows keep it legible. A fixed side column (vote
    arrows, score, open/download) sits at the inline start, so those controls
    stay put whatever the title's length; the title and post details take the
    rest of the width. */
@@ -507,15 +507,6 @@ iframe.reddit-slideshow-media {
   padding-block: 96px 20px;
   /* The end padding keeps a long title clear of the buffering hint. */
   padding-inline: 26px min(150px, 12vw);
-  /* Eased stops: a straight ramp shows its top edge over a light image. */
-  background: linear-gradient(
-    to top,
-    rgba(3, 4, 7, 0.9),
-    rgba(3, 4, 7, 0.62) 40%,
-    rgba(3, 4, 7, 0.22) 72%,
-    rgba(3, 4, 7, 0.06) 90%,
-    rgba(3, 4, 7, 0)
-  );
   /* The strip spans the slide, so only its controls take the pointer: the
      backdrop and the slide stay reachable through it. */
   pointer-events: none;
@@ -664,18 +655,10 @@ iframe.reddit-slideshow-media {
 }
 
 /* Over an embedded player the strip sits above the player's own control bar
-   (overlay-ui sets --rs-clip-clear), on a band that fades at both edges rather
-   than running to the bottom of the screen. */
+   (overlay-ui sets --rs-clip-clear). */
 .rs-meta--lifted {
   bottom: var(--rs-clip-clear, 0px);
   padding-block: 36px 18px;
-  background: linear-gradient(
-    to top,
-    rgba(3, 4, 7, 0),
-    rgba(3, 4, 7, 0.62) 26%,
-    rgba(3, 4, 7, 0.5) 62%,
-    rgba(3, 4, 7, 0)
-  );
 }
 
 .rs-meta__side {
@@ -758,7 +741,7 @@ iframe.reddit-slideshow-media {
   font-size: 16px;
   line-height: 1.35;
   font-weight: 500;
-  /* Edge + glow so the text holds up even where the scrim thins out. */
+  /* Edge + glow so the text holds up over any image. */
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.8),
     0 0 0.35rem rgba(0, 0, 0, 0.6);
@@ -1152,7 +1135,6 @@ iframe.reddit-slideshow-media {
   width: 92px;
   height: 92px;
   filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55));
-  animation: rs-logo-pulse 2s ease-in-out infinite;
 }
 
 .rs-logo__name {
@@ -1211,24 +1193,10 @@ iframe.reddit-slideshow-media {
   color: var(--rs-muted);
 }
 
+/* The splash fades in where it stands: no rise, no bob. */
 @keyframes rs-logo-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes rs-logo-pulse {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
   }
 }
 
@@ -1275,7 +1243,7 @@ iframe.reddit-slideshow-media {
   position: absolute;
   inset-inline-end: 24px;
   bottom: 34px;
-  /* Above the caption strip, whose scrim reaches this corner. */
+  /* Above the caption strip, which reaches this corner. */
   z-index: 7;
   display: flex;
   align-items: center;
@@ -1853,6 +1821,9 @@ iframe.reddit-slideshow-media {
 .rs-meta__download .rs-icon {
   width: 18px;
   height: 18px;
+  /* With no scrim behind the strip, a shadow keeps the icons visible over a
+     light image. */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
 }
 
 /* Vote arrows rest soft; the one the viewer cast takes its color (orange up,
