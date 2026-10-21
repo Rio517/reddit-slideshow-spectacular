@@ -16,17 +16,16 @@ Reddit Slideshow Spectacular! transforme vos fils Reddit en un diaporama multim�
 
 Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API, aucune connexion supplémentaire, aucun compte additionnel. Il parcourt les publications multimédia dans l'ordre où Reddit les renvoie et pagine automatiquement le fil, de sorte que le diaporama se poursuit au-delà de la première page.
 
-NOUVEAUTÉS — V1.5.2
+NOUVEAUTÉS — V1.5.3
 
-- CORRIGÉ : sur Firefox, les clips Redgifs démarrent immédiatement et sont préchargés, au lieu d'être téléchargés en entier avant la lecture
 - AMÉLIORÉ : les images s'affichent en pleine luminosité sous la légende, sans bande sombre en bas
 - CORRIGÉ : la barre de progression des vidéos ne se fige plus après un clic ou un glissement
 - CORRIGÉ : à l'ouverture du diaporama, la légende apparaît avec la première image au lieu de sauter en place
 - CORRIGÉ : voter n'assombrit plus l'écran un instant
 
-NOUVEAUTÉS — V1.5.1
+NOUVEAUTÉS — V1.5.2
 
-- AMÉLIORÉ : la barre de progression des vidéos apparaît désormais quand vous bougez la souris et s'efface quand vous vous arrêtez, au lieu de rester à l'écran pendant tout le clip
+- CORRIGÉ : sur Firefox, les clips Redgifs démarrent immédiatement et sont préchargés, au lieu d'être téléchargés en entier avant la lecture
 
 Notes de version complètes : https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
