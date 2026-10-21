@@ -3,7 +3,10 @@
 **Branch:** `main` · **Status:** CI-green. v1.5.0 is live on Firefox Add-ons;
 the Chrome Web Store rejected its listing for keyword stuffing. v1.5.2 is
 prepared locally: it carries v1.5.1 (the seek bar fades when the pointer
-rests, never uploaded) plus the Firefox Redgifs fix (ADR 0023). Version and
+rests, never uploaded) plus the Firefox Redgifs fix (ADR 0023), and the
+2026-10-21 polish: no dark scrim under the caption, a still splash, the
+caption arriving with the first slide, a seek bar that can't freeze after a
+drag, and a vote toast without a backdrop blur. Version and
 per-locale store copy are refreshed, the Firefox, Chrome, and source zips are
 built, and the full unit/build/package gate passed. The manual store rollout
 remains in §1.

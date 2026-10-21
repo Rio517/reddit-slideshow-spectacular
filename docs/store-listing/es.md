@@ -19,6 +19,10 @@ El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves d
 NOVEDADES - V1.5.2
 
 - CORREGIDO: en Firefox, los clips de Redgifs empiezan al instante y se precargan, en lugar de descargarse enteros antes de reproducirse
+- MEJORADO: las imágenes se ven con todo su brillo bajo la leyenda, sin una franja oscura en la parte inferior
+- CORREGIDO: la barra de progreso de los vídeos ya no se queda parada tras un clic o un arrastre
+- CORREGIDO: al abrir la presentación, la leyenda aparece junto con la primera imagen en lugar de saltar a su sitio
+- CORREGIDO: votar ya no oscurece la pantalla por un momento
 
 NOVEDADES - V1.5.1
 

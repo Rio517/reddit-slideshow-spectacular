@@ -19,6 +19,10 @@ La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave
 NOVITÀ - V1.5.2
 
 - CORRETTO: su Firefox, le clip di Redgifs partono subito e vengono precaricate, invece di essere scaricate per intero prima della riproduzione
+- MIGLIORATO: le immagini appaiono con piena luminosità sotto la didascalia, senza una fascia scura in basso
+- CORRETTO: la barra di avanzamento dei video non si blocca più dopo un clic o un trascinamento
+- CORRETTO: all'apertura della presentazione, la didascalia compare insieme alla prima immagine invece di saltare al suo posto
+- CORRETTO: votare non oscura più lo schermo per un attimo
 
 NOVITÀ - V1.5.1
 

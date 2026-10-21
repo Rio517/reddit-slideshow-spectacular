@@ -19,6 +19,10 @@ The Slideshow reuses your existing logged-in Reddit session - no API keys, no si
 NEW IN V1.5.2
 
 - FIXED: On Firefox, Redgifs clips start right away and load ahead of time, instead of downloading the whole clip before playing
+- IMPROVED: Images show at full brightness under the caption, with no dark band along the bottom
+- FIXED: The video seek bar no longer stops moving after a click or drag
+- FIXED: When the slideshow opens, the caption appears with the first image instead of jumping into place
+- FIXED: Voting no longer flashes the screen dark
 
 NEW IN V1.5.1
 

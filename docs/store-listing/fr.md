@@ -19,6 +19,10 @@ Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API
 NOUVEAUTÉS — V1.5.2
 
 - CORRIGÉ : sur Firefox, les clips Redgifs démarrent immédiatement et sont préchargés, au lieu d'être téléchargés en entier avant la lecture
+- AMÉLIORÉ : les images s'affichent en pleine luminosité sous la légende, sans bande sombre en bas
+- CORRIGÉ : la barre de progression des vidéos ne se fige plus après un clic ou un glissement
+- CORRIGÉ : à l'ouverture du diaporama, la légende apparaît avec la première image au lieu de sauter en place
+- CORRIGÉ : voter n'assombrit plus l'écran un instant
 
 NOUVEAUTÉS — V1.5.1
 
