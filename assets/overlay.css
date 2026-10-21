@@ -654,6 +654,13 @@ iframe.reddit-slideshow-media {
   opacity: 1;
 }
 
+/* Off while the stage shows a status card (the loading splash, the end card);
+   the strip fades back in with the next slide. */
+.rs-meta--away {
+  visibility: hidden;
+  opacity: 0;
+}
+
 /* Over an embedded player the strip sits above the player's own control bar
    (overlay-ui sets --rs-clip-clear). */
 .rs-meta--lifted {

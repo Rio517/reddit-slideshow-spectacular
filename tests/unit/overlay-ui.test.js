@@ -144,6 +144,38 @@ describe("createOverlay", () => {
     ).toBe("Spectacular!");
   });
 
+  it("keeps the caption off the splash until the first slide shows", async () => {
+    const overlay = createOverlay(noopHandlers());
+    overlay.show();
+    const meta = /** @type {HTMLElement} */ (
+      overlay.root.querySelector(".rs-meta")
+    );
+    overlay.showLoading();
+    expect(meta.classList.contains("rs-meta--away")).toBe(true);
+
+    overlay.renderCurrent(
+      imageSlide({ id: "first", mediaUrl: "https://i.redd.it/first.jpg" }),
+      {
+        index: 0,
+        total: 2,
+        exhausted: false,
+        effectiveSeconds: 5,
+        playing: true,
+      },
+    );
+    // Filled in, but held back until the image is ready to show.
+    expect(meta.classList.contains("rs-meta--away")).toBe(true);
+    overlay.root
+      .querySelector('img[src="https://i.redd.it/first.jpg"]')
+      ?.dispatchEvent(new Event("load"));
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(meta.classList.contains("rs-meta--away")).toBe(false);
+
+    overlay.showEnd();
+    expect(meta.classList.contains("rs-meta--away")).toBe(true);
+  });
+
   it("makes the page inert while shown and restores it on hide", () => {
     const overlay = createOverlay(noopHandlers());
     document.documentElement.append(overlay.host);
