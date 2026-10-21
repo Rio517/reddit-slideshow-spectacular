@@ -1346,10 +1346,10 @@ iframe.reddit-slideshow-media {
   z-index: 9;
   padding: 8px 16px;
   border-radius: 999px;
-  background: rgba(10, 12, 18, 0.82);
+  /* Solid, not a backdrop blur: a blur layer appearing makes the GPU redraw
+     everything under it, which can flash the whole screen dark. */
+  background: rgba(10, 12, 18, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.02em;
