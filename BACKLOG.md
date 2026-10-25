@@ -6,7 +6,8 @@ dark scrim under the caption, a still splash, the caption arriving with the
 first slide, a seek bar that can't freeze after a drag, and a vote toast
 without a backdrop blur. Version and per-locale store copy are refreshed, the
 Firefox, Chrome, and source zips are built, and the full unit/build/package
-gate passed. The manual store rollout remains in §1.
+gate passed. The v1.5.3 GitHub release is published with its zips
+[card a5a4 = RAN, 2026-10-25]. The manual store rollout remains in §1.
 
 > **Hard rule:** work directly on `main`. Do not create branches or worktrees unless the user explicitly asks. See `AGENTS.md`.
 
