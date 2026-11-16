@@ -196,7 +196,7 @@ Parked - the proxied path buffers the whole clip before playing. Streaming it
 
 Run these against live Firefox and real Reddit before committing to the full build; each is a go/no-go:
 
-- **Reddit listing access:** a same-origin content-script fetch of paginated `.json` listings using the existing session, without OAuth, at slideshow-realistic request volume, survives rate limits and returns expected shapes.
+- **Reddit listing access:** a background fetch of paginated `.json` listings using the existing session, without OAuth, at slideshow-realistic request volume, survives rate limits and returns expected shapes.
 - **v.redd.it video:** `secure_media.reddit_video.fallback_url` plays inside the overlay (muted), and the separate-audio-track behavior is understood.
 - **Redgifs iframe:** `https://www.redgifs.com/ifr/<id>` embeds and plays from the extension overlay in Firefox without a `redgifs.com` host permission.
 - **RES coexistence:** the prototype overlay alongside RES on a real old Reddit page has no arrow-key/keyboard capture or DOM-mutation conflicts.

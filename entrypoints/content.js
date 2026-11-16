@@ -8,7 +8,6 @@ import { base64ToBlob } from "@/lib/bytes-base64.js";
 import { redgifsVideoSlide } from "@/lib/redgifs.js";
 import { redgifsId } from "@/lib/slides.js";
 import { createLogger } from "@/lib/log.js";
-import { fetchListingJson } from "@/lib/reddit-listing.js";
 import { setLocale, resolveLocale } from "@/lib/i18n.js";
 
 const log = createLogger("content");
@@ -35,34 +34,11 @@ export default defineContentScript({
         createOverlay(handlers, document, overlayCss),
       getSettings,
       saveSettings,
-      // The listing is fetched here, from the page's own origin with the
-      // user's session: Reddit 403s the same request from the extension
-      // background. The background builds slides from the JSON.
       requestPage: async (after) => {
-        const pageUrl = window.location.href;
-        let listing;
-        try {
-          ({ listing } = await fetchListingJson(
-            pageUrl,
-            after ? { after } : {},
-          ));
-        } catch (err) {
-          log.warn("listing fetch failed", err);
-          const e = /** @type {any} */ (err);
-          return {
-            ok: false,
-            error: {
-              code: e?.name ?? "listing-fetch-failed",
-              message: e?.message,
-              status: e?.status,
-              jsonUrl: e?.jsonUrl,
-            },
-          };
-        }
         try {
           return await browser.runtime.sendMessage({
             type: "slideshow.requestPage",
-            payload: { pageUrl, listing },
+            payload: { pageUrl: window.location.href, after },
           });
         } catch (err) {
           log.warn("requestPage message failed", err);

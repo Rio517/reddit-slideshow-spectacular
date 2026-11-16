@@ -23,8 +23,7 @@ export default defineConfig({
       ...(browser === "firefox" ? ["declarativeNetRequestWithHostAccess"] : []),
     ],
     host_permissions: [
-      // The content script runs on these two and fetches listing JSON
-      // same-origin; the background uses them for votes and blocks.
+      // Listing JSON is fetched (with the session cookie) from these two.
       "https://old.reddit.com/*",
       "https://www.reddit.com/*",
       // Reddit image bytes, background-fetched for the perceptual-hash dedup that
