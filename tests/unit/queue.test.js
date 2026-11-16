@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildQueuePage,
-  fetchQueuePage,
+  queuePageFromListing,
   shouldFetchNextPage,
   unreadSlideCount,
 } from "../../lib/queue.js";
@@ -47,21 +47,12 @@ describe("buildQueuePage", () => {
   });
 });
 
-describe("fetchQueuePage", () => {
-  it("fetches a listing and returns a built queue page of slides", async () => {
-    /** @type {typeof fetch} */
-    const fetchImpl = async () =>
-      new Response(JSON.stringify(fixture), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      });
-
-    const page = await fetchQueuePage(
+describe("queuePageFromListing", () => {
+  it("returns a built queue page of slides", () => {
+    const page = queuePageFromListing(
+      fixture,
       "https://old.reddit.com/r/example/",
-      {},
-      fetchImpl,
     );
-
     expect(page).toMatchObject({
       after: "t3_beta",
       postsScanned: 2,
@@ -70,44 +61,14 @@ describe("fetchQueuePage", () => {
     expect(page.slides.map((s) => s.id)).toEqual(["t3_alpha:0", "t3_gamma:0"]);
   });
 
-  it("resolves slide permalinks against the page origin (no old.reddit dependency)", async () => {
-    /** @type {typeof fetch} */
-    const fetchImpl = async () =>
-      new Response(JSON.stringify(fixture), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      });
-    const page = await fetchQueuePage(
+  it("resolves slide permalinks against the page origin (no old.reddit dependency)", () => {
+    const page = queuePageFromListing(
+      fixture,
       "https://www.reddit.com/r/example/",
-      {},
-      fetchImpl,
     );
     expect(
       page.slides[0].permalink?.startsWith("https://www.reddit.com/"),
     ).toBe(true);
-  });
-
-  it("passes the after cursor through to pagination", async () => {
-    /** @type {Array<string>} */
-    const urls = [];
-    /** @type {typeof fetch} */
-    const fetchImpl = async (url) => {
-      urls.push(String(url));
-      return new Response(JSON.stringify(fixture), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      });
-    };
-
-    await fetchQueuePage(
-      "https://old.reddit.com/r/example/",
-      { after: "t3_beta" },
-      fetchImpl,
-    );
-
-    expect(urls[0]).toBe(
-      "https://old.reddit.com/r/example/.json?raw_json=1&after=t3_beta",
-    );
   });
 });
 

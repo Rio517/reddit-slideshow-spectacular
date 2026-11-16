@@ -27,7 +27,7 @@ Costs:
 
 ## Terms-of-Service Posture
 
-The v1 working hypothesis is to fetch `old.reddit.com/.../.json` using the user's existing logged-in browser session (cookies), without OAuth app credentials. Reddit's current Data API guidance says clients must authenticate and that traffic without OAuth or login credentials may be blocked. A logged-in browser-session fetch is therefore operationally plausible but still needs a live Firefox spike before we treat it as settled. The fetch should run from the **background script** so session cookies and host permissions are handled consistently.
+The v1 working hypothesis is to fetch `old.reddit.com/.../.json` using the user's existing logged-in browser session (cookies), without OAuth app credentials. Reddit's current Data API guidance says clients must authenticate and that traffic without OAuth or login credentials may be blocked. A logged-in browser-session fetch is therefore operationally plausible but still needs a live Firefox spike before we treat it as settled. The fetch runs from the **content script**, same-origin with the page the user is on: Reddit 403s the same request from the extension background (seen in November 2026, with other extensions reporting the same). The background builds slides from the JSON the content script sends it.
 
 This carries modest but real ToS/AMO risk, so the extension adopts and documents an explicit posture:
 

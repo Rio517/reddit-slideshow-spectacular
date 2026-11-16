@@ -1,4 +1,4 @@
-import { fetchQueuePage } from "@/lib/queue.js";
+import { queuePageFromListing } from "@/lib/queue.js";
 import {
   createMessageRouter,
   isAllowedFetchUrl,
@@ -62,17 +62,18 @@ export default defineBackground(() => {
   });
 
   /**
-   * Build a queue page, then upgrade Streamable iframe embeds to native video
-   * and expand Imgur album placeholders 1→N into their member image slides.
+   * Build a queue page from the content script's listing, then upgrade
+   * Streamable iframe embeds to native video and expand Imgur album
+   * placeholders 1→N into their member image slides.
    * Redgifs is resolved lazily instead (slideshow.resolveRedgifs, on approach),
    * so the page ships immediately with redgifs iframe embeds. Each resolver
    * leaves the iframe fallback in place when its lookup fails; a failed album
    * expansion drops to no slides.
    * @param {string} pageUrl
-   * @param {{ after?: string }} options
+   * @param {any} listing
    */
-  const fetchQueuePageWithProviders = async (pageUrl, options) => {
-    const page = await fetchQueuePage(pageUrl, options);
+  const buildQueuePageWithProviders = async (pageUrl, listing) => {
+    const page = queuePageFromListing(listing, pageUrl);
     page.slides = await resolveStreamableSlides(
       page.slides,
       streamable.resolve,
@@ -83,7 +84,7 @@ export default defineBackground(() => {
 
   const router = createMessageRouter({
     runtimeId: browser.runtime.id,
-    fetchQueuePage: fetchQueuePageWithProviders,
+    buildQueuePage: buildQueuePageWithProviders,
     // Layer 2 dedup: returns the perceptual hash hex (computed background-side).
     hashImage,
     // Redgifs mp4 bytes played as a blob (CDN hotlink protection), plus

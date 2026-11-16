@@ -4,11 +4,12 @@ import { createMessageRouter } from "../../lib/background-router.js";
 const RUNTIME_ID = "self@example";
 // A content-script sender: own extension id + a tab (extension pages have none).
 const OWN = { id: RUNTIME_ID, tab: { id: 1 } };
+const LISTING = { data: { children: [], after: null } };
 
 function makeRouter(overrides = {}) {
   return createMessageRouter({
     runtimeId: RUNTIME_ID,
-    fetchQueuePage: async () => ({
+    buildQueuePage: async () => ({
       slides: [{ id: "a" }],
       after: "t3_x",
       postsScanned: 50,
@@ -47,7 +48,7 @@ describe("createMessageRouter - requestPage", () => {
     const result = await router(
       {
         type: "slideshow.requestPage",
-        payload: { pageUrl: "https://old.reddit.com/r/x/" },
+        payload: { pageUrl: "https://old.reddit.com/r/x/", listing: LISTING },
       },
       OWN,
     );
@@ -57,26 +58,43 @@ describe("createMessageRouter - requestPage", () => {
     });
   });
 
-  it("passes the after cursor through", async () => {
-    /** @type {Array<{ pageUrl: string, options: any }>} */
+  it("builds from the listing the content script sent", async () => {
+    /** @type {Array<{ pageUrl: string, listing: any }>} */
     const calls = [];
     const router = makeRouter({
-      fetchQueuePage: async (
+      buildQueuePage: async (
         /** @type {string} */ pageUrl,
-        /** @type {any} */ options,
+        /** @type {any} */ listing,
       ) => {
-        calls.push({ pageUrl, options });
+        calls.push({ pageUrl, listing });
         return { slides: [], after: null, postsScanned: 0, exhausted: true };
       },
     });
     await router(
       {
         type: "slideshow.requestPage",
-        payload: { pageUrl: "https://old.reddit.com/r/x/", after: "t3_y" },
+        payload: { pageUrl: "https://old.reddit.com/r/x/", listing: LISTING },
       },
       OWN,
     );
-    expect(calls[0].options).toEqual({ after: "t3_y" });
+    expect(calls).toEqual([
+      { pageUrl: "https://old.reddit.com/r/x/", listing: LISTING },
+    ]);
+  });
+
+  it("rejects a request without a listing", async () => {
+    const router = makeRouter();
+    const result = await router(
+      {
+        type: "slideshow.requestPage",
+        payload: { pageUrl: "https://old.reddit.com/r/x/" },
+      },
+      OWN,
+    );
+    expect(result).toMatchObject({
+      ok: false,
+      error: { code: "missing-listing" },
+    });
   });
 
   it("rejects a missing page url", async () => {
@@ -91,30 +109,27 @@ describe("createMessageRouter - requestPage", () => {
     });
   });
 
-  it("returns an error payload when the fetch fails", async () => {
+  it("returns an error payload when building fails", async () => {
     const router = makeRouter({
-      fetchQueuePage: async () => {
-        throw Object.assign(new Error("boom"), {
-          name: "RedditListingFetchError",
-          status: 403,
-        });
+      buildQueuePage: async () => {
+        throw Object.assign(new Error("boom"), { status: 500 });
       },
     });
     const result = await router(
       {
         type: "slideshow.requestPage",
-        payload: { pageUrl: "https://old.reddit.com/r/x/" },
+        payload: { pageUrl: "https://old.reddit.com/r/x/", listing: LISTING },
       },
       OWN,
     );
-    expect(result).toMatchObject({ ok: false, error: { status: 403 } });
+    expect(result).toMatchObject({ ok: false, error: { status: 500 } });
   });
 
-  it("rejects a listing fetch from a non-content-script sender (no tab)", async () => {
+  it("rejects a page build from a non-content-script sender (no tab)", async () => {
     /** @type {string[]} */
     const fetched = [];
     const router = makeRouter({
-      fetchQueuePage: async (/** @type {string} */ pageUrl) => {
+      buildQueuePage: async (/** @type {string} */ pageUrl) => {
         fetched.push(pageUrl);
         return { slides: [], after: null, postsScanned: 0, exhausted: true };
       },
@@ -122,12 +137,12 @@ describe("createMessageRouter - requestPage", () => {
     const result = await router(
       {
         type: "slideshow.requestPage",
-        payload: { pageUrl: "https://old.reddit.com/r/x/" },
+        payload: { pageUrl: "https://old.reddit.com/r/x/", listing: LISTING },
       },
       { id: RUNTIME_ID }, // an extension page: own id, but no tab
     );
     expect(result).toEqual({ ok: false });
-    // The session-authenticated fetch must never run for an untrusted caller.
+    // Provider lookups must never run for an untrusted caller.
     expect(fetched).toEqual([]);
   });
 });
