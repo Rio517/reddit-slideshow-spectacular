@@ -23,7 +23,8 @@ export default defineConfig({
       ...(browser === "firefox" ? ["declarativeNetRequestWithHostAccess"] : []),
     ],
     host_permissions: [
-      // Listing pages are fetched (with the session cookie) from old Reddit.
+      // Listing pages are fetched (with the session cookie): a www subreddit
+      // feed from new Reddit, falling back to old Reddit, which serves the rest.
       "https://old.reddit.com/*",
       "https://www.reddit.com/*",
       // Reddit image bytes, background-fetched for the perceptual-hash dedup that

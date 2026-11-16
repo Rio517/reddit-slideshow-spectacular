@@ -190,7 +190,7 @@ describe("fetchListingJson", () => {
     });
 
     const { listing } = await fetchListingJson(
-      "https://www.reddit.com/r/aww/new/",
+      "https://old.reddit.com/r/aww/new/",
       { after: "t3_x" },
       fetchImpl,
     );

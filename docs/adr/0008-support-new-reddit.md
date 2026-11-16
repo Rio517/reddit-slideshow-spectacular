@@ -27,11 +27,16 @@ session, found:
 
 1. **Run the content script on both `old.reddit.com` and `www.reddit.com`,** and
    treat each frontend as self-contained.
-2. **Fetch the listing from old Reddit on both frontends.** Reddit now 403s
-   listing `.json` on both hosts, and old Reddit's HTML page is the listing
-   source that still carries every post's media (ADR 0003). The new-Reddit path
-   therefore depends on old Reddit: if Reddit removes it, the listing source
-   must move to new Reddit's own pages.
+2. **Read a www subreddit feed from new Reddit's own pages, and fall back to
+   old Reddit.** Reddit 403s listing `.json` on both hosts. A feed at
+   `www.reddit.com/r/<name>/` (any sort) reads new Reddit's listing partial
+   (`/svc/shreddit/community-more-posts/<sort>/`, 25 posts a request, paged by
+   the base64 of the last post's fullname). If that request fails, hits the
+   login wall or returns no posts, the same page of the same feed is read from
+   old Reddit's HTML (ADR 0003), which carries each post's media. Every other
+   feed (r/all, r/popular, multireddits, users, the home feed, search) and all
+   of `old.reddit.com` use old Reddit. The feed markup has no vote state or
+   hidden-score marker, so posts from new Reddit carry neither.
 3. **Render the overlay directly in the page on both,** relying on new Reddit's
    permissive logged-in CSP - no extension-page-iframe workaround now. Media that
    the CSP blocks already degrades to the existing placeholder card. The iframe
@@ -57,7 +62,8 @@ correct listing; overlay reset across in-SPA route changes is a verification ite
 
 ## Consequences
 
-- Future-proof: new-Reddit users do not depend on old Reddit.
+- Future-proof: a new-Reddit user reading a subreddit feed does not depend on
+  old Reddit, which stays the fallback and the source for other feeds.
 - The new-Reddit overlay's media rendering depends on Reddit keeping a permissive
   CSP for logged-in users. If that changes, media falls back to placeholders, and
   the documented next step is the extension-page-iframe overlay.
