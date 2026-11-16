@@ -15,6 +15,20 @@ const log = createLogger("content");
 // URL fragment a popout window carries so its content script auto-starts.
 const POPOUT_MARKER = "rs-slideshow";
 
+// The feed path this tab was popped out for, or null.
+function popoutPath() {
+  try {
+    if (window.location.hash === `#${POPOUT_MARKER}`) {
+      window.sessionStorage.setItem(POPOUT_MARKER, window.location.pathname);
+    }
+    return window.sessionStorage.getItem(POPOUT_MARKER);
+  } catch {
+    return window.location.hash === `#${POPOUT_MARKER}`
+      ? window.location.pathname
+      : null;
+  }
+}
+
 export default defineContentScript({
   matches: ["https://old.reddit.com/*", "https://www.reddit.com/*"],
   cssInjectionMode: "manifest",
@@ -242,7 +256,9 @@ export default defineContentScript({
 
     // A popout window opens the feed with the marker fragment; auto-start once
     // the saved locale is applied so the overlay isn't built in the wrong language.
-    if (window.location.hash === `#${POPOUT_MARKER}`) {
+    // The tab keeps the feed's path, since Reddit sometimes reloads the page on
+    // arrival and drops the fragment.
+    if (popoutPath() === window.location.pathname) {
       localeReady.then(() => session.start());
     }
   },
