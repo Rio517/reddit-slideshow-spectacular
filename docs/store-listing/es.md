@@ -16,16 +16,18 @@ Reddit Slideshow Spectacular! convierte tus feeds de Reddit en un pase de diapos
 
 El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves de API, sin inicio de sesión adicional y sin cuentas extra. Recorre las publicaciones multimedia en el orden en que Reddit las devuelve y avanza por el feed de forma automática, de modo que el pase de diapositivas continúa más allá de la primera página.
 
+NOVEDADES - V1.6.0
+
+- CORREGIDO: la presentación vuelve a iniciarse después de que Reddit dejara de ofrecer los datos del feed que usaba (un error «403»)
+- MEJORADO: en www.reddit.com, las presentaciones de un subreddit se cargan desde las propias páginas del nuevo Reddit y pasan al antiguo Reddit si fallan
+- CORREGIDO: «Abrir en una ventana» conserva su presentación cuando Reddit recarga la página
+
 NOVEDADES - V1.5.3
 
 - MEJORADO: las imágenes se ven con todo su brillo bajo la leyenda, sin una franja oscura en la parte inferior
 - CORREGIDO: la barra de progreso de los vídeos ya no se queda parada tras un clic o un arrastre
 - CORREGIDO: al abrir la presentación, la leyenda aparece junto con la primera imagen en lugar de saltar a su sitio
 - CORREGIDO: votar ya no oscurece la pantalla por un momento
-
-NOVEDADES - V1.5.2
-
-- CORREGIDO: en Firefox, los clips de Redgifs empiezan al instante y se precargan, en lugar de descargarse enteros antes de reproducirse
 
 Notas completas de la versión: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 

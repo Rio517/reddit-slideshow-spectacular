@@ -1,13 +1,12 @@
 # Backlog: session handoff - Reddit Slideshow Spectacular!
 
-**Branch:** `main` · **Status:** CI-green. v1.5.2 is released [Mario
-2026-10-21: "1.5.2 was already released"]. v1.5.3 is prepared locally: no
-dark scrim under the caption, a still splash, the caption arriving with the
-first slide, a seek bar that can't freeze after a drag, and a vote toast
-without a backdrop blur. Version and per-locale store copy are refreshed, the
-Firefox, Chrome, and source zips are built, and the full unit/build/package
-gate passed. The v1.5.3 GitHub release is published with its zips
-[card a5a4 = RAN, 2026-10-25]. The manual store rollout remains in §1.
+**Branch:** `main` · **Status:** CI-green. v1.5.3 is released. v1.6.0 is
+prepared locally: the slideshow starts again after Reddit stopped serving the
+listing `.json` (a 403), www subreddit feeds load from new Reddit's own pages
+with old Reddit as the fallback, and "Open in a window" keeps its slideshow
+across Reddit's reload. Version and per-locale store copy are refreshed, the
+Firefox, Chrome, and source zips are built, and the full gate passed. The
+manual store rollout remains in §1.
 
 > **Hard rule:** work directly on `main`. Do not create branches or worktrees unless the user explicitly asks. See `AGENTS.md`.
 
@@ -57,21 +56,23 @@ giant commit.
   the full host list, and has no what's-new block. Regenerate it with
   `npm run listing:chrome` after editing a main listing; Firefox keeps
   `docs/store-listing/<lang>.md`.
-- **v1.5.3 store rollout.** Upload
-  `.output/reddit-slideshow-1.5.3-firefox.zip` plus
-  `.output/reddit-slideshow-1.5.3-sources.zip` (the build minifies) to Firefox
-  Add-ons, and `.output/reddit-slideshow-1.5.3-chrome.zip` to the Chrome Web
+- **v1.6.0 store rollout.** Upload
+  `.output/reddit-slideshow-1.6.0-firefox.zip` plus
+  `.output/reddit-slideshow-1.6.0-sources.zip` (the build minifies) to Firefox
+  Add-ons, and `.output/reddit-slideshow-1.6.0-chrome.zip` to the Chrome Web
   Store. Paste the per-locale listing copy from
   `docs/store-listing/<lang>.md` for Firefox (its what's-new shows the last two
   versions) and from `docs/store-listing/chrome/<lang>.md` for Chrome.
-  Permissions are unchanged from v1.5.2, and the store screenshots and promo
+  Permissions are unchanged from v1.5.3, and the store screenshots and promo
   tiles are the same as v1.5.0's.
 - **Hand-check in a logged-in Firefox and Chrome:** vote with a caption arrow
   (the score moves and the vote lands on Reddit), and drag the seek bar on a
   real Reddit video and a Redgifs clip (the show waits for the clip to finish;
   the bar fades when the pointer rests). The offline gates cover the logic and
   a scripted mouse drag on a local clip, not a real account vote or a
-  provider's video.
+  provider's video. Also run the slideshow on old and www r/aww/new in a
+  logged-in Firefox (only Chrome was checked live), and confirm an NSFW post on
+  www shows its NSFW tag (untested against real markup).
 - Optional: a native-speaker pass on the machine-drafted translations,
   especially Arabic (~25% of installs). English fallback covers any gap, and a
   locale file can be refreshed without code changes.
@@ -82,6 +83,9 @@ giant commit.
   `entrypoints/content.js` would let Chrome stream Redgifs clips instead of
   downloading each one whole. Held until the Chrome listing is approved, so
   that review sees no permission change.
+- **Known issue: www vote state.** On www subreddit feeds the caption's vote
+  arrows start neutral, since new Reddit's feed markup has no vote state
+  (voting still works).
 - **Known slow path: www.reddit.com.** Its CSP allows only `*.redd.it` media, so
   Redgifs, Imgur, Streamable, Giphy and Catbox clips are downloaded whole
   through the blob proxy there, in both browsers. No header rule fixes that.

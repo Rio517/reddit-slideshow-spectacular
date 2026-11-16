@@ -16,16 +16,18 @@ Reddit Slideshow Spectacular! turns your Reddit feeds into full-screen, keyboard
 
 The Slideshow reuses your existing logged-in Reddit session - no API keys, no sign-in, no extra account. It walks media posts in the order Reddit returns them and pages through the feed automatically, so the slideshow keeps going past the first page.
 
+NEW IN V1.6.0
+
+- FIXED: The slideshow starts again after Reddit stopped serving the feed data it used (a "403" error)
+- IMPROVED: On www.reddit.com, subreddit slideshows load from new Reddit's own pages, and switch to old Reddit if those fail
+- FIXED: "Open in a window" keeps its slideshow when Reddit reloads the page
+
 NEW IN V1.5.3
 
 - IMPROVED: Images show at full brightness under the caption, with no dark band along the bottom
 - FIXED: The video seek bar no longer stops moving after a click or drag
 - FIXED: When the slideshow opens, the caption appears with the first image instead of jumping into place
 - FIXED: Voting no longer flashes the screen dark
-
-NEW IN V1.5.2
-
-- FIXED: On Firefox, Redgifs clips start right away and load ahead of time, instead of downloading the whole clip before playing
 
 Full release notes: https://github.com/Rio517/reddit-slideshow-spectacular/releases
 
