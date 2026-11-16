@@ -5,7 +5,7 @@ Status: Accepted
 
 ## Context
 
-The extension needs access to old Reddit pages, Reddit listing JSON, Reddit-hosted media, and selected external media providers such as Redgifs. Browser extension permissions are visible to users and directly affect trust. Firefox also supports runtime permission requests for optional permissions, which can let an extension ask for external-provider access only when a user needs it.
+The extension needs access to old Reddit pages, Reddit listing pages, Reddit-hosted media, and selected external media providers such as Redgifs. Browser extension permissions are visible to users and directly affect trust. Firefox also supports runtime permission requests for optional permissions, which can let an extension ask for external-provider access only when a user needs it.
 
 The tempting shortcut is to request broad host access, such as all websites, so any external media host can be resolved. That would make development easier but would be disproportionate to the product.
 
@@ -16,7 +16,7 @@ Use the narrowest practical install-time host permissions and stage the rest.
 **Install-time `host_permissions`** are the hosts the extension must fetch from
 to function:
 
-- `old.reddit.com`, `www.reddit.com` - listing JSON for both frontends (ADR 0008).
+- `old.reddit.com`, `www.reddit.com` - the listing page for both frontends (ADR 0008).
 - `i.redd.it`, `preview.redd.it`, `external-preview.redd.it` - background-fetch
   Reddit images and previews to compute the perceptual hash for re-upload
   detection, which is on by default (ADR 0006 Layer 2). Display of these images

@@ -44,7 +44,7 @@ The overlay should expose minimal controls: close, previous, next, play/pause sl
 
 ## Queue Behavior
 
-The queue begins from the current old Reddit context: front page, subreddit, multireddit, search, or other listing-like page where feasible. The first queue can be seeded from the DOM, but the durable source of truth should be Reddit listing JSON for pagination.
+The queue begins from the current old Reddit context: front page, subreddit, multireddit, search, or other listing-like page where feasible. The first queue can be seeded from the DOM, but the durable source of truth is the old Reddit listing page, fetched by the background for pagination.
 
 When the queue nears the end, the extension fetches the next listing page using Reddit listing pagination and appends supported media in the same order Reddit returns it.
 
@@ -125,7 +125,7 @@ network resolve is needed, a scoped host permission, and an ADR.
 Install-time host permissions are scoped to the hosts the extension actually
 fetches from (see ADR 0004 and the manifest in `wxt.config.ts`):
 
-- `https://old.reddit.com/*`, `https://www.reddit.com/*` - listing JSON for both
+- `https://old.reddit.com/*`, `https://www.reddit.com/*` - the listing page for both
   frontends (ADR 0008), and the keypress-driven account writes (vote/block/friend).
 - `https://i.redd.it/*`, `https://preview.redd.it/*`,
   `https://external-preview.redd.it/*` - fetch Reddit images/previews to hash
@@ -196,7 +196,7 @@ Parked - the proxied path buffers the whole clip before playing. Streaming it
 
 Run these against live Firefox and real Reddit before committing to the full build; each is a go/no-go:
 
-- **Reddit listing access:** a background fetch of paginated `.json` listings using the existing session, without OAuth, at slideshow-realistic request volume, survives rate limits and returns expected shapes.
+- **Reddit listing access:** a background fetch of paginated old Reddit listing pages using the existing session, without OAuth, at slideshow-realistic request volume, survives rate limits and returns expected shapes.
 - **v.redd.it video:** `secure_media.reddit_video.fallback_url` plays inside the overlay (muted), and the separate-audio-track behavior is understood.
 - **Redgifs iframe:** `https://www.redgifs.com/ifr/<id>` embeds and plays from the extension overlay in Firefox without a `redgifs.com` host permission.
 - **RES coexistence:** the prototype overlay alongside RES on a real old Reddit page has no arrow-key/keyboard capture or DOM-mutation conflicts.

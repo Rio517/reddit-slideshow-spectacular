@@ -6,6 +6,7 @@ import {
   unreadSlideCount,
 } from "../../lib/queue.js";
 import fixture from "../fixtures/reddit-json/subreddit-direct-images.json";
+import { listingHtml } from "../fixtures/old-reddit/listing-html.js";
 
 describe("buildQueuePage", () => {
   it("builds a media-only page from a Reddit listing", () => {
@@ -47,19 +48,30 @@ describe("buildQueuePage", () => {
   });
 });
 
+/**
+ * Serves the fixture the way Reddit does now: as an old Reddit HTML page.
+ * Media CDN requests (image size headers) get a 404.
+ * @param {string[]} [urls]
+ * @returns {typeof fetch}
+ */
+const fixtureFetch =
+  (urls = []) =>
+  async (url) => {
+    urls.push(String(url));
+    if (!String(url).startsWith("https://old.reddit.com/r/")) {
+      return new Response("", { status: 404 });
+    }
+    return new Response(listingHtml(fixture), {
+      headers: { "content-type": "text/html" },
+    });
+  };
+
 describe("fetchQueuePage", () => {
   it("fetches a listing and returns a built queue page of slides", async () => {
-    /** @type {typeof fetch} */
-    const fetchImpl = async () =>
-      new Response(JSON.stringify(fixture), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      });
-
     const page = await fetchQueuePage(
       "https://old.reddit.com/r/example/",
       {},
-      fetchImpl,
+      fixtureFetch(),
     );
 
     expect(page).toMatchObject({
@@ -71,16 +83,10 @@ describe("fetchQueuePage", () => {
   });
 
   it("resolves slide permalinks against the page origin (no old.reddit dependency)", async () => {
-    /** @type {typeof fetch} */
-    const fetchImpl = async () =>
-      new Response(JSON.stringify(fixture), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      });
     const page = await fetchQueuePage(
       "https://www.reddit.com/r/example/",
       {},
-      fetchImpl,
+      fixtureFetch(),
     );
     expect(
       page.slides[0].permalink?.startsWith("https://www.reddit.com/"),
@@ -90,24 +96,12 @@ describe("fetchQueuePage", () => {
   it("passes the after cursor through to pagination", async () => {
     /** @type {Array<string>} */
     const urls = [];
-    /** @type {typeof fetch} */
-    const fetchImpl = async (url) => {
-      urls.push(String(url));
-      return new Response(JSON.stringify(fixture), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      });
-    };
-
     await fetchQueuePage(
       "https://old.reddit.com/r/example/",
       { after: "t3_beta" },
-      fetchImpl,
+      fixtureFetch(urls),
     );
-
-    expect(urls[0]).toBe(
-      "https://old.reddit.com/r/example/.json?raw_json=1&after=t3_beta",
-    );
+    expect(urls[0]).toBe("https://old.reddit.com/r/example/?after=t3_beta");
   });
 });
 

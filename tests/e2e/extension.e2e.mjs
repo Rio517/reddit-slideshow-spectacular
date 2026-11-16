@@ -12,10 +12,12 @@
 // with `npm run test:prod` (which builds the Chrome target first).
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
+import { Buffer } from "node:buffer";
 import { existsSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { listingHtml } from "../fixtures/old-reddit/listing-html.js";
 
 const EXT = resolve(process.cwd(), ".output/chrome-mv3");
 const UA =
@@ -192,20 +194,37 @@ async function main() {
       chrome.storage.local.set({ autoplay: false, includeNsfw: true }),
     );
 
-    // Mock the listing JSON and the i.redd.it media (deterministic; also dodges
-    // reddit's 403 on a headless/datacenter request).
-    await context.route("**/*.json?*", (route) =>
-      route.fulfill({
-        contentType: "application/json",
-        body: JSON.stringify(LISTING),
-      }),
+    // Mock the listing and the i.redd.it media (deterministic; also dodges
+    // reddit's 403 on a headless/datacenter request). The listing arrives the
+    // way Reddit serves it now: an old Reddit HTML page, which also serves as
+    // the feed page itself. An image's size comes from a Range request for its
+    // header, answered with a PNG header of the post's source size.
+    let listing = LISTING;
+    await context.route(
+      /old\.reddit\.com\/r\/slideshowspectacular\//,
+      (route) =>
+        route.fulfill({ contentType: "text/html", body: listingHtml(listing) }),
     );
-    await context.route("https://i.redd.it/**", (route) =>
-      route.fulfill({
-        contentType: "image/svg+xml",
-        body: route.request().url().includes("tall") ? TALL_SVG : SVG,
-      }),
-    );
+    await context.route("https://i.redd.it/**", (route) => {
+      const url = route.request().url();
+      if (!route.request().headers().range) {
+        return route.fulfill({
+          contentType: "image/svg+xml",
+          body: url.includes("tall") ? TALL_SVG : SVG,
+        });
+      }
+      const source = listing.data.children.find((c) => c.data.url === url)?.data
+        .preview.images[0].source;
+      const head = Buffer.alloc(24);
+      head.set([0x89, 0x50, 0x4e, 0x47]);
+      head.writeUInt32BE(source?.width ?? 0, 16);
+      head.writeUInt32BE(source?.height ?? 0, 20);
+      return route.fulfill({
+        status: 206,
+        contentType: "image/png",
+        body: head,
+      });
+    });
 
     const page = await context.newPage();
     await page.goto(FEED, { waitUntil: "domcontentloaded", timeout: 45000 });
@@ -482,14 +501,8 @@ async function main() {
     // A gif post: it must play as reddit's transcode and take its dwell from the
     // clip. Only a real browser reports a media duration, so this can't be a
     // unit test. The listing fetch runs in the background service worker, so the
-    // swap has to happen on the context's route, not the page's.
-    await context.unroute("**/*.json?*");
-    await context.route("**/*.json?*", (route) =>
-      route.fulfill({
-        contentType: "application/json",
-        body: JSON.stringify(GIF_LISTING),
-      }),
-    );
+    // swap goes through the context's routes, not the page's.
+    listing = GIF_LISTING;
     await context.route("https://preview.redd.it/**", (route) =>
       route.fulfill({ path: GIF_CLIP, contentType: "video/webm" }),
     );

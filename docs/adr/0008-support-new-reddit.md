@@ -27,10 +27,11 @@ session, found:
 
 1. **Run the content script on both `old.reddit.com` and `www.reddit.com`,** and
    treat each frontend as self-contained.
-2. **Fetch listing JSON from the same host as the current page** (old → old
-   `.json`, www → www `.json`). The new-Reddit path does **not** call old Reddit,
-   so it keeps working if old Reddit is ever removed. (Earlier "render on new,
-   fetch from old" is rejected for exactly this reason.)
+2. **Fetch the listing from old Reddit on both frontends.** Reddit now 403s
+   listing `.json` on both hosts, and old Reddit's HTML page is the listing
+   source that still carries every post's media (ADR 0003). The new-Reddit path
+   therefore depends on old Reddit: if Reddit removes it, the listing source
+   must move to new Reddit's own pages.
 3. **Render the overlay directly in the page on both,** relying on new Reddit's
    permissive logged-in CSP - no extension-page-iframe workaround now. Media that
    the CSP blocks already degrades to the existing placeholder card. The iframe

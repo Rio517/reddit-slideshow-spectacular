@@ -23,19 +23,19 @@ export default defineConfig({
       ...(browser === "firefox" ? ["declarativeNetRequestWithHostAccess"] : []),
     ],
     host_permissions: [
-      // Listing JSON is fetched (with the session cookie) from these two.
+      // Listing pages are fetched (with the session cookie) from old Reddit.
       "https://old.reddit.com/*",
       "https://www.reddit.com/*",
       // Reddit image bytes, background-fetched for the perceptual-hash dedup that
       // is on by default (ADR 0006 Layer 2): the on-screen image (i.redd.it) and
-      // its smaller previews. Display images load directly without a permission;
-      // this access is only for hashing them to catch re-uploads.
+      // its smaller previews; and an i.redd.it image's first bytes, for its size.
+      // Display images load directly without a permission.
       "https://i.redd.it/*",
       "https://preview.redd.it/*",
       "https://external-preview.redd.it/*",
       // v.redd.it: background-fetch the DASH manifest to read a hosted video's
-      // separate audio track URL (ADR 0018). The video itself loads as a page
-      // subresource (no permission); this access is only for the manifest.
+      // renditions, duration and separate audio track (ADR 0018). The video
+      // itself loads as a page subresource; this access is only for the manifest.
       "https://v.redd.it/*",
       // Redgifs: resolve the direct mp4 (api) and fetch its bytes (media) in the
       // background, so the clip plays as a native, correctly-timed video.

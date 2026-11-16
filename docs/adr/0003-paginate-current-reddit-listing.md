@@ -27,7 +27,7 @@ Costs:
 
 ## Terms-of-Service Posture
 
-The v1 working hypothesis is to fetch `old.reddit.com/.../.json` using the user's existing logged-in browser session (cookies), without OAuth app credentials. Reddit's current Data API guidance says clients must authenticate and that traffic without OAuth or login credentials may be blocked. A logged-in browser-session fetch is therefore operationally plausible but still needs a live Firefox spike before we treat it as settled. The fetch should run from the **background script** so session cookies and host permissions are handled consistently.
+The extension reads the listing with the user's existing logged-in browser session (cookies), without OAuth app credentials, from the **background script** so session cookies and host permissions are handled consistently. Reddit answers listing `.json` (and `/api/info`, `/by_id`) with `403`, even logged in, and limits each post's own `.json` to about 100 requests a window. So each listing page is one request for the old Reddit HTML page (`old.reddit.com/<path>/?after=…`), whose `.thing` elements carry each post's fields and, in the expando's `data-cachedhtml`, its media: image previews, gallery images, a gif's mp4 transcode, a video's DASH and HLS URLs. `lib/reddit-listing.js` maps that into the listing JSON shape `lib/slides.js` reads, completing it from the media CDNs (a video's DASH manifest, an i.redd.it image's size header), which don't count against Reddit's limit. A post whose expando lacks its media falls back to its own `.json`.
 
 This carries modest but real ToS/AMO risk, so the extension adopts and documents an explicit posture:
 
@@ -36,7 +36,7 @@ This carries modest but real ToS/AMO risk, so the extension adopts and documents
 - Stores nothing server-side; no bulk collection, no redistribution, no analytics.
 - Degrades on `403`/`429` (and `X-Ratelimit-*` headers when present - note they are often **absent** on the cookie-session website path, so `403`/`429` must also drive backoff).
 - Keeps the listing transport swappable (the ADR 0002 resolver layer) so optional per-user OAuth is an escape hatch if the cookie path is ever blocked. The extension must **not** ship app OAuth client credentials.
-- Always sends `raw_json=1` (required): without it, `preview` and `media_metadata` URLs are HTML-entity-encoded.
+- Decodes HTML entities in every attribute it reads; the expando's URLs are encoded twice.
 
 This posture reduces real risk, but it does not remove the need to validate Reddit's current behavior and AMO review expectations with a working prototype.
 
