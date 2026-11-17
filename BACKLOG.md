@@ -43,6 +43,29 @@ giant commit.
 
 ### Requested, not yet done
 
+- **Daily Reddit format check** [Mario 2026-11-16: "a bot that runs a daily
+  check on reddit to ensure api consistency. and email me ane rror via our
+  hetzner ops setup"; card 9f91, 2026-11-17: "can we run it on the vm and go
+  back to ym mac for tailscale and my home ip?"; Mario 2026-11-17: "i do want
+  to create a new redit account"]. Facts: logged out, Reddit 403s every
+  request from the VM and sends a logged-out Mac to its login page, so the
+  check needs a login and the home IP. Plan: a Node script that runs the
+  extension's own readers (`lib/reddit-listing.js`, `lib/reddit-www-listing.js`)
+  on r/aww/new, old and www, two pages each; a fetch relay on the Mac
+  (reddit hosts only, the check account's cookie stays on the Mac) reached
+  over Tailscale; a VM cron job that runs the check, pings a GlitchTip
+  heartbeat on success and sends an error event on failure (pattern:
+  hetzner-ops `scripts/reboot-drift-check.sh`). The VM side (cron, the
+  tailnet grant from `tag:server` to the Mac's relay port, GlitchTip
+  heartbeat) belongs to hetzner-ops. Status: Mario is creating the check's
+  Reddit account in a Chrome for Testing profile at
+  `~/.config/reddit-check/chrome` (CDP port 9334, `--use-mock-keychain`);
+  next, test that a script fetch with that account's cookie gets both
+  readers' pages from the Mac.
+- **Live-check the other sorts on www** (hot, top, rising, controversial):
+  only `new` was verified live; Mario's OK to open r/aww/hot and r/aww/top is
+  pending (he limited live testing to r/aww/new).
+
 - **Hand-check the Redgifs fix in a logged-in Firefox on old.reddit.com.** Load
   `.output/firefox-mv3/manifest.json` at `about:debugging` > This Firefox >
   Load Temporary Add-on, open a feed with Redgifs posts, and step through them:
