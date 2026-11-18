@@ -26,6 +26,7 @@ import { createRedditWriter } from "@/lib/reddit-write.js";
 import { createImageHasher } from "@/lib/image-hash.js";
 import { getSettings } from "@/lib/settings.js";
 import { createLogger } from "@/lib/log.js";
+import { createActionClickHandler } from "@/lib/action-click.js";
 
 const log = createLogger("background");
 
@@ -124,16 +125,16 @@ export default defineBackground(() => {
   browser.runtime.onMessage.addListener(router);
 
   browser.action.onClicked.addListener(
-    async (/** @type {Browser.tabs.Tab} */ tab) => {
-      if (!tab.id) return;
-      try {
-        await browser.tabs.sendMessage(tab.id, {
+    createActionClickHandler({
+      action: browser.action,
+      tabs: browser.tabs,
+      sendStart: (tabId) =>
+        browser.tabs.sendMessage(tabId, {
           type: "slideshow.startRequested",
           payload: { source: "action" },
-        });
-      } catch (err) {
-        log.info("toolbar clicked off a Reddit listing", err);
-      }
-    },
+        }),
+      pageUrl: (path) => browser.runtime.getURL(/** @type {any} */ (path)),
+      log,
+    }),
   );
 });

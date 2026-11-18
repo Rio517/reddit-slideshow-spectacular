@@ -728,5 +728,61 @@
   "uiActionError": {
     "message": "Operazione non riuscita",
     "description": "Toast shown when a block/friend/follow action failed."
+  },
+  "noticeTitle": {
+    "message": "Pagine supportate",
+    "description": "Notice heading when the toolbar button is clicked on a page the slideshow can't play (off Reddit, or a single post)."
+  },
+  "noticeOffReddit": {
+    "message": "La presentazione riproduce i feed di Reddit, come un subreddit, la home o i post di un utente.",
+    "description": "Notice body: the toolbar button was clicked off Reddit."
+  },
+  "noticeNextOpen": {
+    "message": "Apri un feed e fai di nuovo clic sull'icona.",
+    "description": "Notice: next step after noticeOffReddit ('one' = a Reddit feed)."
+  },
+  "noticePost": {
+    "message": "Questa pagina mostra un solo post di {feed}. La presentazione riproduce un intero feed.",
+    "description": "Notice body on a single Reddit post page. Keep the {feed} marker; it becomes the post's subreddit, e.g. r/pics."
+  },
+  "noticePostNoFeed": {
+    "message": "Questa pagina mostra un solo post. La presentazione riproduce un intero feed.",
+    "description": "Notice body on a single Reddit post page whose subreddit is unknown."
+  },
+  "noticeNextFeed": {
+    "message": "Apri {feed} e fai di nuovo clic sull'icona.",
+    "description": "Notice: next step after noticePost. Keep the {feed} marker; it becomes the post's subreddit, e.g. r/pics."
+  },
+  "noticeReloadTitle": {
+    "message": "Ricarica necessaria",
+    "description": "Notice heading: the Reddit tab was open before the extension was installed or updated and must be reloaded."
+  },
+  "noticeReload": {
+    "message": "Questa pagina è stata caricata prima che l'estensione fosse installata o aggiornata.",
+    "description": "Notice body under noticeReloadTitle."
+  },
+  "noticeNextReload": {
+    "message": "Ricarica la pagina e fai di nuovo clic sull'icona.",
+    "description": "Notice: next step after noticeReload."
+  },
+  "noticeShortcut": {
+    "message": "La scorciatoia da tastiera è {shortcut}.",
+    "description": "Notice: the keyboard shortcut. Keep the {shortcut} marker; it becomes the keys, e.g. Alt+Shift+S."
+  },
+  "noticeOpenReddit": {
+    "message": "Apri Reddit",
+    "description": "Notice button: opens reddit.com."
+  },
+  "noticeOpenFeed": {
+    "message": "Apri {feed}",
+    "description": "Notice button: opens the post's subreddit. Keep the {feed} marker, e.g. r/pics."
+  },
+  "noticeReloadPage": {
+    "message": "Ricarica pagina",
+    "description": "Notice button: reloads the Reddit tab."
+  },
+  "noticeHelp": {
+    "message": "Aiuto ↗",
+    "description": "Notice link to the extension's website (opens a new tab)."
   }
 }

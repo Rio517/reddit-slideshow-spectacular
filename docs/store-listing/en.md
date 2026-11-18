@@ -21,6 +21,7 @@ NEW IN V1.6.0
 - FIXED: The slideshow starts again after Reddit stopped serving the feed data it used (a "403" error)
 - IMPROVED: On www.reddit.com, subreddit slideshows load from new Reddit's own pages, and switch to old Reddit if those fail
 - FIXED: "Open in a window" keeps its slideshow when Reddit reloads the page
+- NEW: Clicking the toolbar button away from a Reddit feed now explains where the slideshow plays, with a button to open Reddit or the post's subreddit
 
 NEW IN V1.5.3
 

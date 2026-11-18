@@ -21,6 +21,7 @@ NOVEDADES - V1.6.0
 - CORREGIDO: la presentación vuelve a iniciarse después de que Reddit dejara de ofrecer los datos del feed que usaba (un error «403»)
 - MEJORADO: en www.reddit.com, las presentaciones de un subreddit se cargan desde las propias páginas del nuevo Reddit y pasan al antiguo Reddit si fallan
 - CORREGIDO: «Abrir en una ventana» conserva su presentación cuando Reddit recarga la página
+- NUEVO: al hacer clic en el botón fuera de un feed de Reddit, ahora se explica dónde funciona la presentación, con un botón para abrir Reddit o el subreddit de la publicación
 
 NOVEDADES - V1.5.3
 

@@ -728,5 +728,61 @@
   "uiActionError": {
     "message": "Couldn't do that",
     "description": "Toast shown when a block/friend/follow action failed."
+  },
+  "noticeTitle": {
+    "message": "Supported pages",
+    "description": "Notice heading when the toolbar button is clicked on a page the slideshow can't play (off Reddit, or a single post)."
+  },
+  "noticeOffReddit": {
+    "message": "The slideshow plays Reddit feeds, such as a subreddit, the front page or a user's posts.",
+    "description": "Notice body: the toolbar button was clicked off Reddit."
+  },
+  "noticeNextOpen": {
+    "message": "Open a feed and click the icon again.",
+    "description": "Notice: next step after noticeOffReddit ('one' = a Reddit feed)."
+  },
+  "noticePost": {
+    "message": "This page shows a single post from {feed}. The slideshow plays a whole feed.",
+    "description": "Notice body on a single Reddit post page. Keep the {feed} marker; it becomes the post's subreddit, e.g. r/pics."
+  },
+  "noticePostNoFeed": {
+    "message": "This page shows a single post. The slideshow plays a whole feed.",
+    "description": "Notice body on a single Reddit post page whose subreddit is unknown."
+  },
+  "noticeNextFeed": {
+    "message": "Open {feed} and click the icon again.",
+    "description": "Notice: next step after noticePost. Keep the {feed} marker; it becomes the post's subreddit, e.g. r/pics."
+  },
+  "noticeReloadTitle": {
+    "message": "Reload needed",
+    "description": "Notice heading: the Reddit tab was open before the extension was installed or updated and must be reloaded."
+  },
+  "noticeReload": {
+    "message": "This page loaded before the extension was installed or updated.",
+    "description": "Notice body under noticeReloadTitle."
+  },
+  "noticeNextReload": {
+    "message": "Reload the page and click the icon again.",
+    "description": "Notice: next step after noticeReload."
+  },
+  "noticeShortcut": {
+    "message": "The keyboard shortcut is {shortcut}.",
+    "description": "Notice: the keyboard shortcut. Keep the {shortcut} marker; it becomes the keys, e.g. Alt+Shift+S."
+  },
+  "noticeOpenReddit": {
+    "message": "Open Reddit",
+    "description": "Notice button: opens reddit.com."
+  },
+  "noticeOpenFeed": {
+    "message": "Open {feed}",
+    "description": "Notice button: opens the post's subreddit. Keep the {feed} marker, e.g. r/pics."
+  },
+  "noticeReloadPage": {
+    "message": "Reload page",
+    "description": "Notice button: reloads the Reddit tab."
+  },
+  "noticeHelp": {
+    "message": "Help ↗",
+    "description": "Notice link to the extension's website (opens a new tab)."
   }
 }

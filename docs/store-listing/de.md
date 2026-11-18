@@ -21,6 +21,7 @@ NEU IN V1.6.0
 - BEHOBEN: Die Diashow startet wieder, nachdem Reddit die bisher genutzten Feed-Daten nicht mehr lieferte (ein „403“-Fehler)
 - VERBESSERT: Auf www.reddit.com laden Subreddit-Diashows von den eigenen Seiten des neuen Reddit und wechseln zum alten Reddit, falls das scheitert
 - BEHOBEN: „In einem Fenster öffnen“ behält die Diashow, wenn Reddit die Seite neu lädt
+- NEU: Ein Klick auf die Schaltfläche außerhalb eines Reddit-Feeds erklärt jetzt, wo die Diashow läuft, und bietet an, Reddit oder das Subreddit des Beitrags zu öffnen
 
 NEU IN V1.5.3
 

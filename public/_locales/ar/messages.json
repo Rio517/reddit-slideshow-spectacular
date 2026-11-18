@@ -764,5 +764,61 @@
   "uiActionError": {
     "message": "تعذّر تنفيذ ذلك",
     "description": "Toast shown when a block/friend/follow action failed."
+  },
+  "noticeTitle": {
+    "message": "الصفحات المدعومة",
+    "description": "Notice heading when the toolbar button is clicked on a page the slideshow can't play (off Reddit, or a single post)."
+  },
+  "noticeOffReddit": {
+    "message": "يعرض عرض الشرائح خلاصات Reddit، مثل منتدى فرعي أو الصفحة الرئيسية أو منشورات مستخدم.",
+    "description": "Notice body: the toolbar button was clicked off Reddit."
+  },
+  "noticeNextOpen": {
+    "message": "افتح خلاصة وانقر على الأيقونة مرة أخرى.",
+    "description": "Notice: next step after noticeOffReddit ('one' = a Reddit feed)."
+  },
+  "noticePost": {
+    "message": "تعرض هذه الصفحة منشورًا واحدًا من {feed}. يعرض عرض الشرائح خلاصة كاملة.",
+    "description": "Notice body on a single Reddit post page. Keep the {feed} marker; it becomes the post's subreddit, e.g. r/pics."
+  },
+  "noticePostNoFeed": {
+    "message": "تعرض هذه الصفحة منشورًا واحدًا. يعرض عرض الشرائح خلاصة كاملة.",
+    "description": "Notice body on a single Reddit post page whose subreddit is unknown."
+  },
+  "noticeNextFeed": {
+    "message": "افتح {feed} وانقر على الأيقونة مرة أخرى.",
+    "description": "Notice: next step after noticePost. Keep the {feed} marker; it becomes the post's subreddit, e.g. r/pics."
+  },
+  "noticeReloadTitle": {
+    "message": "يلزم إعادة التحميل",
+    "description": "Notice heading: the Reddit tab was open before the extension was installed or updated and must be reloaded."
+  },
+  "noticeReload": {
+    "message": "حُمّلت هذه الصفحة قبل تثبيت الإضافة أو تحديثها.",
+    "description": "Notice body under noticeReloadTitle."
+  },
+  "noticeNextReload": {
+    "message": "أعد تحميل الصفحة وانقر على الأيقونة مرة أخرى.",
+    "description": "Notice: next step after noticeReload."
+  },
+  "noticeShortcut": {
+    "message": "اختصار لوحة المفاتيح هو {shortcut}.",
+    "description": "Notice: the keyboard shortcut. Keep the {shortcut} marker; it becomes the keys, e.g. Alt+Shift+S."
+  },
+  "noticeOpenReddit": {
+    "message": "افتح Reddit",
+    "description": "Notice button: opens reddit.com."
+  },
+  "noticeOpenFeed": {
+    "message": "افتح {feed}",
+    "description": "Notice button: opens the post's subreddit. Keep the {feed} marker, e.g. r/pics."
+  },
+  "noticeReloadPage": {
+    "message": "أعد تحميل الصفحة",
+    "description": "Notice button: reloads the Reddit tab."
+  },
+  "noticeHelp": {
+    "message": "مساعدة ↗",
+    "description": "Notice link to the extension's website (opens a new tab)."
   }
 }

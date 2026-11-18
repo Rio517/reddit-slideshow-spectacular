@@ -728,5 +728,61 @@
   "uiActionError": {
     "message": "Action impossible",
     "description": "Toast shown when a block/friend/follow action failed."
+  },
+  "noticeTitle": {
+    "message": "Pages compatibles",
+    "description": "Notice heading when the toolbar button is clicked on a page the slideshow can't play (off Reddit, or a single post)."
+  },
+  "noticeOffReddit": {
+    "message": "Le diaporama lit les flux Reddit, comme un subreddit, la page d'accueil ou les publications d'un utilisateur.",
+    "description": "Notice body: the toolbar button was clicked off Reddit."
+  },
+  "noticeNextOpen": {
+    "message": "Ouvrez un flux et cliquez à nouveau sur l'icône.",
+    "description": "Notice: next step after noticeOffReddit ('one' = a Reddit feed)."
+  },
+  "noticePost": {
+    "message": "Cette page affiche une seule publication de {feed}. Le diaporama lit un flux entier.",
+    "description": "Notice body on a single Reddit post page. Keep the {feed} marker; it becomes the post's subreddit, e.g. r/pics."
+  },
+  "noticePostNoFeed": {
+    "message": "Cette page affiche une seule publication. Le diaporama lit un flux entier.",
+    "description": "Notice body on a single Reddit post page whose subreddit is unknown."
+  },
+  "noticeNextFeed": {
+    "message": "Ouvrez {feed} et cliquez à nouveau sur l'icône.",
+    "description": "Notice: next step after noticePost. Keep the {feed} marker; it becomes the post's subreddit, e.g. r/pics."
+  },
+  "noticeReloadTitle": {
+    "message": "Rechargement requis",
+    "description": "Notice heading: the Reddit tab was open before the extension was installed or updated and must be reloaded."
+  },
+  "noticeReload": {
+    "message": "Cette page a été chargée avant l'installation ou la mise à jour de l'extension.",
+    "description": "Notice body under noticeReloadTitle."
+  },
+  "noticeNextReload": {
+    "message": "Rechargez la page et cliquez à nouveau sur l'icône.",
+    "description": "Notice: next step after noticeReload."
+  },
+  "noticeShortcut": {
+    "message": "Le raccourci clavier est {shortcut}.",
+    "description": "Notice: the keyboard shortcut. Keep the {shortcut} marker; it becomes the keys, e.g. Alt+Shift+S."
+  },
+  "noticeOpenReddit": {
+    "message": "Ouvrir Reddit",
+    "description": "Notice button: opens reddit.com."
+  },
+  "noticeOpenFeed": {
+    "message": "Ouvrir {feed}",
+    "description": "Notice button: opens the post's subreddit. Keep the {feed} marker, e.g. r/pics."
+  },
+  "noticeReloadPage": {
+    "message": "Recharger la page",
+    "description": "Notice button: reloads the Reddit tab."
+  },
+  "noticeHelp": {
+    "message": "Aide ↗",
+    "description": "Notice link to the extension's website (opens a new tab)."
   }
 }

@@ -3,8 +3,10 @@
 **Branch:** `main` · **Status:** CI-green. v1.5.3 is released. v1.6.0 is
 prepared locally: the slideshow starts again after Reddit stopped serving the
 listing `.json` (a 403), www subreddit feeds load from new Reddit's own pages
-with old Reddit as the fallback, and "Open in a window" keeps its slideshow
-across Reddit's reload. Version and per-locale store copy are refreshed, the
+with old Reddit as the fallback, "Open in a window" keeps its slideshow
+across Reddit's reload, and the toolbar button off a Reddit feed opens a notice
+under it (where the slideshow plays, plus Open Reddit / the post's subreddit /
+Reload page) instead of doing nothing. Version and per-locale store copy are refreshed, the
 Firefox, Chrome, and source zips are built, and the full gate passed. The
 manual store rollout remains in §1.
 
@@ -86,7 +88,10 @@ giant commit.
   Store. Paste the per-locale listing copy from
   `docs/store-listing/<lang>.md` for Firefox (its what's-new shows the last two
   versions) and from `docs/store-listing/chrome/<lang>.md` for Chrome.
-  Permissions are unchanged from v1.5.3, and the store screenshots and promo
+  Hand-check first: click the toolbar button on a non-Reddit site, on a
+  Reddit post page, and on a Reddit tab opened before reinstalling, in Firefox
+  and Chrome (Firefox shows the reload notice in a tab, since its popup needs
+  the click's own turn). Permissions are unchanged from v1.5.3, and the store screenshots and promo
   tiles are the same as v1.5.0's.
 - **Hand-check in a logged-in Firefox and Chrome:** vote with a caption arrow
   (the score moves and the vote lands on Reddit), and drag the seek bar on a

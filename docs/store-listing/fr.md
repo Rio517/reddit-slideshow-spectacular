@@ -21,6 +21,7 @@ NOUVEAUTÉS — V1.6.0
 - CORRIGÉ : le diaporama démarre de nouveau après que Reddit a cessé de fournir les données du fil qu'il utilisait (une erreur « 403 »)
 - AMÉLIORÉ : sur www.reddit.com, les diaporamas de subreddit se chargent depuis les pages du nouveau Reddit et passent à l'ancien Reddit en cas d'échec
 - CORRIGÉ : « Ouvrir dans une fenêtre » conserve son diaporama quand Reddit recharge la page
+- NOUVEAU : un clic sur le bouton en dehors d'un fil Reddit explique maintenant où le diaporama fonctionne, avec un bouton pour ouvrir Reddit ou le subreddit de la publication
 
 NOUVEAUTÉS — V1.5.3
 
