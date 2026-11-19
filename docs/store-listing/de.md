@@ -18,10 +18,10 @@ Die Diashow nutzt deine bereits angemeldete Reddit-Sitzung – keine API-Schlüs
 
 NEU IN V1.6.0
 
-- BEHOBEN: Die Diashow startet wieder, nachdem Reddit die bisher genutzten Feed-Daten nicht mehr lieferte (ein „403“-Fehler)
-- VERBESSERT: Auf www.reddit.com laden Subreddit-Diashows von den eigenen Seiten des neuen Reddit und wechseln zum alten Reddit, falls das scheitert
-- BEHOBEN: „In einem Fenster öffnen“ behält die Diashow, wenn Reddit die Seite neu lädt
-- NEU: Ein Klick auf die Schaltfläche außerhalb eines Reddit-Feeds erklärt jetzt, wo die Diashow läuft, und bietet an, Reddit oder das Subreddit des Beitrags zu öffnen
+- NEU: Ein Klick auf die Schaltfläche des Add-ons in der Symbolleiste auf einer Seite außerhalb von Reddit zeigt jetzt eine Fehlermeldung mit einer Schaltfläche, die Reddit öffnet.
+- VERBESSERT: Funktioniert das alte oder das neue Reddit nicht, wechselt die Diashow jetzt zum jeweils anderen.
+- BEHOBEN: Probleme, bei denen Reddit in manchen Fällen einen „403“-Fehler lieferte, sind gelöst.
+- BEHOBEN: „In einem Fenster öffnen“ funktioniert jetzt auch, wenn die Hauptseite neu geladen wird.
 
 NEU IN V1.5.3
 

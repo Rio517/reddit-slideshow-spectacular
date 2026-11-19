@@ -18,10 +18,10 @@ La presentazione riutilizza la tua sessione Reddit già connessa: nessuna chiave
 
 NOVITÀ - V1.6.0
 
-- CORRETTO: la presentazione riparte dopo che Reddit ha smesso di fornire i dati del feed che usava (un errore «403»)
-- MIGLIORATO: su www.reddit.com, le presentazioni di un subreddit si caricano dalle pagine del nuovo Reddit e passano al vecchio Reddit se falliscono
-- CORRETTO: «Apri in una finestra» mantiene la sua presentazione quando Reddit ricarica la pagina
-- NUOVO: un clic sul pulsante fuori da un feed di Reddit ora spiega dove funziona la presentazione, con un pulsante per aprire Reddit o il subreddit del post
+- NUOVO: facendo clic sul pulsante del componente aggiuntivo nella barra degli strumenti su un sito diverso da Reddit, ora compare un messaggio di errore con un pulsante per aprire Reddit.
+- MIGLIORATO: se il vecchio o il nuovo Reddit non funziona, ora si passa all'altro.
+- CORRETTO: risolti i problemi con l'errore «403» restituito da Reddit in alcuni casi.
+- CORRETTO: «Apri in una finestra» ora funziona quando la pagina principale si ricarica.
 
 NOVITÀ - V1.5.3
 

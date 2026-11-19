@@ -18,10 +18,10 @@ El pase de diapositivas reutiliza tu sesión de Reddit ya iniciada: sin claves d
 
 NOVEDADES - V1.6.0
 
-- CORREGIDO: la presentación vuelve a iniciarse después de que Reddit dejara de ofrecer los datos del feed que usaba (un error «403»)
-- MEJORADO: en www.reddit.com, las presentaciones de un subreddit se cargan desde las propias páginas del nuevo Reddit y pasan al antiguo Reddit si fallan
-- CORREGIDO: «Abrir en una ventana» conserva su presentación cuando Reddit recarga la página
-- NUEVO: al hacer clic en el botón fuera de un feed de Reddit, ahora se explica dónde funciona la presentación, con un botón para abrir Reddit o el subreddit de la publicación
+- NUEVO: al hacer clic en el botón del complemento en la barra de herramientas desde un sitio que no es Reddit, ahora aparece un mensaje de error con un botón para abrir Reddit.
+- MEJORADO: si el Reddit antiguo o el nuevo no funciona, ahora se usa el otro.
+- CORREGIDO: se resuelven los problemas con el error «403» que Reddit devolvía en algunos casos.
+- CORREGIDO: «Abrir en una ventana» ahora funciona cuando se recarga la página principal.
 
 NOVEDADES - V1.5.3
 

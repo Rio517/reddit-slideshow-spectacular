@@ -18,10 +18,10 @@ Le diaporama réutilise votre session Reddit déjà connectée : aucune clé API
 
 NOUVEAUTÉS — V1.6.0
 
-- CORRIGÉ : le diaporama démarre de nouveau après que Reddit a cessé de fournir les données du fil qu'il utilisait (une erreur « 403 »)
-- AMÉLIORÉ : sur www.reddit.com, les diaporamas de subreddit se chargent depuis les pages du nouveau Reddit et passent à l'ancien Reddit en cas d'échec
-- CORRIGÉ : « Ouvrir dans une fenêtre » conserve son diaporama quand Reddit recharge la page
-- NOUVEAU : un clic sur le bouton en dehors d'un fil Reddit explique maintenant où le diaporama fonctionne, avec un bouton pour ouvrir Reddit ou le subreddit de la publication
+- NOUVEAU : un clic sur le bouton du module dans la barre d'outils depuis un site autre que Reddit affiche maintenant un message d'erreur, avec un bouton pour ouvrir Reddit.
+- AMÉLIORÉ : si l'ancien ou le nouveau Reddit ne fonctionne pas, le diaporama passe maintenant à l'autre.
+- CORRIGÉ : les problèmes d'erreur « 403 » renvoyée par Reddit dans certains cas sont résolus.
+- CORRIGÉ : « Ouvrir dans une fenêtre » fonctionne désormais quand la page principale est actualisée.
 
 NOUVEAUTÉS — V1.5.3
 
